@@ -1,5 +1,6 @@
 package com.blockguard.server.domain.auth.infra;
 
+import com.blockguard.server.domain.auth.enums.JwtTokenExpireTime;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -28,8 +29,13 @@ public class JwtTokenGenerator {
         // 권한 가져오기
         long now = (new Date()).getTime();
 
+        // Jwt token time
+        long accessTokenExpireTime = JwtTokenExpireTime.ACCESS_TOKEN_EXPIRE_TIME.getExpireTime();
+        long refreshTokenExpireTime = JwtTokenExpireTime.REFRESH_TOKEN_EXPIRE_TIME.getExpireTime();
+
+
         // Access Token 생성
-        Date accessTokenExpiresIn = new Date(now + 86400000);
+        Date accessTokenExpiresIn = new Date(now + accessTokenExpireTime);
         String accessToken = Jwts.builder()
                 .setSubject(String.valueOf(userId))
                 .setExpiration(accessTokenExpiresIn)
@@ -38,7 +44,7 @@ public class JwtTokenGenerator {
 
         // Refresh Token 생성
         String refreshToken = Jwts.builder()
-                .setExpiration(new Date(now + 86400000))
+                .setExpiration(new Date(now + refreshTokenExpireTime))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 

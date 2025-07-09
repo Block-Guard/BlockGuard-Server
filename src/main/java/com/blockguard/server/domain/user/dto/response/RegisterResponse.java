@@ -8,6 +8,5 @@ import lombok.Getter;
 @AllArgsConstructor
 @Builder
 public class RegisterResponse {
-    private String msg;
     private Long userId;
 }

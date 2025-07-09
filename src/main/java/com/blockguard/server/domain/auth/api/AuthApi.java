@@ -5,6 +5,8 @@ import com.blockguard.server.domain.user.dto.request.LoginRequest;
 import com.blockguard.server.domain.user.dto.request.RegisterRequest;
 import com.blockguard.server.domain.user.dto.response.LoginResponse;
 import com.blockguard.server.domain.user.dto.response.RegisterResponse;
+import com.blockguard.server.global.common.codes.SuccessCode;
+import com.blockguard.server.global.common.response.BaseResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,24 +21,16 @@ public class AuthApi {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest registerRequest) {
-        try {
-            RegisterResponse registerResponse = authService.register(registerRequest);
-            return ResponseEntity.ok(registerResponse);
-        } catch (IllegalStateException e) {
-            return ResponseEntity.internalServerError().build();
-        }
+    public ResponseEntity<BaseResponse<RegisterResponse>> register(@RequestBody RegisterRequest registerRequest) {
+        RegisterResponse registerResponse = authService.register(registerRequest);
+        return ResponseEntity.ok(BaseResponse.of(SuccessCode.USER_REGISTERED, registerResponse));
+
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> register(@RequestBody LoginRequest loginRequest) {
-        try {
-            LoginResponse loginResponse = authService.login(loginRequest);
-            return ResponseEntity.ok(loginResponse);
-        } catch (IllegalStateException e) {
-            return ResponseEntity.internalServerError().build();
-        }
+    public ResponseEntity<BaseResponse<LoginResponse>> register(@RequestBody LoginRequest loginRequest) {
+        LoginResponse loginResponse = authService.login(loginRequest);
+        return ResponseEntity.ok(BaseResponse.of(SuccessCode.LOGIN_SUCCESS, loginResponse));
     }
-
 
 }

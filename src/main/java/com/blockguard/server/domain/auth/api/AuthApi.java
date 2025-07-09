@@ -5,6 +5,11 @@ import com.blockguard.server.domain.user.dto.request.LoginRequest;
 import com.blockguard.server.domain.user.dto.request.RegisterRequest;
 import com.blockguard.server.domain.user.dto.response.LoginResponse;
 import com.blockguard.server.domain.user.dto.response.RegisterResponse;
+import com.blockguard.server.global.common.codes.SuccessCode;
+import com.blockguard.server.global.common.response.BaseResponse;
+import com.blockguard.server.global.config.swagger.CustomExceptionDescription;
+import com.blockguard.server.global.config.swagger.SwaggerResponseDescription;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,25 +23,22 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthApi {
     private final AuthService authService;
 
+    @Operation(summary = "회원가입")
+    @CustomExceptionDescription(SwaggerResponseDescription.REGISTER_FAIL)
     @PostMapping("/register")
-    public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest registerRequest) {
-        try {
-            RegisterResponse registerResponse = authService.register(registerRequest);
-            return ResponseEntity.ok(registerResponse);
-        } catch (IllegalStateException e) {
-            return ResponseEntity.internalServerError().build();
-        }
+    public ResponseEntity<BaseResponse<RegisterResponse>> register(@RequestBody RegisterRequest registerRequest) {
+        RegisterResponse registerResponse = authService.register(registerRequest);
+        return ResponseEntity.ok(BaseResponse.of(SuccessCode.USER_REGISTERED, registerResponse));
+
     }
 
+
+    @Operation(summary = "로그인")
+    @CustomExceptionDescription(SwaggerResponseDescription.LOGIN_FAIL)
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> register(@RequestBody LoginRequest loginRequest) {
-        try {
-            LoginResponse loginResponse = authService.login(loginRequest);
-            return ResponseEntity.ok(loginResponse);
-        } catch (IllegalStateException e) {
-            return ResponseEntity.internalServerError().build();
-        }
+    public ResponseEntity<BaseResponse<LoginResponse>> login(@RequestBody LoginRequest loginRequest) {
+        LoginResponse loginResponse = authService.login(loginRequest);
+        return ResponseEntity.ok(BaseResponse.of(SuccessCode.LOGIN_SUCCESS, loginResponse));
     }
-
 
 }

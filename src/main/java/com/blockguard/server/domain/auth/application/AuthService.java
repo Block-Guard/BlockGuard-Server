@@ -8,6 +8,8 @@ import com.blockguard.server.domain.user.dao.UserRepository;
 import com.blockguard.server.domain.user.dto.request.RegisterRequest;
 import com.blockguard.server.domain.user.dto.response.LoginResponse;
 import com.blockguard.server.domain.user.dto.response.RegisterResponse;
+import com.blockguard.server.global.common.codes.ErrorCode;
+import com.blockguard.server.global.exception.BusinessExceptionHandler;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,7 +24,7 @@ public class AuthService {
 
     public RegisterResponse register(RegisterRequest registerRequest) {
         if (userRepository.findByEmail((registerRequest.getEmail())).isPresent()) {
-            throw new IllegalArgumentException("이미 가입되어 있는 아이디입니다.");
+            throw new BusinessExceptionHandler(ErrorCode.DUPLICATED_EMAIL);
         }
 
         User user = User.builder()
@@ -37,23 +39,21 @@ public class AuthService {
         userRepository.save(user);
 
         return RegisterResponse.builder()
-                .msg("회원가입에 성공하였습니다.")
                 .userId(user.getId())
                 .build();
     }
 
     public LoginResponse login(LoginRequest loginRequest) {
         User user = userRepository.findByEmail(loginRequest.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다. 다시 한 번 확인해주세요."));
+                .orElseThrow(() ->  new BusinessExceptionHandler(ErrorCode.INVALID_EMAIL));
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())){
-            throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
+            throw new BusinessExceptionHandler(ErrorCode.INVALID_PASSWORD);
         }
 
         JwtToken jwtToken = jwtTokenGenerator.generateToken(user.getId(), "Bearer");
 
         return LoginResponse.builder()
-                .msg("로그인에 성공하였습니다.")
                 .userId(user.getId())
                 .jwtToken(jwtToken)
                 .build();

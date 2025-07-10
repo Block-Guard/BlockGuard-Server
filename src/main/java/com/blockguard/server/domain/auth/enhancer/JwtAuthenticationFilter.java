@@ -25,6 +25,16 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
+
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        String uri = httpRequest.getRequestURI();
+
+        // actuator 등 인증 없이 접근 가능한 경로는 필터 통과
+        if (uri.startsWith("/actuator")) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         // 1. Request Header에서 JWT 토큰 추출
         String token = resolveToken((HttpServletRequest) request);
 

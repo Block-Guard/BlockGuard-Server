@@ -38,14 +38,51 @@ jobs:
     needs: build
 
     steps:
-      - name: EC2에 SSH 접속하여 Docker 컨테이너 재배포
+      - name: EC2에 SSH 접속하여 무중단 배포 수행
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script: |
+            CURRENT_PORT=$(docker ps --filter "name=blockguard_server_blue" --format "{{.Ports}}" | grep -q "8080" && echo blue || echo green)
+
+            if [ "$CURRENT_PORT" = "blue" ]; then
+              NEW_PORT=8081
+              NEW_NAME=blockguard_server_green
+              OLD_NAME=blockguard_server_blue
+            else
+              NEW_PORT=8080
+              NEW_NAME=blockguard_server_blue
+              OLD_NAME=blockguard_server_green
+            fi
+
+            echo "새 컨테이너 실행: $NEW_NAME (포트: $NEW_PORT)"
             docker pull ${{ secrets.DOCKER_USERNAME }}/blockguard_server:latest
-            docker stop blockguard_server || true
-            docker rm blockguard_server || true
-            docker run -d -p 8080:8080 --name blockguard_server ${{ secrets.DOCKER_USERNAME }}/blockguard_server:latest
+            docker run -d --name $NEW_NAME -p $NEW_PORT:8080 ${{ secrets.DOCKER_USERNAME }}/blockguard_server:latest
+
+            echo "헬스체크 진행 중..."
+            for i in {1..10}; do
+              STATUS=$(curl -s http://localhost:$NEW_PORT/actuator/health | grep '"status":"UP"' || true)
+              if [ -n "$STATUS" ]; then
+                echo "헬스체크 통과"
+                break
+              else
+                echo "⏱ 대기 중..."
+                sleep 3
+              fi
+            done
+
+            if [ -z "$STATUS" ]; then
+              echo "헬스체크 실패: 롤백 없음"
+              docker logs $NEW_NAME
+              exit 1
+            fi
+
+            echo "nginx 포트 전환"
+            sudo sed -i "s/proxy_pass http:\/\/localhost:808[0-9];/proxy_pass http:\/\/localhost:$NEW_PORT;/" /etc/nginx/sites-available/default
+            sudo nginx -s reload
+
+            echo "이전 컨테이너 정리: $OLD_NAME"
+            docker stop $OLD_NAME || true
+            docker rm $OLD_NAME || true

@@ -34,7 +34,7 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return web -> web.ignoring()
-                .requestMatchers("/h2-console/**","/error", "/favicon.ico");
+                .requestMatchers("/h2-console/**", "/error", "/favicon.ico");
     }
 
     @Bean
@@ -55,7 +55,7 @@ public class SecurityConfig {
                         registry
                                 .requestMatchers("/api/auth/**").permitAll()   // 로그인/회원가입만 허용
                                 .requestMatchers("/actuator/health").permitAll() // 헬스체크 허용
-                                .requestMatchers("/").permitAll()
+                                .requestMatchers("/", "/index.html", "/favicon.ico").permitAll()
                                 .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/swagger-resources/**", "/webjars/**").permitAll()
                                 .anyRequest().authenticated()
                 )

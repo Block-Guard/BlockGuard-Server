@@ -11,10 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Getter
-@Table(
-        name = "news_articles",
-        uniqueConstraints = @UniqueConstraint(name = "uk_news_article_url", columnNames = "url")
-)
+@Table(name = "news_articles")
 public class NewsArticle extends BaseEntity {
 
     @Id
@@ -25,7 +22,7 @@ public class NewsArticle extends BaseEntity {
     @Column(nullable = false, length = 500)
     private String title;
 
-    @Column(nullable = false, length = 1000)
+    @Column(nullable = false, length = 1000, unique = true)
     private String url;
 
     @Column(name = "published_at", nullable = false)

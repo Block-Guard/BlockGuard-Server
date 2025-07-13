@@ -1,4 +1,4 @@
-package com.blockguard.server.domain.fraud.phone.domain;
+package com.blockguard.server.domain.fraud.domain;
 
 import com.blockguard.server.global.common.entity.BaseEntity;
 import jakarta.persistence.*;

@@ -1,5 +1,6 @@
 package com.blockguard.server.domain.user.domain;
 
+import com.blockguard.server.domain.fraudanalysis.domain.FraudAnalysisRecord;
 import com.blockguard.server.domain.guardian.domain.Guardian;
 import com.blockguard.server.domain.user.domain.enums.Gender;
 import com.blockguard.server.domain.userreport.domain.UserReportRecord;
@@ -57,7 +58,11 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<UserReportRecord> userReportRecord = new ArrayList<>();
+    private List<UserReportRecord> userReportRecords = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<FraudAnalysisRecord> fraudAnalysisRecords = new ArrayList<>();
 
     public void markDeleted() {
         this.deletedAt = LocalDateTime.now();

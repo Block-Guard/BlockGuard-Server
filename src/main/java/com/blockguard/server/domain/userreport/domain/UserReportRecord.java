@@ -1,0 +1,37 @@
+package com.blockguard.server.domain.userreport.domain;
+
+import com.blockguard.server.domain.user.domain.User;
+import com.blockguard.server.domain.userreport.domain.enums.ReportStep;
+import com.blockguard.server.global.common.entity.BaseEntity;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDateTime;
+
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
+@Getter
+@Table(name = "user_report_records")
+public class UserReportRecord extends BaseEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
+    private Long id;
+
+    @Column(name = "reported_at", nullable = false)
+    private LocalDateTime reportedAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ReportStep step;
+
+    @Column(name = "is_completed", nullable = false)
+    private boolean isCompleted = false;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+}

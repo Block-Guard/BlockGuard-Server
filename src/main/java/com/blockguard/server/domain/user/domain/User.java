@@ -2,6 +2,7 @@ package com.blockguard.server.domain.user.domain;
 
 import com.blockguard.server.domain.guardian.domain.Guardian;
 import com.blockguard.server.domain.user.domain.enums.Gender;
+import com.blockguard.server.domain.userreport.domain.UserReportRecord;
 import com.blockguard.server.global.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -53,6 +54,10 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<Guardian> guardians = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<UserReportRecord> userReportRecord = new ArrayList<>();
 
     public void markDeleted() {
         this.deletedAt = LocalDateTime.now();

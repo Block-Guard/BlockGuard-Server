@@ -4,14 +4,17 @@ import com.blockguard.server.domain.user.domain.enums.Gender;
 import com.blockguard.server.global.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 @Getter
+@SQLRestriction("deleted_at IS NULL")
 @Table(name = "user")
 public class User extends BaseEntity {
     @Id
@@ -37,4 +40,14 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Gender gender;
+
+    @Column(name = "profile_image_key", length = 512)
+    private String profileImageKey;
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt = null;
+
+    public void markDeleted() {
+        this.deletedAt = LocalDateTime.now();
+    }
 }

@@ -1,5 +1,6 @@
 package com.blockguard.server.domain.user.domain;
 
+import com.blockguard.server.domain.guardian.domain.Guardian;
 import com.blockguard.server.domain.user.domain.enums.Gender;
 import com.blockguard.server.global.common.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -8,6 +9,8 @@ import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -46,6 +49,10 @@ public class User extends BaseEntity {
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt = null;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<Guardian> guardians = new ArrayList<>();
 
     public void markDeleted() {
         this.deletedAt = LocalDateTime.now();

@@ -22,10 +22,6 @@ public class Guardian extends BaseEntity {
     @Column(nullable = false)
     private Long id;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
     @Column(nullable = false, length = 50)
     private String name;
 
@@ -40,6 +36,10 @@ public class Guardian extends BaseEntity {
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt = null;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     public void markDeleted() {
         this.deletedAt = LocalDateTime.now();

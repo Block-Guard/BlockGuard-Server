@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 @Table(
-        name = "news_article",
+        name = "news_articles",
         uniqueConstraints = @UniqueConstraint(name = "uk_news_article_url", columnNames = "url")
 )
 public class NewsArticle extends BaseEntity {

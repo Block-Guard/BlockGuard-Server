@@ -21,9 +21,6 @@ public class UserReportRecord extends BaseEntity {
     @Column(nullable = false)
     private Long id;
 
-    @Column(name = "reported_at", nullable = false)
-    private LocalDateTime reportedAt;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ReportStep step;

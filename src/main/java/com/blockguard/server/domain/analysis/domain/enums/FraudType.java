@@ -1,4 +1,4 @@
-package com.blockguard.server.domain.fraudanalysis.domain.enums;
+package com.blockguard.server.domain.analysis.domain.enums;
 
 // Todo: 사기 클래스 확정 후 변경
 public enum FraudType {

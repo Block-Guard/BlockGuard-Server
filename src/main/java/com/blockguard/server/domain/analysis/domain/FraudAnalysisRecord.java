@@ -1,7 +1,7 @@
-package com.blockguard.server.domain.fraudanalysis.domain;
+package com.blockguard.server.domain.analysis.domain;
 
-import com.blockguard.server.domain.fraudanalysis.domain.enums.FraudType;
-import com.blockguard.server.domain.fraudanalysis.domain.enums.RiskLevel;
+import com.blockguard.server.domain.analysis.domain.enums.FraudType;
+import com.blockguard.server.domain.analysis.domain.enums.RiskLevel;
 import com.blockguard.server.domain.user.domain.User;
 import com.blockguard.server.global.common.entity.BaseEntity;
 import jakarta.persistence.*;

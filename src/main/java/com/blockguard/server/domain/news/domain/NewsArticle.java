@@ -1,4 +1,4 @@
-package com.blockguard.server.domain.newsarticle.domain;
+package com.blockguard.server.domain.news.domain;
 
 import com.blockguard.server.global.common.entity.BaseEntity;
 import jakarta.persistence.*;

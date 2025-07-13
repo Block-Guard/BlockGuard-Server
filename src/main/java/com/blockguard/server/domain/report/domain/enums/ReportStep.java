@@ -1,4 +1,4 @@
-package com.blockguard.server.domain.userreport.domain.enums;
+package com.blockguard.server.domain.report.domain.enums;
 
 public enum ReportStep {
     STEP1,

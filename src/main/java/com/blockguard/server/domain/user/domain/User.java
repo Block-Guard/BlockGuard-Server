@@ -3,7 +3,7 @@ package com.blockguard.server.domain.user.domain;
 import com.blockguard.server.domain.fraudanalysis.domain.FraudAnalysisRecord;
 import com.blockguard.server.domain.guardian.domain.Guardian;
 import com.blockguard.server.domain.user.domain.enums.Gender;
-import com.blockguard.server.domain.userreport.domain.UserReportRecord;
+import com.blockguard.server.domain.report.domain.UserReportRecord;
 import com.blockguard.server.global.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;

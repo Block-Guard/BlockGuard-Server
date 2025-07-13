@@ -1,12 +1,10 @@
-package com.blockguard.server.domain.userreport.domain;
+package com.blockguard.server.domain.report.domain;
 
 import com.blockguard.server.domain.user.domain.User;
-import com.blockguard.server.domain.userreport.domain.enums.ReportStep;
+import com.blockguard.server.domain.report.domain.enums.ReportStep;
 import com.blockguard.server.global.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

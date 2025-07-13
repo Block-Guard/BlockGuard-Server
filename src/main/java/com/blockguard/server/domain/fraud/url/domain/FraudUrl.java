@@ -1,4 +1,4 @@
-package com.blockguard.server.domain.fraud.phonenumber.domain;
+package com.blockguard.server.domain.fraud.url.domain;
 
 import com.blockguard.server.global.common.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -11,16 +11,16 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 @Getter
-@Table(name = "fraud_phone_numbers")
-public class FraudPhoneNumber extends BaseEntity {
+@Table(name = "fraud_urls")
+public class FraudUrl extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
 
-    @Column(name = "phone_number", nullable = false, length = 20, unique = true)
-    private String phoneNumber;
+    @Column(nullable = false, columnDefinition = "TEXT", unique = true)
+    private String url;
 
     // Todo: Open API 제공자 추후 enum type 변경
     @Column(nullable = false, length = 100)

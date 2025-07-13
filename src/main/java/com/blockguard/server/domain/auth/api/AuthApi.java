@@ -10,6 +10,7 @@ import com.blockguard.server.global.common.response.BaseResponse;
 import com.blockguard.server.global.config.swagger.CustomExceptionDescription;
 import com.blockguard.server.global.config.swagger.SwaggerResponseDescription;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,7 +27,7 @@ public class AuthApi {
     @Operation(summary = "회원가입")
     @CustomExceptionDescription(SwaggerResponseDescription.REGISTER_FAIL)
     @PostMapping("/register")
-    public ResponseEntity<BaseResponse<RegisterResponse>> register(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<BaseResponse<RegisterResponse>> register(@Valid @RequestBody RegisterRequest registerRequest) {
         RegisterResponse registerResponse = authService.register(registerRequest);
         return ResponseEntity.ok(BaseResponse.of(SuccessCode.USER_REGISTERED, registerResponse));
 

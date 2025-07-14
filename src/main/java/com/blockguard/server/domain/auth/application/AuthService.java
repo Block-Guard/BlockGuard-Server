@@ -3,9 +3,11 @@ package com.blockguard.server.domain.auth.application;
 import com.blockguard.server.domain.auth.domain.JwtToken;
 import com.blockguard.server.domain.auth.infra.JwtTokenGenerator;
 import com.blockguard.server.domain.user.domain.User;
+import com.blockguard.server.domain.user.dto.request.FindEmailRequest;
 import com.blockguard.server.domain.user.dto.request.LoginRequest;
 import com.blockguard.server.domain.user.dao.UserRepository;
 import com.blockguard.server.domain.user.dto.request.RegisterRequest;
+import com.blockguard.server.domain.user.dto.response.FindEmailResponse;
 import com.blockguard.server.domain.user.dto.response.LoginResponse;
 import com.blockguard.server.domain.user.dto.response.RegisterResponse;
 import com.blockguard.server.global.common.codes.ErrorCode;
@@ -45,9 +47,9 @@ public class AuthService {
 
     public LoginResponse login(LoginRequest loginRequest) {
         User user = userRepository.findByEmail(loginRequest.getEmail())
-                .orElseThrow(() ->  new BusinessExceptionHandler(ErrorCode.INVALID_EMAIL));
+                .orElseThrow(() -> new BusinessExceptionHandler(ErrorCode.INVALID_EMAIL));
 
-        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())){
+        if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             throw new BusinessExceptionHandler(ErrorCode.INVALID_PASSWORD);
         }
 
@@ -58,5 +60,15 @@ public class AuthService {
                 .jwtToken(jwtToken)
                 .build();
 
+    }
+
+    public FindEmailResponse findEmail(FindEmailRequest findEmailRequest) {
+        User user = userRepository.findByNameAndPhoneNumberAndBirthDate(
+                        findEmailRequest.getName(), findEmailRequest.getPhoneNumber(), findEmailRequest.getBirthDate())
+                .orElseThrow(() -> new BusinessExceptionHandler(ErrorCode.USER_INFO_NOT_FOUND));
+
+        return FindEmailResponse.builder()
+                .email(user.getEmail())
+                .build();
     }
 }

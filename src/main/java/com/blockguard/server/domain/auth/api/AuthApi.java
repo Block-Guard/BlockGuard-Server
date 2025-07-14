@@ -53,4 +53,12 @@ public class AuthApi {
         return ResponseEntity.ok(BaseResponse.of(SuccessCode.USER_EMAIL_FOUND, findEmailResponse));
     }
 
+    @Operation(summary = "비밀번호 찾기", description = "이메일이 유효하면 해당 이메일로 임시 비밀번호를 발송합니다.")
+    @CustomExceptionDescription(SwaggerResponseDescription.FIND_PASSWORD_FAIL)
+    @PostMapping("find-password")
+    public ResponseEntity<BaseResponse<Void>> findPassword(@RequestBody @Valid FindPasswordRequest findPasswordRequest){
+        authService.sendTempPassword(findPasswordRequest);
+        return ResponseEntity.ok(BaseResponse.of(SuccessCode.SEND_TEMP_PASSWORD_BY_EMAIL));
+    }
+
 }

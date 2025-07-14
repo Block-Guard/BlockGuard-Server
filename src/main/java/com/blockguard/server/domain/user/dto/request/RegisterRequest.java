@@ -2,6 +2,7 @@ package com.blockguard.server.domain.user.dto.request;
 
 import com.blockguard.server.domain.user.domain.enums.Gender;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -25,6 +26,7 @@ public class RegisterRequest {
     private String password;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd")
+    @Schema(description = "생년월일 yyyyMMdd", example = "20000101")
     private LocalDate birthDate;
 
     private Gender gender;

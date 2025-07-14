@@ -64,10 +64,18 @@ public class User extends BaseEntity {
     @Builder.Default
     private List<FraudAnalysisRecord> fraudAnalysisRecords = new ArrayList<>();
 
+    /**
+     * Marks the user as logically deleted by setting the deletion timestamp to the current time.
+     */
     public void markDeleted() {
         this.deletedAt = LocalDateTime.now();
     }
 
+    /**
+     * Updates the user's password to the specified value.
+     *
+     * @param tempPassword the new password to set for the user
+     */
     public void changePassword(String tempPassword) {
         this.password = tempPassword;
     }

@@ -37,6 +37,12 @@ public class AuthApi {
     }
 
 
+    /**
+     * Authenticates a user with the provided login credentials.
+     *
+     * @param loginRequest the login credentials submitted by the user
+     * @return a response containing authentication details and a success code if login is successful
+     */
     @Operation(summary = "로그인")
     @CustomExceptionDescription(SwaggerResponseDescription.LOGIN_FAIL)
     @PostMapping("/login")
@@ -45,6 +51,12 @@ public class AuthApi {
         return ResponseEntity.ok(BaseResponse.of(SuccessCode.LOGIN_SUCCESS, loginResponse));
     }
 
+    /**
+     * Handles a request to find a user's email based on provided identifying information.
+     *
+     * @param findEmailRequest the request containing information needed to locate the user's email
+     * @return a response entity containing the found email information and a success code
+     */
     @Operation(summary = "아이디 찾기")
     @CustomExceptionDescription(SwaggerResponseDescription.FIND_EMAIL_FAIL)
     @PostMapping("find-email")
@@ -53,6 +65,12 @@ public class AuthApi {
         return ResponseEntity.ok(BaseResponse.of(SuccessCode.USER_EMAIL_FOUND, findEmailResponse));
     }
 
+    /**
+     * Sends a temporary password to the user's email address if the provided information is valid.
+     *
+     * @param findPasswordRequest the request containing user information for password recovery
+     * @return a response indicating that a temporary password has been sent by email
+     */
     @Operation(summary = "비밀번호 찾기", description = "이메일이 유효하면 해당 이메일로 임시 비밀번호를 발송합니다.")
     @CustomExceptionDescription(SwaggerResponseDescription.FIND_PASSWORD_FAIL)
     @PostMapping("find-password")

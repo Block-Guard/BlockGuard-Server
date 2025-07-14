@@ -53,6 +53,13 @@ public class AuthService {
                 .build();
     }
 
+    /**
+     * Authenticates a user with the provided login credentials and returns a JWT token upon successful authentication.
+     *
+     * @param loginRequest the login credentials containing email and password
+     * @return a LoginResponse containing the user ID and a generated JWT token
+     * @throws BusinessExceptionHandler if the email does not exist or the password is incorrect
+     */
     public LoginResponse login(LoginRequest loginRequest) {
         User user = userRepository.findByEmail(loginRequest.getEmail())
                 .orElseThrow(() -> new BusinessExceptionHandler(ErrorCode.INVALID_EMAIL));
@@ -70,6 +77,13 @@ public class AuthService {
 
     }
 
+    /**
+     * Retrieves a user's email address based on their name, phone number, and birth date.
+     *
+     * @param findEmailRequest the request containing the user's identifying information
+     * @return a response containing the user's email address
+     * @throws BusinessExceptionHandler if no user matching the provided information is found
+     */
     public FindEmailResponse findEmail(FindEmailRequest findEmailRequest) {
         User user = userRepository.findByNameAndPhoneNumberAndBirthDate(
                         findEmailRequest.getName(), findEmailRequest.getPhoneNumber(), findEmailRequest.getBirthDate())
@@ -80,6 +94,14 @@ public class AuthService {
                 .build();
     }
 
+    /**
+     * Sends a temporary password to the user's email address for password reset.
+     *
+     * If the user with the specified email does not exist, throws a {@code BusinessExceptionHandler} with {@code EMAIL_NOT_FOUND}.
+     * The user's password is updated to a newly generated temporary password, which is sent via email asynchronously.
+     *
+     * @param findPasswordRequest the request containing the user's email for password reset
+     */
     public void sendTempPassword(FindPasswordRequest findPasswordRequest) {
         User user = userRepository.findByEmail(findPasswordRequest.getEmail())
                 .orElseThrow(() -> new BusinessExceptionHandler(ErrorCode.EMAIL_NOT_FOUND));
@@ -99,6 +121,12 @@ public class AuthService {
 
     private JavaMailSender mailSender;
 
+    /**
+     * Generates a secure temporary password for the given user, updates the user's password with its encoded value, and persists the change.
+     *
+     * @param user the user whose password will be reset
+     * @return the plain temporary password generated for the user
+     */
     private String generateTempPwd(User user) {
         String tempPassword = generateTempPassword();
 
@@ -107,6 +135,13 @@ public class AuthService {
         return tempPassword;
     }
 
+    /**
+     * Generates a secure random temporary password containing at least one lowercase letter, one digit, and one special character.
+     *
+     * The resulting password is 10 characters long and the character order is randomized.
+     *
+     * @return a randomly generated temporary password string
+     */
     private String generateTempPassword() {
         String str = "abcdefghijklmnopqrstuvwxyz";
         String digits = "0123456789";

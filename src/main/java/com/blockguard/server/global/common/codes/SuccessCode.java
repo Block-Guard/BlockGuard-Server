@@ -10,7 +10,9 @@ public enum SuccessCode {
 
     OK(HttpStatus.OK, 2000, "OK"),
     USER_REGISTERED(HttpStatus.CREATED, 2001, "회원가입이 완료되었습니다."),
-    LOGIN_SUCCESS(HttpStatus.OK, 2002, "로그인 성공");
+    LOGIN_SUCCESS(HttpStatus.OK, 2002, "로그인에 성공하였습니다."),
+    USER_EMAIL_FOUND(HttpStatus.OK, 2003, "아이디 조회에 성공하였습니다."),
+    SEND_EMAIL(HttpStatus.OK, 2005, "임시 비밀번호를 메일로 전송하였습니다.ㄹㄹ");
 
     private final HttpStatus status;
     private final int code;

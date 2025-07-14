@@ -1,19 +1,27 @@
 package com.blockguard.server.domain.user.domain;
 
+import com.blockguard.server.domain.analysis.domain.FraudAnalysisRecord;
+import com.blockguard.server.domain.guardian.domain.Guardian;
 import com.blockguard.server.domain.user.domain.enums.Gender;
+import com.blockguard.server.domain.report.domain.UserReportRecord;
+import com.blockguard.server.global.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 @Getter
-@Table(name = "user")
-public class User {
+@SQLRestriction("deleted_at IS NULL")
+@Table(name = "users")
+public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
@@ -28,7 +36,7 @@ public class User {
     @Column(nullable = false, length = 255)
     private String password;
 
-    @Column(name = "phone_number", nullable = false)
+    @Column(name = "phone_number", nullable = false, length = 20)
     private String phoneNumber;
 
     @Column(name = "birth_date", nullable = false)
@@ -38,22 +46,25 @@ public class User {
     @Column(nullable = false)
     private Gender gender;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    @Column(name = "profile_image_key", length = 512)
+    private String profileImageKey;
 
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt = null;
 
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<Guardian> guardians = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<UserReportRecord> userReportRecords = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<FraudAnalysisRecord> fraudAnalysisRecords = new ArrayList<>();
+
+    public void markDeleted() {
+        this.deletedAt = LocalDateTime.now();
     }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
-
-
 }

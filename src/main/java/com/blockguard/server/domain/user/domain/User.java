@@ -68,15 +68,7 @@ public class User extends BaseEntity {
         this.deletedAt = LocalDateTime.now();
     }
 
-    public void updateName(String updateName) {
-        this.name = updateName;
-    }
-
-    public void updatePhoneNumber(String updatePhoneNumber) {
-        this.phoneNumber = updatePhoneNumber;
-    }
-
-    public void updateProfileImageKey(String updateProfileImageKey){
-        this.profileImageKey = updateProfileImageKey;
+    public void changePassword(String tempPassword) {
+        this.password = tempPassword;
     }
 }

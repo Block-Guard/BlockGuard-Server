@@ -15,7 +15,16 @@ public enum SwaggerResponseDescription {
     LOGIN_FAIL(new LinkedHashSet<>(Set.of(
             ErrorCode.INVALID_EMAIL,
             ErrorCode.INVALID_PASSWORD
+    ))),
+
+    FIND_EMAIL_FAIL(new LinkedHashSet<>(Set.of(
+            ErrorCode.USER_INFO_NOT_FOUND
+    ))),
+
+    FIND_PASSWORD_FAIL(new LinkedHashSet<>(Set.of(
+            ErrorCode.EMAIL_NOT_FOUND
     )));
+
 
     private final Set<ErrorCode> errorCodeList;
 

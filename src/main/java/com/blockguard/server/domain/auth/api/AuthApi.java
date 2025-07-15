@@ -1,8 +1,11 @@
 package com.blockguard.server.domain.auth.api;
 
 import com.blockguard.server.domain.auth.application.AuthService;
+import com.blockguard.server.domain.user.dto.request.FindEmailRequest;
+import com.blockguard.server.domain.user.dto.request.FindPasswordRequest;
 import com.blockguard.server.domain.user.dto.request.LoginRequest;
 import com.blockguard.server.domain.user.dto.request.RegisterRequest;
+import com.blockguard.server.domain.user.dto.response.FindEmailResponse;
 import com.blockguard.server.domain.user.dto.response.LoginResponse;
 import com.blockguard.server.domain.user.dto.response.RegisterResponse;
 import com.blockguard.server.global.common.codes.SuccessCode;
@@ -40,6 +43,22 @@ public class AuthApi {
     public ResponseEntity<BaseResponse<LoginResponse>> login(@RequestBody LoginRequest loginRequest) {
         LoginResponse loginResponse = authService.login(loginRequest);
         return ResponseEntity.ok(BaseResponse.of(SuccessCode.LOGIN_SUCCESS, loginResponse));
+    }
+
+    @Operation(summary = "아이디 찾기")
+    @CustomExceptionDescription(SwaggerResponseDescription.FIND_EMAIL_FAIL)
+    @PostMapping("find-email")
+    public ResponseEntity<BaseResponse<FindEmailResponse>> findEmail(@RequestBody @Valid FindEmailRequest findEmailRequest){
+        FindEmailResponse findEmailResponse = authService.findEmail(findEmailRequest);
+        return ResponseEntity.ok(BaseResponse.of(SuccessCode.USER_EMAIL_FOUND, findEmailResponse));
+    }
+
+    @Operation(summary = "비밀번호 찾기", description = "이메일이 유효하면 해당 이메일로 임시 비밀번호를 발송합니다.")
+    @CustomExceptionDescription(SwaggerResponseDescription.FIND_PASSWORD_FAIL)
+    @PostMapping("find-password")
+    public ResponseEntity<BaseResponse<Void>> findPassword(@RequestBody @Valid FindPasswordRequest findPasswordRequest){
+        authService.sendTempPassword(findPasswordRequest);
+        return ResponseEntity.ok(BaseResponse.of(SuccessCode.SEND_TEMP_PASSWORD_BY_EMAIL));
     }
 
 }

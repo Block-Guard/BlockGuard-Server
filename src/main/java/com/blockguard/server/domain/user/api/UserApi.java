@@ -2,6 +2,7 @@ package com.blockguard.server.domain.user.api;
 
 import com.blockguard.server.domain.user.application.UserService;
 import com.blockguard.server.domain.user.domain.User;
+import com.blockguard.server.domain.user.dto.request.UpdateUserInfo;
 import com.blockguard.server.domain.user.dto.response.MyPageResponse;
 import com.blockguard.server.global.common.codes.SuccessCode;
 import com.blockguard.server.global.common.response.BaseResponse;
@@ -9,10 +10,8 @@ import com.blockguard.server.global.config.resolver.CurrentUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
@@ -27,11 +26,22 @@ public class UserApi {
         return BaseResponse.of(SuccessCode.GET_MY_PAGE_SUCCESS, myPageResponse);
     }
 
+    @PutMapping(value = "/me", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "회원 정보 수정", description = "아이디를 제외하고 수정가능합니다.")
+    public BaseResponse<Void> updateUserInfo(@Parameter(hidden = true) @CurrentUser User user,
+                                             @ModelAttribute UpdateUserInfo updateUserInfo){
+        userService.updateUserInfo(user.getId(), updateUserInfo);
+        return BaseResponse.of(SuccessCode.UPDATE_USER_INFO_SUCCESS);
+
+    }
+
     @DeleteMapping("/withdraw")
     @Operation(summary = "회원 탈퇴")
     public BaseResponse<Void> withdraw(@Parameter(hidden = true) @CurrentUser User user){
         userService.withdraw(user.getId());
         return BaseResponse.of(SuccessCode.WITHDRAW_SUCCESS);
     }
+
+
 
 }

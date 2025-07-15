@@ -12,7 +12,8 @@ public enum SuccessCode {
     USER_REGISTERED(HttpStatus.CREATED, 2001, "회원가입이 완료되었습니다."),
     LOGIN_SUCCESS(HttpStatus.OK, 2002, "로그인 성공"),
     GET_MY_PAGE_SUCCESS(HttpStatus.OK, 2004, "마이페이지 조회에 성공하였습니다."),
-    WITHDRAW_SUCCESS(HttpStatus.OK, 2005, "회원 탈퇴에 성공하였습니다.");
+    WITHDRAW_SUCCESS(HttpStatus.OK, 2005, "회원 탈퇴에 성공하였습니다."),
+    UPDATE_USER_INFO_SUCCESS(HttpStatus.OK, 2006, "회원 정보 업데이트에 성공하였습니다.");
 
     private final HttpStatus status;
     private final int code;

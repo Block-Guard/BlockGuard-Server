@@ -23,6 +23,10 @@ public enum SwaggerResponseDescription {
 
     FIND_PASSWORD_FAIL(new LinkedHashSet<>(Set.of(
             ErrorCode.EMAIL_NOT_FOUND
+    ))),
+
+    FIND_GUARDIANS_FAIL(new LinkedHashSet<>(Set.of(
+            ErrorCode.USER_INFO_NOT_FOUND
     )));
 
 

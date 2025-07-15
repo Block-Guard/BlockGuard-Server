@@ -67,4 +67,8 @@ public class User extends BaseEntity {
     public void markDeleted() {
         this.deletedAt = LocalDateTime.now();
     }
+
+    public void changePassword(String tempPassword) {
+        this.password = tempPassword;
+    }
 }

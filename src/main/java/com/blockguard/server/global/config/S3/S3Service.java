@@ -27,7 +27,7 @@ public class S3Service {
     public String upload(MultipartFile file, String dir) {
 
         if (file.getOriginalFilename() == null) {
-            throw new BusinessExceptionHandler(ErrorCode.FILE_NAME_NOT_FOUNT);
+            throw new BusinessExceptionHandler(ErrorCode.FILE_NAME_NOT_FOUND);
         }
         if (dir.contains("..") || dir.contains("/") || dir.contains("\\")) {
             throw new BusinessExceptionHandler(ErrorCode.INVALID_DIRECTORY_ROUTE);

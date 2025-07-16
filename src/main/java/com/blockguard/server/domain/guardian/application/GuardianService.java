@@ -6,7 +6,9 @@ import com.blockguard.server.domain.guardian.dto.request.CreateGuardianRequest;
 import com.blockguard.server.domain.guardian.dto.response.GuardianResponse;
 import com.blockguard.server.domain.guardian.dto.response.GuardiansListResponse;
 import com.blockguard.server.domain.user.domain.User;
+import com.blockguard.server.global.common.codes.ErrorCode;
 import com.blockguard.server.global.config.S3.S3Service;
+import com.blockguard.server.global.exception.BusinessExceptionHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,5 +46,26 @@ public class GuardianService {
         Guardian saved = guardianRepository.save(newGuardian);
 
         return GuardianResponse.from(saved, s3Service);
+    }
+
+    @Transactional
+    public GuardianResponse updateGuardian(User user, Long guardianId, CreateGuardianRequest request) {
+        Guardian guardian = guardianRepository.findByIdAndUser(guardianId, user)
+                .orElseThrow(() -> new BusinessExceptionHandler(ErrorCode.GUARDIAN_NOT_FOUND));
+
+        String key = null;
+        if (request.getProfileImage() != null && !request.getProfileImage().isEmpty()){
+            // 새 이미지 업로드
+            key = s3Service.upload(request.getProfileImage(), "guardians");
+            // 예전 이미지 삭제
+            if (guardian.getProfileImageKey() != null){
+                s3Service.delete(guardian.getProfileImageKey());
+            }
+        }
+        guardian.updateGuardianInfo(request.getName(), request.getPhoneNumber(), key);
+
+        Guardian updated = guardianRepository.save(guardian);
+
+        return GuardianResponse.from(updated, s3Service);
     }
 }

@@ -20,7 +20,8 @@ public enum SuccessCode {
     GUARDIAN_REGISTERED(HttpStatus.CREATED,2009,"보호자 등록이 완료되었습니다."),
     GUARDIAN_LIST_RETRIEVED(HttpStatus.OK, 2010, "보호자 목록 조회가 완료되었습니다."),
     GUARDIAN_UPDATED(HttpStatus.OK, 2011, "보호자 정보 수정이 완료되었습니다."),
-    GUARDIAN_PRIMARY_UPDATED(HttpStatus.OK, 2011, "보호자 정보 수정이 완료되었습니다.");
+    GUARDIAN_PRIMARY_UPDATED(HttpStatus.OK, 2012, "보호자 정보 수정이 완료되었습니다."),
+    GUARDIAN_DELETED(HttpStatus.NO_CONTENT, 2013, "보호자 삭제 처리되었습니다.");
 
     private final HttpStatus status;
     private final int code;

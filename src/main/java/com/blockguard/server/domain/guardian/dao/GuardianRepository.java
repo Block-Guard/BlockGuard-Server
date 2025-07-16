@@ -19,6 +19,7 @@ public interface GuardianRepository extends JpaRepository<Guardian, Long> {
       SET g.isPrimary = false
       WHERE g.user = :user
         AND g.deletedAt IS NULL
+        AND g.isPrimary = true
   """)
     void clearPrimaryFlagsByUser(User user);
 }

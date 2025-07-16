@@ -81,7 +81,6 @@ public class GuardianService {
         }
 
         guardian.setPrimary(request.isPrimary());
-
         Guardian updated = guardianRepository.save(guardian);
 
         return GuardianResponse.from(updated, s3Service);

@@ -8,6 +8,7 @@ import com.blockguard.server.global.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLRestriction;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -70,5 +71,21 @@ public class User extends BaseEntity {
 
     public void changePassword(String tempPassword) {
         this.password = tempPassword;
+    }
+
+    public void updateName(String updateName) {
+        this.name = updateName;
+    }
+
+    public void updatePhoneNumber(String updatePhoneNumber){
+        this.phoneNumber = updatePhoneNumber;
+    }
+
+    public void updateProfileImageKey(String updateProfileImageKey) {
+        this.profileImageKey = updateProfileImageKey;
+    }
+
+    public void updateBirthDate(LocalDate updateBirthDate) {
+        this.birthDate = updateBirthDate;
     }
 }

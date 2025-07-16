@@ -85,4 +85,12 @@ public class GuardianService {
 
         return GuardianResponse.from(updated, s3Service);
     }
+
+    @Transactional
+    public void deleteGuardian(User user, Long guardianId) {
+        Guardian guardian = guardianRepository.findByIdAndUser(guardianId, user)
+                .orElseThrow(() -> new BusinessExceptionHandler(ErrorCode.GUARDIAN_NOT_FOUND));
+
+        guardian.markDeleted();
+    }
 }

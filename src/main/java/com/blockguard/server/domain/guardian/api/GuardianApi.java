@@ -53,13 +53,22 @@ public class GuardianApi {
     }
 
     @Operation(summary = "보호자 대표 여부 수정")
-    @CustomExceptionDescription(SwaggerResponseDescription.UPDATE_GUARDIAN_FAIL)
+    @CustomExceptionDescription(SwaggerResponseDescription.UPDATE_GUARDIAN_PRIMARY_FAIL)
     @PatchMapping(value = "/{id}/primary")
     public ResponseEntity<BaseResponse<GuardianResponse>> updatePrimary(@Parameter(hidden = true) @CurrentUser User user,
                                                                          @PathVariable("id") Long guardianId,
                                                                          @Valid @RequestBody UpdateGuardianPrimaryRequest updateGuardianPrimaryRequest) {
         GuardianResponse guardianResponse = guardianService.updatePrimary(user, guardianId, updateGuardianPrimaryRequest);
         return ResponseEntity.ok(BaseResponse.of(SuccessCode.GUARDIAN_PRIMARY_UPDATED, guardianResponse));
+    }
+
+    @Operation(summary = "보호자 삭제")
+    @CustomExceptionDescription(SwaggerResponseDescription.UPDATE_GUARDIAN_PRIMARY_FAIL)
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<BaseResponse<Void>> deleteGuardian(@Parameter(hidden = true) @CurrentUser User user,
+                                                                        @PathVariable("id") Long guardianId) {
+        guardianService.deleteGuardian(user, guardianId);
+        return ResponseEntity.ok(BaseResponse.of(SuccessCode.GUARDIAN_DELETED));
     }
 
 

@@ -17,7 +17,7 @@ public class MyPageResponse {
     private String phoneNumber;
     private String profileImageUrl;
 
-    public static MyPageResponse from(User user) {
+    public static MyPageResponse from(User user, String profileImageUrl) {
         return MyPageResponse.builder()
                 .email(user.getEmail())
                 .name(user.getName())

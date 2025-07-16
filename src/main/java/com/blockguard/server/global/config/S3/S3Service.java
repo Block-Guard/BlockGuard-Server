@@ -48,7 +48,7 @@ public class S3Service {
             throw new RuntimeException("S3 업로드 실패", e);
         }
 
-        return getPublicUrl(key);
+        return key;
     }
 
     public void delete(String key) {

@@ -19,7 +19,8 @@ public enum SuccessCode {
     UPDATE_PASSWORD_SUCCESS(HttpStatus.OK,2008,"비밀번호 변경에 성공하였습니다."),
     GUARDIAN_REGISTERED(HttpStatus.CREATED,2009,"보호자 등록이 완료되었습니다."),
     GUARDIAN_LIST_RETRIEVED(HttpStatus.OK, 2010, "보호자 목록 조회가 완료되었습니다."),
-    GUARDIAN_UPDATED(HttpStatus.OK, 2011, "보호자 정보 수정이 완료되었습니다.");
+    GUARDIAN_UPDATED(HttpStatus.OK, 2011, "보호자 정보 수정이 완료되었습니다."),
+    GUARDIAN_PRIMARY_UPDATED(HttpStatus.OK, 2011, "보호자 정보 수정이 완료되었습니다.");
 
     private final HttpStatus status;
     private final int code;

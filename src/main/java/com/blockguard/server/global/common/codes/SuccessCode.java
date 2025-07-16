@@ -15,7 +15,8 @@ public enum SuccessCode {
     SEND_TEMP_PASSWORD_BY_EMAIL(HttpStatus.OK, 2004, "임시 비밀번호를 메일로 전송하였습니다."),
     GET_MY_PAGE_SUCCESS(HttpStatus.OK, 2005, "마이페이지 조회에 성공하였습니다."),
     UPDATE_USER_INFO_SUCCESS(HttpStatus.OK, 2006, "회원 정보를 수정하였습니다."),
-    WITHDRAW_SUCCESS(HttpStatus.OK, 2007, "회원 탈퇴가 성공하였습니다.");
+    WITHDRAW_SUCCESS(HttpStatus.OK, 2007, "회원 탈퇴가 성공하였습니다."),
+    UPDATE_PASSWORD_SUCCESS(HttpStatus.OK,2008,"비밀번호 변경에 성공하였습니다.");
 
     private final HttpStatus status;
     private final int code;

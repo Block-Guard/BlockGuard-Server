@@ -2,6 +2,7 @@ package com.blockguard.server.domain.user.api;
 
 import com.blockguard.server.domain.user.application.UserService;
 import com.blockguard.server.domain.user.domain.User;
+import com.blockguard.server.domain.user.dto.request.UpdatePasswordRequest;
 import com.blockguard.server.domain.user.dto.request.UpdateUserInfo;
 import com.blockguard.server.domain.user.dto.response.MyPageResponse;
 import com.blockguard.server.global.common.codes.SuccessCode;
@@ -35,6 +36,16 @@ public class UserApi {
                                              @ModelAttribute UpdateUserInfo updateUserInfo){
         userService.updateUserInfo(user.getId(), updateUserInfo);
         return BaseResponse.of(SuccessCode.UPDATE_USER_INFO_SUCCESS);
+
+    }
+
+    @PutMapping(value = "/me/password")
+    @CustomExceptionDescription(SwaggerResponseDescription.UPDATE_MY_PAGE_INFO_FAIL)
+    @Operation(summary = "비밀번호 변경", description = "현재 비밀번호를 확인하고, 새 비밀번호로 변경합니다.")
+    public BaseResponse<Void> updatePassword(@Parameter(hidden = true) @CurrentUser User user,
+    @RequestBody UpdatePasswordRequest updatePasswordRequest){
+       userService.updatePassword(user, updatePasswordRequest);
+       return BaseResponse.of(SuccessCode.UPDATE_PASSWORD_SUCCESS);
 
     }
 

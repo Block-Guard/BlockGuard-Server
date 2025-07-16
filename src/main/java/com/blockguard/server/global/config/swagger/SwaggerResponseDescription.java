@@ -31,10 +31,14 @@ public enum SwaggerResponseDescription {
 
     FIND_GUARDIANS_FAIL(new LinkedHashSet<>(Set.of(
             ErrorCode.USER_INFO_NOT_FOUND
+    ))),
+
+    CREATE_GUARDIAN_FAIL(new LinkedHashSet<>(Set.of(
+            ErrorCode.INVALID_PHONE_NUMBER_FORMAT,
+            ErrorCode.INVALID_PROFILE_IMAGE,
+            ErrorCode.FILE_NAME_NOT_FOUND,
+            ErrorCode.INVALID_DIRECTORY_ROUTE
     )));
-
-
-
 
     private final Set<ErrorCode> errorCodeList;
 

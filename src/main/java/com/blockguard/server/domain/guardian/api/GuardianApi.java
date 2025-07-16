@@ -33,7 +33,7 @@ public class GuardianApi {
     }
 
     @Operation(summary = "보호자 등록")
-    @CustomExceptionDescription(SwaggerResponseDescription.FIND_GUARDIANS_FAIL)
+    @CustomExceptionDescription(SwaggerResponseDescription.CREATE_GUARDIAN_FAIL)
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<BaseResponse<GuardianResponse>> createGuardian(@Parameter(hidden = true) @CurrentUser User user,
                                                                          @Valid CreateGuardianRequest createGuardianRequest) {

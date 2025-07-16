@@ -46,6 +46,10 @@ public enum SwaggerResponseDescription {
             ErrorCode.GUARDIAN_NOT_FOUND,
             ErrorCode.FILE_NAME_NOT_FOUND,
             ErrorCode.INVALID_DIRECTORY_ROUTE
+    ))),
+
+    UPDATE_GUARDIAN_PRIMARY_FAIL(new LinkedHashSet<>(Set.of(
+            ErrorCode.GUARDIAN_NOT_FOUND
     )));
 
     private final Set<ErrorCode> errorCodeList;

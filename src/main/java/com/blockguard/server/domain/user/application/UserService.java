@@ -50,6 +50,10 @@ public class UserService {
             }
         }
         if (updateUserInfo.getProfileImage() != null && !updateUserInfo.getProfileImage().isEmpty()) {
+            String contentType = updateUserInfo.getProfileImage().getContentType();
+            if (contentType == null || !contentType.startsWith("image/")) {
+            throw new BusinessExceptionHandler(ErrorCode.INVALID_PROFILE_IMAGE);
+             }
             String imageKey = s3Service.upload(updateUserInfo.getProfileImage(), "profiles");
             user.updateProfileImageKey(imageKey);
         }

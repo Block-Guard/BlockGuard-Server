@@ -22,17 +22,17 @@ public class GuardianService {
                         guardianRepository.findAllByUserId(user.getId()).stream()
                                 .map(guardian ->
                                         GuardianResponse.builder()
-                                        .guardiansId(guardian.getId())
-                                        .name(guardian.getName())
-                                        .phoneNumber(guardian.getPhoneNumber())
-                                        .isPrimary(guardian.isPrimary())
-                                        .createdAt(guardian.getCreatedAt().toString())
-                                        .profileImageUrl(
-                                                guardian.getProfileImageKey() != null
-                                                        ? s3Service.getPublicUrl(guardian.getProfileImageKey())
-                                                        : null
-                                        )
-                                        .build()
+                                                .guardiansId(guardian.getId())
+                                                .name(guardian.getName())
+                                                .phoneNumber(guardian.getPhoneNumber())
+                                                .isPrimary(guardian.isPrimary())
+                                                .createdAt(guardian.getCreatedAt().toString())
+                                                .profileImageUrl(
+                                                        guardian.getProfileImageKey() != null
+                                                                ? s3Service.getPublicUrl(guardian.getProfileImageKey())
+                                                                : null
+                                                )
+                                                .build()
                                 ).toList()
                 )
                 .build();

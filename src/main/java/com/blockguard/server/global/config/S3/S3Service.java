@@ -1,5 +1,7 @@
 package com.blockguard.server.global.config.S3;
 
+import com.blockguard.server.global.common.codes.ErrorCode;
+import com.blockguard.server.global.exception.BusinessExceptionHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,13 @@ public class S3Service {
     private String bucket;
 
     public String upload(MultipartFile file, String dir) {
+
+        if (file.getOriginalFilename() == null) {
+            throw new BusinessExceptionHandler(ErrorCode.FILE_NAME_NOT_FOUNT);
+        }
+        if (dir.contains("..") || dir.contains("/") || dir.contains("\\")) {
+            throw new BusinessExceptionHandler(ErrorCode.INVALID_DIRECTORY_ROUTE);
+        }
 
         String ext = StringUtils.getFilenameExtension(file.getOriginalFilename());
         String key = dir + "/" + UUID.randomUUID() + "." + ext;

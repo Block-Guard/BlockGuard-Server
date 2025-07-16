@@ -31,6 +31,7 @@ public class Guardian extends BaseEntity {
     @Column(name = "profile_image_key", length = 512)
     private String profileImageKey;
 
+    @Setter
     @Column(name = "is_primary", nullable = false)
     private boolean isPrimary = false;
 

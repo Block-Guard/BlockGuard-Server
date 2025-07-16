@@ -3,6 +3,7 @@ package com.blockguard.server.domain.guardian.application;
 import com.blockguard.server.domain.guardian.dao.GuardianRepository;
 import com.blockguard.server.domain.guardian.domain.Guardian;
 import com.blockguard.server.domain.guardian.dto.request.CreateGuardianRequest;
+import com.blockguard.server.domain.guardian.dto.request.UpdateGuardianPrimaryRequest;
 import com.blockguard.server.domain.guardian.dto.response.GuardianResponse;
 import com.blockguard.server.domain.guardian.dto.response.GuardiansListResponse;
 import com.blockguard.server.domain.user.domain.User;
@@ -63,6 +64,23 @@ public class GuardianService {
             }
         }
         guardian.updateGuardianInfo(request.getName(), request.getPhoneNumber(), key);
+
+        Guardian updated = guardianRepository.save(guardian);
+
+        return GuardianResponse.from(updated, s3Service);
+    }
+
+    @Transactional
+    public GuardianResponse updatePrimary(User user, Long guardianId, UpdateGuardianPrimaryRequest request) {
+        Guardian guardian = guardianRepository.findByIdAndUser(guardianId, user)
+                .orElseThrow(() -> new BusinessExceptionHandler(ErrorCode.GUARDIAN_NOT_FOUND));
+
+        // 다른 보호자 대표 해제
+        if (request.isPrimary()) {
+            guardianRepository.clearPrimaryFlagsByUser(user);
+        }
+
+        guardian.setPrimary(request.isPrimary());
 
         Guardian updated = guardianRepository.save(guardian);
 

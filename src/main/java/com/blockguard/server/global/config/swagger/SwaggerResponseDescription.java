@@ -21,6 +21,10 @@ public enum SwaggerResponseDescription {
             ErrorCode.USER_INFO_NOT_FOUND
     ))),
 
+    UPDATE_MY_PAGE_INFO_FAIL(new LinkedHashSet<>(Set.of(
+            ErrorCode.INVALID_DATE_FORMAT
+    ))),
+
     FIND_PASSWORD_FAIL(new LinkedHashSet<>(Set.of(
             ErrorCode.EMAIL_NOT_FOUND
     ))),
@@ -28,6 +32,8 @@ public enum SwaggerResponseDescription {
     FIND_GUARDIANS_FAIL(new LinkedHashSet<>(Set.of(
             ErrorCode.USER_INFO_NOT_FOUND
     )));
+
+
 
 
     private final Set<ErrorCode> errorCodeList;

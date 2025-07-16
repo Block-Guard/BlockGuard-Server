@@ -29,7 +29,7 @@ public class GuardianApi {
     @GetMapping
     public ResponseEntity<BaseResponse<GuardiansListResponse>> getGuardiansList(@Parameter(hidden = true) @CurrentUser User user) {
         GuardiansListResponse guardiansList = guardianService.getGuardiansList(user);
-        return ResponseEntity.ok(BaseResponse.of(SuccessCode.GUARDIANS_FOUND, guardiansList));
+        return ResponseEntity.ok(BaseResponse.of(SuccessCode.GUARDIAN_LIST_RETRIEVED, guardiansList));
     }
 
     @Operation(summary = "보호자 등록")
@@ -38,7 +38,17 @@ public class GuardianApi {
     public ResponseEntity<BaseResponse<GuardianResponse>> createGuardian(@Parameter(hidden = true) @CurrentUser User user,
                                                                          @Valid CreateGuardianRequest createGuardianRequest) {
         GuardianResponse guardianResponse = guardianService.createGuardian(user, createGuardianRequest);
-        return ResponseEntity.ok(BaseResponse.of(SuccessCode.CREATE_GUARDIAN_SUCCESS, guardianResponse));
+        return ResponseEntity.ok(BaseResponse.of(SuccessCode.GUARDIAN_REGISTERED, guardianResponse));
+    }
+
+    @Operation(summary = "보호자 정보 수정")
+    @CustomExceptionDescription(SwaggerResponseDescription.UPDATE_GUARDIAN_FAIL)
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<BaseResponse<GuardianResponse>> updateGuardian(@Parameter(hidden = true) @CurrentUser User user,
+                                                                         @PathVariable("id") Long guardianId,
+                                                                         @Valid CreateGuardianRequest createGuardianRequest) {
+        GuardianResponse guardianResponse = guardianService.updateGuardian(user, guardianId, createGuardianRequest);
+        return ResponseEntity.ok(BaseResponse.of(SuccessCode.GUARDIAN_UPDATED, guardianResponse));
     }
 
 

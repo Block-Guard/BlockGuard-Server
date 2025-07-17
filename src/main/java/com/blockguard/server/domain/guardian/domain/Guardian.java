@@ -44,4 +44,14 @@ public class Guardian extends BaseEntity {
     public void markDeleted() {
         this.deletedAt = LocalDateTime.now();
     }
+
+    public void updateGuardianInfo(String name, String phoneNumber, String profileImageKey) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.profileImageKey = profileImageKey;
+    }
+
+    public void setPrimary(boolean isPrimary) {
+        this.isPrimary = isPrimary;
+    }
 }

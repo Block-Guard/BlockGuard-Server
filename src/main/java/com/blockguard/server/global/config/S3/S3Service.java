@@ -14,6 +14,7 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -25,15 +26,27 @@ public class S3Service {
     private String bucket;
 
     public String upload(MultipartFile file, String dir) {
+        String contentType = file.getContentType();
+        if (contentType == null ||
+                !List.of("image/jpeg", "image/png", "image/webp").contains(contentType)) {
+            throw new BusinessExceptionHandler(ErrorCode.INVALID_PROFILE_IMAGE);
+        }
 
-        if (file.getOriginalFilename() == null) {
+        String original = file.getOriginalFilename();
+        if (original == null) {
             throw new BusinessExceptionHandler(ErrorCode.FILE_NAME_NOT_FOUND);
         }
+
+        String ext = StringUtils.getFilenameExtension(original);
+        if (ext == null ||
+                !List.of("jpg", "jpeg", "png", "webp").contains(ext.toLowerCase())) {
+            throw new BusinessExceptionHandler(ErrorCode.INVALID_PROFILE_IMAGE);
+        }
+
         if (dir.contains("..") || dir.contains("/") || dir.contains("\\")) {
             throw new BusinessExceptionHandler(ErrorCode.INVALID_DIRECTORY_ROUTE);
         }
 
-        String ext = StringUtils.getFilenameExtension(file.getOriginalFilename());
         String key = dir + "/" + UUID.randomUUID() + "." + ext;
 
         try (InputStream is = file.getInputStream()) {

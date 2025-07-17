@@ -18,6 +18,7 @@ public enum ErrorCode {
     INVALID_PHONE_NUMBER_FORMAT(HttpStatus.BAD_REQUEST, 4008, "전화번호 형식이 올바르지 않습니다. 010-1234-5678 형식으로 입력해주십시오."),
     PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST, 4009, "현재 비밀번호 값이 일치하지 않습니다."),
     INVALID_PROFILE_IMAGE(HttpStatus.BAD_REQUEST, 4010,"이미지 파일만 업로드 가능합니다."),
+    GUARDIAN_NOT_FOUND(HttpStatus.NOT_FOUND, 4011, "일치하는 보호자 정보가 없습니다."),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, 4020, "유효하지 않은 토큰입니다."),
     FILE_NAME_NOT_FOUND(HttpStatus.NOT_FOUND, 4021, "파일명이 없습니다."),
     INVALID_DIRECTORY_ROUTE(HttpStatus.NOT_FOUND, 4022, "잘못된 디렉토리 경로입니다."),

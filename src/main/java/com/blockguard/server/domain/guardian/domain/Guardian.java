@@ -31,7 +31,6 @@ public class Guardian extends BaseEntity {
     @Column(name = "profile_image_key", length = 512)
     private String profileImageKey;
 
-    @Setter
     @Column(name = "is_primary", nullable = false)
     private boolean isPrimary = false;
 
@@ -50,5 +49,9 @@ public class Guardian extends BaseEntity {
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.profileImageKey = profileImageKey;
+    }
+
+    public void setPrimary(boolean isPrimary) {
+        this.isPrimary = isPrimary;
     }
 }

@@ -34,7 +34,7 @@ public class GuardianService {
 
     @Transactional
     public GuardianResponse createGuardian(User user, CreateGuardianRequest request) {
-        if (guardianRepository.existsByUserAndName(user, request.getName())) {
+        if (guardianRepository.existsByUserAndNameAndDeletedAtIsNull(user, request.getName())) {
             throw new BusinessExceptionHandler(ErrorCode.DUPLICATE_GUARDIAN_NAME);
         }
 
@@ -59,7 +59,7 @@ public class GuardianService {
                 .orElseThrow(() -> new BusinessExceptionHandler(ErrorCode.GUARDIAN_NOT_FOUND));
 
         if (!guardian.getName().equals(request.getName()) &&
-                guardianRepository.existsByUserAndName(user, request.getName())) {
+                guardianRepository.existsByUserAndNameAndDeletedAtIsNull(user, request.getName())) {
             throw new BusinessExceptionHandler(ErrorCode.DUPLICATE_GUARDIAN_NAME);
         }
 

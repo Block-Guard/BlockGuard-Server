@@ -14,12 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @Getter
 @SQLRestriction("deleted_at IS NULL")
-@Table(
-        name = "guardians",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"user_id", "name"})
-        }
-)
+@Table(name = "guardians")
 public class Guardian extends BaseEntity {
 
     @Id

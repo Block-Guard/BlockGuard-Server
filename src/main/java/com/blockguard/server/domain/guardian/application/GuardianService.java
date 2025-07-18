@@ -34,6 +34,10 @@ public class GuardianService {
 
     @Transactional
     public GuardianResponse createGuardian(User user, CreateGuardianRequest request) {
+        if (guardianRepository.existsByUserAndName(user, request.getName())) {
+            throw new BusinessExceptionHandler(ErrorCode.DUPLICATE_GUARDIAN_NAME);
+        }
+
         String key = (request.getProfileImage() != null && !request.getProfileImage().isEmpty())
                 ? s3Service.upload(request.getProfileImage(), "guardians"): null;
 
@@ -53,6 +57,10 @@ public class GuardianService {
     public GuardianResponse updateGuardian(User user, Long guardianId, CreateGuardianRequest request) {
         Guardian guardian = guardianRepository.findByIdAndUser(guardianId, user)
                 .orElseThrow(() -> new BusinessExceptionHandler(ErrorCode.GUARDIAN_NOT_FOUND));
+
+        if (guardianRepository.existsByUserAndName(user, request.getName())) {
+            throw new BusinessExceptionHandler(ErrorCode.DUPLICATE_GUARDIAN_NAME);
+        }
 
         String key = null;
         if (request.getProfileImage() != null && !request.getProfileImage().isEmpty()){

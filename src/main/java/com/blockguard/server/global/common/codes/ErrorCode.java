@@ -22,7 +22,8 @@ public enum ErrorCode {
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, 4020, "유효하지 않은 토큰입니다."),
     FILE_NAME_NOT_FOUND(HttpStatus.NOT_FOUND, 4021, "파일명이 없습니다."),
     INVALID_DIRECTORY_ROUTE(HttpStatus.NOT_FOUND, 4022, "잘못된 디렉토리 경로입니다."),
-    FILE_SIZE_EXCEEDED(HttpStatus.PAYLOAD_TOO_LARGE, 4023, "프로필 파일 최대 허용 용량(10MB)을 초과했습니다."),
+    FILE_SIZE_EXCEEDED(HttpStatus.PAYLOAD_TOO_LARGE, 4023, "프로필 파일 최대 허용 용량(5MB)을 초과했습니다."),
+    DUPLICATE_GUARDIAN_NAME(HttpStatus.BAD_REQUEST, 4024, "이미 등록된 보호자 이름입니다."),
 
     // 5000~ : server error
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 5000, "서버 오류가 발생했습니다.");

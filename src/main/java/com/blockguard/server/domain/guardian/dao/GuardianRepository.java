@@ -22,4 +22,6 @@ public interface GuardianRepository extends JpaRepository<Guardian, Long> {
         AND g.isPrimary = true
   """)
     void clearPrimaryFlagsByUser(User user);
+
+    boolean existsByUserAndName(User user, String name);
 }

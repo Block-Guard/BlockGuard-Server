@@ -58,7 +58,8 @@ public class GuardianService {
         Guardian guardian = guardianRepository.findByIdAndUser(guardianId, user)
                 .orElseThrow(() -> new BusinessExceptionHandler(ErrorCode.GUARDIAN_NOT_FOUND));
 
-        if (guardianRepository.existsByUserAndName(user, request.getName())) {
+        if (!guardian.getName().equals(request.getName()) &&
+                guardianRepository.existsByUserAndName(user, request.getName())) {
             throw new BusinessExceptionHandler(ErrorCode.DUPLICATE_GUARDIAN_NAME);
         }
 

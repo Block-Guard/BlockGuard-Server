@@ -22,7 +22,11 @@ public enum SwaggerResponseDescription {
     ))),
 
     UPDATE_MY_PAGE_INFO_FAIL(new LinkedHashSet<>(Set.of(
-            ErrorCode.INVALID_DATE_FORMAT
+            ErrorCode.INVALID_PHONE_NUMBER_FORMAT,
+            ErrorCode.INVALID_PROFILE_IMAGE,
+            ErrorCode.FILE_NAME_NOT_FOUND,
+            ErrorCode.INVALID_DIRECTORY_ROUTE,
+            ErrorCode.FILE_SIZE_EXCEEDED
     ))),
 
     FIND_PASSWORD_FAIL(new LinkedHashSet<>(Set.of(
@@ -37,7 +41,9 @@ public enum SwaggerResponseDescription {
             ErrorCode.INVALID_PHONE_NUMBER_FORMAT,
             ErrorCode.INVALID_PROFILE_IMAGE,
             ErrorCode.FILE_NAME_NOT_FOUND,
-            ErrorCode.INVALID_DIRECTORY_ROUTE
+            ErrorCode.INVALID_DIRECTORY_ROUTE,
+            ErrorCode.FILE_SIZE_EXCEEDED,
+            ErrorCode.DUPLICATE_GUARDIAN_NAME
     ))),
 
     UPDATE_GUARDIAN_FAIL(new LinkedHashSet<>(Set.of(
@@ -45,7 +51,9 @@ public enum SwaggerResponseDescription {
             ErrorCode.INVALID_PROFILE_IMAGE,
             ErrorCode.GUARDIAN_NOT_FOUND,
             ErrorCode.FILE_NAME_NOT_FOUND,
-            ErrorCode.INVALID_DIRECTORY_ROUTE
+            ErrorCode.INVALID_DIRECTORY_ROUTE,
+            ErrorCode.FILE_SIZE_EXCEEDED,
+            ErrorCode.DUPLICATE_GUARDIAN_NAME
     ))),
 
     UPDATE_GUARDIAN_PRIMARY_FAIL(new LinkedHashSet<>(Set.of(

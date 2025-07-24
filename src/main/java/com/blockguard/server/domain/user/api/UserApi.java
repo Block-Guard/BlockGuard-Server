@@ -23,6 +23,7 @@ public class UserApi {
     private final UserService userService;
 
     @GetMapping("/me")
+    @CustomExceptionDescription(SwaggerResponseDescription.INVALID_TOKEN)
     @Operation(summary = "마이페이지 조회")
     public BaseResponse<MyPageResponse> getMyPageInfo(@Parameter(hidden = true) @CurrentUser User user){
         MyPageResponse myPageResponse = userService.getMyPageInfo(user);
@@ -40,7 +41,7 @@ public class UserApi {
     }
 
     @PutMapping(value = "/me/password")
-    @CustomExceptionDescription(SwaggerResponseDescription.UPDATE_MY_PAGE_INFO_FAIL)
+    @CustomExceptionDescription(SwaggerResponseDescription.UPDATE_PASSWORD_FAIL)
     @Operation(summary = "비밀번호 변경", description = "현재 비밀번호를 확인하고, 새 비밀번호로 변경합니다.")
     public BaseResponse<Void> updatePassword(@Parameter(hidden = true) @CurrentUser User user,
     @RequestBody UpdatePasswordRequest updatePasswordRequest){
@@ -50,12 +51,11 @@ public class UserApi {
     }
 
     @DeleteMapping("/withdraw")
+    @CustomExceptionDescription(SwaggerResponseDescription.INVALID_TOKEN)
     @Operation(summary = "회원 탈퇴")
     public BaseResponse<Void> withdraw(@Parameter(hidden = true) @CurrentUser User user){
         userService.withdraw(user.getId());
         return BaseResponse.of(SuccessCode.WITHDRAW_SUCCESS);
     }
-
-
 
 }

@@ -30,6 +30,11 @@ public enum SwaggerResponseDescription {
             ErrorCode.FILE_SIZE_EXCEEDED
     ))),
 
+    UPDATE_PASSWORD_FAIL(new LinkedHashSet<>(Set.of(
+            ErrorCode.INVALID_TOKEN,
+            ErrorCode.PASSWORD_MISMATCH
+    ))),
+
     FIND_PASSWORD_FAIL(new LinkedHashSet<>(Set.of(
             ErrorCode.EMAIL_NOT_FOUND
     ))),
@@ -67,6 +72,10 @@ public enum SwaggerResponseDescription {
 
     CHECK_EMAIL_DUPLICATED_FAIL(new LinkedHashSet<>(Set.of(
             ErrorCode.INVALID_EMAIL_TYPE
+    ))),
+
+    INVALID_TOKEN(new LinkedHashSet<>(Set.of(
+            ErrorCode.INVALID_TOKEN
     )));
 
     private final Set<ErrorCode> errorCodeList;

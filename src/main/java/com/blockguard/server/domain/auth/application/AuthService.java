@@ -3,11 +3,9 @@ package com.blockguard.server.domain.auth.application;
 import com.blockguard.server.domain.auth.domain.JwtToken;
 import com.blockguard.server.domain.auth.infra.JwtTokenGenerator;
 import com.blockguard.server.domain.user.domain.User;
-import com.blockguard.server.domain.user.dto.request.FindEmailRequest;
-import com.blockguard.server.domain.user.dto.request.FindPasswordRequest;
-import com.blockguard.server.domain.user.dto.request.LoginRequest;
+import com.blockguard.server.domain.user.dto.request.*;
 import com.blockguard.server.domain.user.dao.UserRepository;
-import com.blockguard.server.domain.user.dto.request.RegisterRequest;
+import com.blockguard.server.domain.user.dto.response.CheckEmailDuplicatedResponse;
 import com.blockguard.server.domain.user.dto.response.FindEmailResponse;
 import com.blockguard.server.domain.user.dto.response.LoginResponse;
 import com.blockguard.server.domain.user.dto.response.RegisterResponse;
@@ -50,6 +48,14 @@ public class AuthService {
 
         return RegisterResponse.builder()
                 .userId(user.getId())
+                .build();
+    }
+
+
+    public CheckEmailDuplicatedResponse checkEmailDuplicated(CheckEmailDuplicatedRequest checkEmailDuplicatedRequest) {
+        boolean isDuplicated = userRepository.findByEmail(checkEmailDuplicatedRequest.getEmail()).isPresent();
+        return CheckEmailDuplicatedResponse.builder()
+                .isDuplicated(isDuplicated)
                 .build();
     }
 
@@ -135,4 +141,5 @@ public class AuthService {
 
         return finalPassword.toString();
     }
+
 }

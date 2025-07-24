@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum ErrorCode {
     /// 4000 ~ : client error
+    INVALID_REQUEST(HttpStatus.BAD_REQUEST, 4000, "잘못된 요청 형식입니다. 입력값을 확인해주세요."),
     DUPLICATED_EMAIL(HttpStatus.BAD_REQUEST, 4001, "이미 가입된 이메일입니다."),
     INVALID_EMAIL(HttpStatus.BAD_REQUEST, 4002, "존재하지 않는 이메일입니다."),
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST, 4003, "비밀번호가 일치하지 않습니다."),
@@ -24,6 +25,7 @@ public enum ErrorCode {
     INVALID_DIRECTORY_ROUTE(HttpStatus.NOT_FOUND, 4022, "잘못된 디렉토리 경로입니다."),
     FILE_SIZE_EXCEEDED(HttpStatus.PAYLOAD_TOO_LARGE, 4023, "프로필 파일 최대 허용 용량(5MB)을 초과했습니다."),
     DUPLICATE_GUARDIAN_NAME(HttpStatus.BAD_REQUEST, 4024, "이미 등록된 보호자 이름입니다."),
+    INVALID_EMAIL_TYPE(HttpStatus.BAD_REQUEST, 4025, "이메일 형식이 올바르지 않습니다."),
 
     // 5000~ : server error
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 5000, "서버 오류가 발생했습니다.");

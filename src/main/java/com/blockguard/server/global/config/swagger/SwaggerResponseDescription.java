@@ -58,6 +58,10 @@ public enum SwaggerResponseDescription {
 
     UPDATE_GUARDIAN_PRIMARY_FAIL(new LinkedHashSet<>(Set.of(
             ErrorCode.GUARDIAN_NOT_FOUND
+    ))),
+
+    CHECK_EMAIL_DUPLICATED_FAIL(new LinkedHashSet<>(Set.of(
+            ErrorCode.INVALID_EMAIL_TYPE
     )));
 
     private final Set<ErrorCode> errorCodeList;

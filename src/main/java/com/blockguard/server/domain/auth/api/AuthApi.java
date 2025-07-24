@@ -1,10 +1,8 @@
 package com.blockguard.server.domain.auth.api;
 
 import com.blockguard.server.domain.auth.application.AuthService;
-import com.blockguard.server.domain.user.dto.request.FindEmailRequest;
-import com.blockguard.server.domain.user.dto.request.FindPasswordRequest;
-import com.blockguard.server.domain.user.dto.request.LoginRequest;
-import com.blockguard.server.domain.user.dto.request.RegisterRequest;
+import com.blockguard.server.domain.user.dto.request.*;
+import com.blockguard.server.domain.user.dto.response.CheckEmailDuplicatedResponse;
 import com.blockguard.server.domain.user.dto.response.FindEmailResponse;
 import com.blockguard.server.domain.user.dto.response.LoginResponse;
 import com.blockguard.server.domain.user.dto.response.RegisterResponse;
@@ -36,6 +34,15 @@ public class AuthApi {
 
     }
 
+    @Operation(summary = "이메일 중복 확인", description = "true 반환 시, 이메일 중복")
+    @CustomExceptionDescription(SwaggerResponseDescription.CHECK_EMAIL_DUPLICATED_FAIL)
+    @PostMapping("/register/check-email")
+    public ResponseEntity<BaseResponse<CheckEmailDuplicatedResponse>> checkEmailDuplicated(@Valid @RequestBody CheckEmailDuplicatedRequest CheckEmailDuplicatedRequest) {
+        CheckEmailDuplicatedResponse checkEmailResponse = authService.checkEmailDuplicated(CheckEmailDuplicatedRequest);
+        return ResponseEntity.ok(BaseResponse.of(SuccessCode.CHECK_EMAIL_DUPLICATED, checkEmailResponse));
+
+    }
+
 
     @Operation(summary = "로그인")
     @CustomExceptionDescription(SwaggerResponseDescription.LOGIN_FAIL)
@@ -48,7 +55,7 @@ public class AuthApi {
     @Operation(summary = "아이디 찾기")
     @CustomExceptionDescription(SwaggerResponseDescription.FIND_EMAIL_FAIL)
     @PostMapping("find-email")
-    public ResponseEntity<BaseResponse<FindEmailResponse>> findEmail(@RequestBody @Valid FindEmailRequest findEmailRequest){
+    public ResponseEntity<BaseResponse<FindEmailResponse>> findEmail(@RequestBody @Valid FindEmailRequest findEmailRequest) {
         FindEmailResponse findEmailResponse = authService.findEmail(findEmailRequest);
         return ResponseEntity.ok(BaseResponse.of(SuccessCode.USER_EMAIL_FOUND, findEmailResponse));
     }
@@ -56,7 +63,7 @@ public class AuthApi {
     @Operation(summary = "비밀번호 찾기", description = "이메일이 유효하면 해당 이메일로 임시 비밀번호를 발송합니다.")
     @CustomExceptionDescription(SwaggerResponseDescription.FIND_PASSWORD_FAIL)
     @PostMapping("find-password")
-    public ResponseEntity<BaseResponse<Void>> findPassword(@RequestBody @Valid FindPasswordRequest findPasswordRequest){
+    public ResponseEntity<BaseResponse<Void>> findPassword(@RequestBody @Valid FindPasswordRequest findPasswordRequest) {
         authService.sendTempPassword(findPasswordRequest);
         return ResponseEntity.ok(BaseResponse.of(SuccessCode.SEND_TEMP_PASSWORD_BY_EMAIL));
     }

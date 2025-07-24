@@ -2,9 +2,11 @@ package com.blockguard.server.global.exception;
 
 import com.blockguard.server.global.common.codes.ErrorCode;
 import com.blockguard.server.global.common.response.ErrorResponse;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -38,9 +40,34 @@ public class GlobalExceptionHandler {
                     .body(ErrorResponse.of(ErrorCode.INVALID_EMAIL_TYPE));
         }
 
+        if (message.contains("phoneNumber")) {
+            return ResponseEntity
+                    .status(ErrorCode.INVALID_PHONE_NUMBER_FORMAT.getStatus())
+                    .body(ErrorResponse.of(ErrorCode.INVALID_PHONE_NUMBER_FORMAT));
+        }
+
         return ResponseEntity
                 .status(ErrorCode.INVALID_REQUEST.getStatus())
                 .body(ErrorResponse.of(ErrorCode.INVALID_REQUEST, message));
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    protected ResponseEntity<ErrorResponse> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
+        log.warn("[HttpMessageNotReadable] message: {}", ex.getMessage());
+
+        Throwable cause = ex.getCause();
+        if (cause instanceof InvalidFormatException invalidEx) {
+            // LocalDate 파싱 실패인지 확인
+            if (invalidEx.getTargetType().equals(java.time.LocalDate.class)) {
+                return ResponseEntity
+                        .status(ErrorCode.INVALID_DATE_FORMAT.getStatus())
+                        .body(ErrorResponse.of(ErrorCode.INVALID_DATE_FORMAT));
+            }
+        }
+
+        return ResponseEntity
+                .status(ErrorCode.INVALID_REQUEST.getStatus())
+                .body(ErrorResponse.of(ErrorCode.INVALID_REQUEST, ex.getMessage()));
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)

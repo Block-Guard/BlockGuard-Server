@@ -16,7 +16,7 @@ public class CreateGuardianRequest {
     private String name;
 
     @NotBlank
-    @Pattern(regexp = "^010-\\d{4}-\\d{4}$", message = "010-1234-5678 형식이어야 합니다.")
+    @Pattern(regexp = "^\\d{3}-\\d{4}-\\d{4}$", message = "phoneNumber must match 010-1234-5678 format")
     private String phoneNumber;
 
     @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED)

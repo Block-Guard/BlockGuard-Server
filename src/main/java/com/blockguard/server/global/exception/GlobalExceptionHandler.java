@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
 
         log.warn("[ValidationException] message: {}", message);
 
-        if (message.contains("이메일 형식")) {
+        if (message.contains("이메일")) {
             return ResponseEntity
                     .status(ErrorCode.INVALID_EMAIL_TYPE.getStatus())
                     .body(ErrorResponse.of(ErrorCode.INVALID_EMAIL_TYPE));

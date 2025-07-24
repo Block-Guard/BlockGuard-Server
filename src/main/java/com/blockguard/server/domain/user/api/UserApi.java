@@ -12,6 +12,7 @@ import com.blockguard.server.global.config.swagger.CustomExceptionDescription;
 import com.blockguard.server.global.config.swagger.SwaggerResponseDescription;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +35,7 @@ public class UserApi {
     @CustomExceptionDescription(SwaggerResponseDescription.UPDATE_MY_PAGE_INFO_FAIL)
     @Operation(summary = "회원 정보 수정", description = "아이디를 제외하고 수정가능합니다. 생년월일 형식은 'yyyyMMDD'로 입력해야합니다.")
     public BaseResponse<Void> updateUserInfo(@Parameter(hidden = true) @CurrentUser User user,
-                                             @ModelAttribute UpdateUserInfo updateUserInfo){
+                                             @Valid @ModelAttribute UpdateUserInfo updateUserInfo){
         userService.updateUserInfo(user.getId(), updateUserInfo);
         return BaseResponse.of(SuccessCode.UPDATE_USER_INFO_SUCCESS);
 

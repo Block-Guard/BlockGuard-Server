@@ -9,7 +9,10 @@ import java.util.Set;
 @Getter
 public enum SwaggerResponseDescription {
     REGISTER_FAIL(new LinkedHashSet<>(Set.of(
-            ErrorCode.DUPLICATED_EMAIL
+            ErrorCode.DUPLICATED_EMAIL,
+            ErrorCode.INVALID_EMAIL_TYPE,
+            ErrorCode.INVALID_PHONE_NUMBER_FORMAT,
+            ErrorCode.INVALID_DATE_FORMAT
     ))),
 
     LOGIN_FAIL(new LinkedHashSet<>(Set.of(
@@ -18,11 +21,14 @@ public enum SwaggerResponseDescription {
     ))),
 
     FIND_EMAIL_FAIL(new LinkedHashSet<>(Set.of(
-            ErrorCode.USER_INFO_NOT_FOUND
+            ErrorCode.USER_INFO_NOT_FOUND,
+            ErrorCode.INVALID_PHONE_NUMBER_FORMAT,
+            ErrorCode.INVALID_DATE_FORMAT
     ))),
 
     UPDATE_MY_PAGE_INFO_FAIL(new LinkedHashSet<>(Set.of(
             ErrorCode.INVALID_PHONE_NUMBER_FORMAT,
+            ErrorCode.INVALID_DATE_FORMAT,
             ErrorCode.INVALID_PROFILE_IMAGE,
             ErrorCode.INVALID_TOKEN,
             ErrorCode.FILE_NAME_NOT_FOUND,
@@ -36,7 +42,8 @@ public enum SwaggerResponseDescription {
     ))),
 
     FIND_PASSWORD_FAIL(new LinkedHashSet<>(Set.of(
-            ErrorCode.EMAIL_NOT_FOUND
+            ErrorCode.EMAIL_NOT_FOUND,
+            ErrorCode.INVALID_EMAIL_TYPE
     ))),
 
     FIND_GUARDIANS_FAIL(new LinkedHashSet<>(Set.of(

@@ -24,6 +24,7 @@ public enum ErrorCode {
     INVALID_DIRECTORY_ROUTE(HttpStatus.NOT_FOUND, 4022, "잘못된 디렉토리 경로입니다."),
     FILE_SIZE_EXCEEDED(HttpStatus.PAYLOAD_TOO_LARGE, 4023, "프로필 파일 최대 허용 용량(5MB)을 초과했습니다."),
     DUPLICATE_GUARDIAN_NAME(HttpStatus.BAD_REQUEST, 4024, "이미 등록된 보호자 이름입니다."),
+    INVALID_EMAIL_TYPE(HttpStatus.BAD_REQUEST, 4025, "이메일 형식이 올바르지 않습니다."),
 
     // 5000~ : server error
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 5000, "서버 오류가 발생했습니다.");

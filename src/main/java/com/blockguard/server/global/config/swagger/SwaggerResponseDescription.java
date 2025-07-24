@@ -24,6 +24,7 @@ public enum SwaggerResponseDescription {
     UPDATE_MY_PAGE_INFO_FAIL(new LinkedHashSet<>(Set.of(
             ErrorCode.INVALID_PHONE_NUMBER_FORMAT,
             ErrorCode.INVALID_PROFILE_IMAGE,
+            ErrorCode.INVALID_TOKEN,
             ErrorCode.FILE_NAME_NOT_FOUND,
             ErrorCode.INVALID_DIRECTORY_ROUTE,
             ErrorCode.FILE_SIZE_EXCEEDED
@@ -34,10 +35,12 @@ public enum SwaggerResponseDescription {
     ))),
 
     FIND_GUARDIANS_FAIL(new LinkedHashSet<>(Set.of(
+            ErrorCode.INVALID_TOKEN,
             ErrorCode.USER_INFO_NOT_FOUND
     ))),
 
     CREATE_GUARDIAN_FAIL(new LinkedHashSet<>(Set.of(
+            ErrorCode.INVALID_TOKEN,
             ErrorCode.INVALID_PHONE_NUMBER_FORMAT,
             ErrorCode.INVALID_PROFILE_IMAGE,
             ErrorCode.FILE_NAME_NOT_FOUND,
@@ -47,6 +50,7 @@ public enum SwaggerResponseDescription {
     ))),
 
     UPDATE_GUARDIAN_FAIL(new LinkedHashSet<>(Set.of(
+            ErrorCode.INVALID_TOKEN,
             ErrorCode.INVALID_PHONE_NUMBER_FORMAT,
             ErrorCode.INVALID_PROFILE_IMAGE,
             ErrorCode.GUARDIAN_NOT_FOUND,
@@ -57,6 +61,7 @@ public enum SwaggerResponseDescription {
     ))),
 
     UPDATE_GUARDIAN_PRIMARY_FAIL(new LinkedHashSet<>(Set.of(
+            ErrorCode.INVALID_TOKEN,
             ErrorCode.GUARDIAN_NOT_FOUND
     ))),
 
@@ -68,10 +73,9 @@ public enum SwaggerResponseDescription {
 
     SwaggerResponseDescription(Set<ErrorCode> errorCodes) {
         // 공통 에러 추가
-        errorCodes.addAll(Set.of(
-                ErrorCode.INVALID_TOKEN,
+        errorCodes.add(
                 ErrorCode.INTERNAL_SERVER_ERROR
-        ));
+        );
 
         this.errorCodeList = errorCodes;
     }

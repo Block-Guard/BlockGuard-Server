@@ -20,9 +20,12 @@ public class FraudAnalysisService {
     public FraudAnalysisResponse fraudAnalysis(FraudAnalysisRequest fraudAnalysisRequest) {
         List<String> keywords = new ArrayList<>();
 
-        String additionalDescription = extractKeywordsFromRequest(fraudAnalysisRequest, keywords);
-        String imageContent = extractOcrText(fraudAnalysisRequest);
-        sendToGpt(fraudAnalysisRequest, keywords, additionalDescription, imageContent);
+        extractKeywordsFromRequest(fraudAnalysisRequest, keywords);
+        String additionalDescription = fraudAnalysisRequest.getAdditionalDescription();
+        String imageContent = "";
+        imageContent = extractOcrText(fraudAnalysisRequest, imageContent);
+
+        GptRequest gptRequest = buildGptRequest(fraudAnalysisRequest, keywords, additionalDescription, imageContent);
 
         FraudAnalysisResponse fraudAnalysisResponse = FraudAnalysisResponse
                 .builder()
@@ -36,8 +39,7 @@ public class FraudAnalysisService {
 
     }
 
-    private String extractOcrText(FraudAnalysisRequest fraudAnalysisRequest) {
-        String imageContent = "";
+    private String extractOcrText(FraudAnalysisRequest fraudAnalysisRequest, String imageContent) {
         List<String> imageUrls = fraudAnalysisRequest.getImageUrls();
         if (imageUrls != null && !imageUrls.isEmpty()){
             List<String> imageContents = new ArrayList<>();
@@ -50,7 +52,7 @@ public class FraudAnalysisService {
         return imageContent;
     }
 
-    private static String extractKeywordsFromRequest(FraudAnalysisRequest fraudAnalysisRequest, List<String> keywords) {
+    private static void extractKeywordsFromRequest(FraudAnalysisRequest fraudAnalysisRequest, List<String> keywords) {
         if (StringUtils.hasText(fraudAnalysisRequest.getContactMethod()))
             keywords.add(fraudAnalysisRequest.getContactMethod());
         if (StringUtils.hasText(fraudAnalysisRequest.getCounterpart()))
@@ -60,12 +62,10 @@ public class FraudAnalysisService {
         if (fraudAnalysisRequest.getRequestedInfo() != null && !fraudAnalysisRequest.getRequestedInfo().isEmpty())
             keywords.addAll(fraudAnalysisRequest.getRequestedInfo());
         if (StringUtils.hasText(fraudAnalysisRequest.getAppType())) keywords.add(fraudAnalysisRequest.getAppType());
-        String additionalDescription = fraudAnalysisRequest.getAdditionalDescription();
-        return additionalDescription;
     }
 
-    private static void sendToGpt(FraudAnalysisRequest fraudAnalysisRequest, List<String> keywords, String additionalDescription, String imageContent) {
-        GptRequest gptRequest = GptRequest.builder()
+    private static GptRequest buildGptRequest(FraudAnalysisRequest fraudAnalysisRequest, List<String> keywords, String additionalDescription, String imageContent) {
+        return GptRequest.builder()
                 .keywords(keywords)
                 .additionalDescription(additionalDescription)
                 .messageContent(StringUtils.hasText(fraudAnalysisRequest.getMessageContent()) ? fraudAnalysisRequest.getMessageContent() : null)

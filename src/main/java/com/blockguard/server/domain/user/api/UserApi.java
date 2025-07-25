@@ -12,6 +12,7 @@ import com.blockguard.server.global.config.swagger.CustomExceptionDescription;
 import com.blockguard.server.global.config.swagger.SwaggerResponseDescription;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,7 @@ public class UserApi {
     private final UserService userService;
 
     @GetMapping("/me")
+    @CustomExceptionDescription(SwaggerResponseDescription.INVALID_TOKEN)
     @Operation(summary = "마이페이지 조회")
     public BaseResponse<MyPageResponse> getMyPageInfo(@Parameter(hidden = true) @CurrentUser User user){
         MyPageResponse myPageResponse = userService.getMyPageInfo(user);
@@ -33,14 +35,14 @@ public class UserApi {
     @CustomExceptionDescription(SwaggerResponseDescription.UPDATE_MY_PAGE_INFO_FAIL)
     @Operation(summary = "회원 정보 수정", description = "아이디를 제외하고 수정가능합니다. 생년월일 형식은 'yyyyMMDD'로 입력해야합니다.")
     public BaseResponse<Void> updateUserInfo(@Parameter(hidden = true) @CurrentUser User user,
-                                             @ModelAttribute UpdateUserInfo updateUserInfo){
+                                             @Valid @ModelAttribute UpdateUserInfo updateUserInfo){
         userService.updateUserInfo(user.getId(), updateUserInfo);
         return BaseResponse.of(SuccessCode.UPDATE_USER_INFO_SUCCESS);
 
     }
 
     @PutMapping(value = "/me/password")
-    @CustomExceptionDescription(SwaggerResponseDescription.UPDATE_MY_PAGE_INFO_FAIL)
+    @CustomExceptionDescription(SwaggerResponseDescription.UPDATE_PASSWORD_FAIL)
     @Operation(summary = "비밀번호 변경", description = "현재 비밀번호를 확인하고, 새 비밀번호로 변경합니다.")
     public BaseResponse<Void> updatePassword(@Parameter(hidden = true) @CurrentUser User user,
     @RequestBody UpdatePasswordRequest updatePasswordRequest){
@@ -50,12 +52,11 @@ public class UserApi {
     }
 
     @DeleteMapping("/withdraw")
+    @CustomExceptionDescription(SwaggerResponseDescription.INVALID_TOKEN)
     @Operation(summary = "회원 탈퇴")
     public BaseResponse<Void> withdraw(@Parameter(hidden = true) @CurrentUser User user){
         userService.withdraw(user.getId());
         return BaseResponse.of(SuccessCode.WITHDRAW_SUCCESS);
     }
-
-
 
 }

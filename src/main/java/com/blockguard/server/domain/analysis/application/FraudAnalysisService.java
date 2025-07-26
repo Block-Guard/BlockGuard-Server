@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,32 +42,38 @@ public class FraudAnalysisService {
         String imageContent = "";
         imageContent = extractOcrText(imageFiles);
 
-        // TODO: gpt 서버와 연동 예정
         GptRequest gptRequest = buildGptRequest(fraudAnalysisRequest, keywords, additionalDescription, imageContent);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
 
-        HttpEntity<GptRequest> entity = new HttpEntity<>(gptRequest, headers);
-        ResponseEntity<GptResponse> response = restTemplate.postForEntity(
-                aiBaseUrl,
-                entity,
-                GptResponse.class
-        );
+            HttpEntity<GptRequest> entity = new HttpEntity<>(gptRequest, headers);
+            ResponseEntity<GptResponse> response = restTemplate.postForEntity(
+                    aiBaseUrl,
+                    entity,
+                    GptResponse.class
+            );
 
-        if (response.getBody() == null || !response.getStatusCode().is2xxSuccessful()) {
+            if (response.getBody() == null || !response.getStatusCode().is2xxSuccessful()) {
+                log.error("AI 서버 응답 오류: status={}, body={}", response.getStatusCode(), response.getBody());
+                throw new BusinessExceptionHandler(ErrorCode.AI_SERVER_ERROR);
+            }
+
+            double score = response.getBody().getScore();
+            return FraudAnalysisResponse
+                    .builder()
+                    .keywords(response.getBody().getKeywords())
+                    .score(response.getBody().getScore())
+                    .estimatedFraudType(response.getBody().getEstimatedFraudType())
+                    .explanation(response.getBody().getExplanation())
+                    .riskLevel(RiskLevel.fromScore(score).getName())
+                    .build();
+
+        } catch (RestClientException e){
+            log.error("AI 서버 통신 실패: {}", e.getMessage());
             throw new BusinessExceptionHandler(ErrorCode.AI_SERVER_ERROR);
         }
-
-        double score = response.getBody().getScore();
-        return FraudAnalysisResponse
-                .builder()
-                .keywords(response.getBody().getKeywords())
-                .score(response.getBody().getScore())
-                .estimatedFraudType(response.getBody().getEstimatedFraudType())
-                .explanation(response.getBody().getExplanation())
-                .riskLevel(RiskLevel.fromScore(score).getName())
-                .build();
     }
 
     private String extractOcrText(List<MultipartFile> imageFiles) {

@@ -22,7 +22,8 @@ public enum SuccessCode {
     GUARDIAN_UPDATED(HttpStatus.OK, 2011, "보호자 정보 수정이 완료되었습니다."),
     GUARDIAN_PRIMARY_UPDATED(HttpStatus.OK, 2012, "보호자 정보 수정이 완료되었습니다."),
     GUARDIAN_DELETED(HttpStatus.NO_CONTENT, 2013, "보호자 삭제 처리되었습니다."),
-    CHECK_EMAIL_DUPLICATED(HttpStatus.OK, 2014, "이메일 중복 확인이 완료되었습니다.");
+    CHECK_EMAIL_DUPLICATED(HttpStatus.OK, 2014, "이메일 중복 확인이 완료되었습니다."),
+    ANALYZE_FRAUD_SUCCESS(HttpStatus.OK, 2015, "사기 분석이 완료되었습니다."),;
 
     private final HttpStatus status;
     private final int code;

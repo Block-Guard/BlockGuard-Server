@@ -3,8 +3,10 @@ package com.blockguard.server.domain.analysis.api;
 import com.blockguard.server.domain.analysis.application.FraudAnalysisService;
 import com.blockguard.server.domain.analysis.dto.request.FraudAnalysisRequest;
 import com.blockguard.server.domain.analysis.dto.response.FraudAnalysisResponse;
+import com.blockguard.server.global.common.codes.ErrorCode;
 import com.blockguard.server.global.common.codes.SuccessCode;
 import com.blockguard.server.global.common.response.BaseResponse;
+import com.blockguard.server.global.exception.BusinessExceptionHandler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,6 +32,11 @@ public class FraudAnalysisApi {
             (@RequestParam("fraudAnalysisRequest") String jsonStr,
              @RequestParam(value = "imageFiles", required = false) List<MultipartFile> imageFiles
             ) throws JsonProcessingException {
+
+        if (imageFiles != null && imageFiles.size() > 2) {
+            throw new BusinessExceptionHandler(ErrorCode.IMAGE_UPLOAD_LIMIT_EXCEEDED);
+        }
+
         FraudAnalysisRequest request = objectMapper.readValue(jsonStr, FraudAnalysisRequest.class);
         FraudAnalysisResponse fraudAnalysisResponse = fraudAnalysisService.fraudAnalysis(request, imageFiles);
         return ResponseEntity.ok(BaseResponse.of(SuccessCode.ANALYZE_FRAUD_SUCCESS, fraudAnalysisResponse));

@@ -29,6 +29,7 @@ public class FraudAnalysisService {
         String imageContent = "";
         imageContent = extractOcrText(imageFiles);
 
+        // TODO: gpt 서버와 연동 예정
         GptRequest gptRequest = buildGptRequest(fraudAnalysisRequest, keywords, additionalDescription, imageContent);
 
         return FraudAnalysisResponse

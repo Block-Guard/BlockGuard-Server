@@ -55,7 +55,6 @@ public class SecurityConfig {
                         registry
                                 .requestMatchers("/api/auth/**").permitAll()   // 로그인/회원가입만 허용
                                 .requestMatchers("/api/fraud-analysis").permitAll()
-                                .requestMatchers("/api/test").permitAll()
                                 .requestMatchers("/actuator/health").permitAll() // 헬스체크 허용
                                 .requestMatchers("/", "/index.html", "/favicon.ico").permitAll()
                                 .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/swagger-resources/**", "/webjars/**").permitAll()

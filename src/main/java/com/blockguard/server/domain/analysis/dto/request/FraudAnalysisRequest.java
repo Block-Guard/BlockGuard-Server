@@ -2,10 +2,12 @@ package com.blockguard.server.domain.analysis.dto.request;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class FraudAnalysisRequest {
     private String contactMethod;
@@ -16,8 +18,6 @@ public class FraudAnalysisRequest {
     private Boolean atmGuided; // 선택
     private String suspiciousLinks; // 선택
     private String suspiciousPhoneNumbers; // 선택
-    private List<String> imageUrls; // 선택
     private String messageContent; // 선택
     private String additionalDescription;
-
 }

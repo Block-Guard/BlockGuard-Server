@@ -29,7 +29,8 @@ public enum ErrorCode {
     IMAGE_UPLOAD_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, 4026, "이미지는 최대 2장까지만 업로드 가능합니다."),
 
     // 5000~ : server error
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 5000, "서버 오류가 발생했습니다.");
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 5000, "서버 오류가 발생했습니다."),
+    AI_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 5001, "AI 서버와의 통신 오류가 발생했습니다.");
 
     private final HttpStatus status;
     private final int code;

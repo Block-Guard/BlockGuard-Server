@@ -27,7 +27,7 @@ public class NaverOcrClient {
     @Value("${naver.ocr.secret-key}")
     private String secretKey;
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
 
     public String extractTextFromImage(byte[] imageBytes, String fileName) {
         log.info("ocr api 호출");

@@ -76,8 +76,6 @@ public class NaverOcrClient {
                     Map.class
             );
 
-            log.info("OCR 응답: {}", new ObjectMapper().writeValueAsString(response.getBody()));
-
             List<Map<String, Object>> imageResponses = (List<Map<String, Object>>) response.getBody().get("images");
 
             return imageResponses.stream()

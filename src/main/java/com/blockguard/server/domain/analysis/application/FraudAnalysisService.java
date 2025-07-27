@@ -1,13 +1,22 @@
 package com.blockguard.server.domain.analysis.application;
 
+import com.blockguard.server.domain.analysis.domain.enums.RiskLevel;
 import com.blockguard.server.domain.analysis.dto.request.FraudAnalysisRequest;
 import com.blockguard.server.domain.analysis.dto.request.GptRequest;
 import com.blockguard.server.domain.analysis.dto.response.FraudAnalysisResponse;
+import com.blockguard.server.domain.analysis.dto.response.GptResponse;
+import com.blockguard.server.global.common.codes.ErrorCode;
+import com.blockguard.server.global.exception.BusinessExceptionHandler;
 import com.blockguard.server.infra.ocr.NaverOcrClient;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -16,10 +25,14 @@ import java.util.List;
 
 @Service
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class FraudAnalysisService {
 
     private final NaverOcrClient naverOcrClient;
+    private final RestTemplate restTemplate;
+
+    @Value("${ai.server.url}")
+    private String aiBaseUrl;
 
     public FraudAnalysisResponse fraudAnalysis(FraudAnalysisRequest fraudAnalysisRequest, List<MultipartFile> imageFiles) {
         List<String> keywords = new ArrayList<>();
@@ -29,17 +42,38 @@ public class FraudAnalysisService {
         String imageContent = "";
         imageContent = extractOcrText(imageFiles);
 
-        // TODO: gpt 서버와 연동 예정
         GptRequest gptRequest = buildGptRequest(fraudAnalysisRequest, keywords, additionalDescription, imageContent);
 
-        return FraudAnalysisResponse
-                .builder()
-                .keywords(keywords)
-                .additionalDescription(additionalDescription)
-                .messageContent(StringUtils.hasText(fraudAnalysisRequest.getMessageContent()) ? fraudAnalysisRequest.getMessageContent() : null)
-                .imageContent(StringUtils.hasText(imageContent) ? imageContent : null)
-                .build();
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
 
+            HttpEntity<GptRequest> entity = new HttpEntity<>(gptRequest, headers);
+            ResponseEntity<GptResponse> response = restTemplate.postForEntity(
+                    aiBaseUrl,
+                    entity,
+                    GptResponse.class
+            );
+
+            if (response.getBody() == null || !response.getStatusCode().is2xxSuccessful()) {
+                log.error("AI 서버 응답 오류: status={}, body={}", response.getStatusCode(), response.getBody());
+                throw new BusinessExceptionHandler(ErrorCode.AI_SERVER_ERROR);
+            }
+
+            double score = response.getBody().getScore();
+            return FraudAnalysisResponse
+                    .builder()
+                    .keywords(response.getBody().getKeywords())
+                    .score(response.getBody().getScore())
+                    .estimatedFraudType(response.getBody().getEstimatedFraudType())
+                    .explanation(response.getBody().getExplanation())
+                    .riskLevel(RiskLevel.fromScore(score).getName())
+                    .build();
+
+        } catch (RestClientException e){
+            log.error("AI 서버 통신 실패: {}", e.getMessage());
+            throw new BusinessExceptionHandler(ErrorCode.AI_SERVER_ERROR);
+        }
     }
 
     private String extractOcrText(List<MultipartFile> imageFiles) {

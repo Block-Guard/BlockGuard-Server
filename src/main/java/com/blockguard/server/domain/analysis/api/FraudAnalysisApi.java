@@ -33,6 +33,7 @@ public class FraudAnalysisApi {
              @RequestParam(value = "imageFiles", required = false) List<MultipartFile> imageFiles
             ) throws JsonProcessingException {
 
+        // TODO: 이미지 파일 개수 픽스 필요
         if (imageFiles != null && imageFiles.size() > 2) {
             throw new BusinessExceptionHandler(ErrorCode.IMAGE_UPLOAD_LIMIT_EXCEEDED);
         }

@@ -25,7 +25,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class FraudUrlImporter {
 
-    private static final int PER_PAGE = 300;
+    private static final int PER_PAGE = 100;
     private static final int MAX_PAGE = 1000;
     private static final int DELAY_BETWEEN_REQUESTS_MS = 200;
 

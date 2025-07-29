@@ -18,6 +18,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +27,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class FraudUrlImporter {
 
-    private static final int PER_PAGE = 50;
+    private static final int PER_PAGE = 100;
     private static final int MAX_PAGE = 1000;
     private static final int DELAY_BETWEEN_REQUESTS_MS = 200;
 
@@ -60,7 +61,6 @@ public class FraudUrlImporter {
         boolean hasNext = true;
 
         while (hasNext && page <= MAX_PAGE) {
-
             String encodedKey = URLEncoder.encode(serviceKey, StandardCharsets.UTF_8);
             String fullUrl = String.format("%s?page=%d&perPage=%d&serviceKey=%s",
                     baseUrl, page, PER_PAGE, encodedKey);
@@ -76,21 +76,26 @@ public class FraudUrlImporter {
                 if (data == null || data.isEmpty()) {
                     hasNext = false;
                 } else {
+                    List<FraudUrl> fraudUrlsToSave = new ArrayList<>();
+
                     for (Map<String, Object> item : data) {
                         String detectedDateStr = (String) item.get("날짜");
                         String urlStr = (String) item.get("홈페이지주소");
 
                         if (urlStr == null || detectedDateStr == null) continue;
+                        if (fraudUrlRepository.existsByUrl(urlStr)) continue;
 
-                        if (!fraudUrlRepository.existsByUrl(urlStr)) {
-                            LocalDate detectedDate = LocalDate.parse(detectedDateStr);
-                            fraudUrlRepository.save(FraudUrl.builder()
-                                    .url(urlStr)
-                                    .detectedDate(detectedDate)
-                                    .lastCheckedAt(LocalDateTime.now())
-                                    .build());
-                        }
+                        LocalDate detectedDate = LocalDate.parse(detectedDateStr);
+                        FraudUrl fraudUrl = FraudUrl.builder()
+                                .url(urlStr)
+                                .detectedDate(detectedDate)
+                                .lastCheckedAt(LocalDateTime.now())
+                                .build();
+
+                        fraudUrlsToSave.add(fraudUrl);
                     }
+
+                    fraudUrlRepository.saveAll(fraudUrlsToSave);
                     page++;
                 }
 

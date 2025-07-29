@@ -27,7 +27,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class FraudUrlImporter {
 
-    private static final int PER_PAGE = 100;
+    private static final int PER_PAGE = 300;
     private static final int MAX_PAGE = 1000;
     private static final int DELAY_BETWEEN_REQUESTS_MS = 200;
 
@@ -48,12 +48,11 @@ public class FraudUrlImporter {
     @Transactional
     public void syncFraudUrlsFromOpenApi() {
 
-        log.info("2024 버전 사기 URL 동기화 시작");
-        importFrom(apiUrl);
+  /*      log.info("2024 버전 사기 URL 동기화 시작");
+        importFrom(apiUrl);*/
 
-/*        log.info("2023 버전 사기 URL 동기화 시작");
-        importFrom(apiUrlOld);*/
-
+        log.info("2023 버전 사기 URL 동기화 시작");
+        importFrom(apiUrlOld);
     }
 
     private void importFrom(String baseUrl) {

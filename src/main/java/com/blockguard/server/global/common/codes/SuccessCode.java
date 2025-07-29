@@ -25,7 +25,8 @@ public enum SuccessCode {
     CHECK_EMAIL_DUPLICATED(HttpStatus.OK, 2014, "이메일 중복 확인이 완료되었습니다."),
     ANALYZE_FRAUD_SUCCESS(HttpStatus.OK, 2015, "사기 분석이 완료되었습니다."),
     CHECK_URL_FRAUD_SUCCESS(HttpStatus.OK, 2016, "URL 사기 조회가 완료되었습니다."),
-    CHECK_PHONE_NUMBER_FRAUD_SUCCESS(HttpStatus.OK, 2017, "전화번호 사기 조회가 완료되었습니다."),;
+    CHECK_PHONE_NUMBER_FRAUD_SUCCESS(HttpStatus.OK, 2017, "전화번호 사기 조회가 완료되었습니다."),
+    IMPORT_OPEN_API_SUCCESS(HttpStatus.OK, 2018, "OPEN API 데이터 호출이 완료되었습니다.");
 
     private final HttpStatus status;
     private final int code;

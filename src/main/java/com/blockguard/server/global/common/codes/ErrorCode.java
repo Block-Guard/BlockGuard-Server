@@ -27,6 +27,7 @@ public enum ErrorCode {
     DUPLICATE_GUARDIAN_NAME(HttpStatus.BAD_REQUEST, 4024, "이미 등록된 보호자 이름입니다."),
     INVALID_EMAIL_TYPE(HttpStatus.BAD_REQUEST, 4025, "이메일 형식이 올바르지 않습니다."),
     IMAGE_UPLOAD_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, 4026, "이미지는 최대 2장까지만 업로드 가능합니다."),
+    FAIL_IMPORT_OPEN_API(HttpStatus.BAD_REQUEST, 4027, "OPEN API 호출에 실패하였습니다."),
 
     // 5000~ : server error
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 5000, "서버 오류가 발생했습니다.");

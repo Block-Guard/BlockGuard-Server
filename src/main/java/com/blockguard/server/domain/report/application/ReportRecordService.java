@@ -6,6 +6,7 @@ import com.blockguard.server.domain.report.domain.ReportStepProgress;
 import com.blockguard.server.domain.report.domain.UserReportRecord;
 import com.blockguard.server.domain.report.domain.enums.CheckboxType;
 import com.blockguard.server.domain.report.domain.enums.ReportStep;
+import com.blockguard.server.domain.report.domain.enums.ReportStepCheckboxConfig;
 import com.blockguard.server.domain.report.dto.response.ReportRecordResponse;
 import com.blockguard.server.domain.user.domain.User;
 import com.blockguard.server.global.common.codes.ErrorCode;
@@ -34,8 +35,10 @@ public class ReportRecordService {
                 .step(ReportStep.STEP1)
                 .build();
 
+        ReportStepCheckboxConfig cfg = ReportStepCheckboxConfig.of(ReportStep.STEP1);
+
         // STEP1 필수 체크박스 3개
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < cfg.getRequiredCount(); i++) {
             progress1.getCheckboxes().add(ReportStepCheckbox.builder()
                     .stepProgress(progress1)
                     .type(CheckboxType.REQUIRED)
@@ -45,7 +48,7 @@ public class ReportRecordService {
         }
 
         // STEP1 권장 체크박스 2개
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < cfg.getRecommendedCount(); i++) {
             progress1.getCheckboxes().add(ReportStepCheckbox.builder()
                     .stepProgress(progress1)
                     .type(CheckboxType.RECOMMENDED)

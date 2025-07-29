@@ -4,6 +4,8 @@ import com.blockguard.server.domain.fraud.dao.FraudUrlRepository;
 import com.blockguard.server.domain.fraud.domain.enums.RiskLevel;
 import com.blockguard.server.domain.fraud.dto.request.FraudUrlRequest;
 import com.blockguard.server.domain.fraud.dto.response.FraudUrlResponse;
+import com.blockguard.server.global.common.codes.ErrorCode;
+import com.blockguard.server.global.exception.BusinessExceptionHandler;
 import com.blockguard.server.infra.google.GoogleSafeBrowsingService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,10 @@ public class FraudService {
 
     public FraudUrlResponse checkFraudUrl(FraudUrlRequest fraudUrlRequest) {
         String url = fraudUrlRequest.getUrl();
+
+        if (url == null || url.trim().isEmpty()){
+            throw new BusinessExceptionHandler(ErrorCode.URL_REQUIRED);
+        }
 
         // 1차: DB 검사
         if(fraudUrlRepository.existsByUrl(url)){

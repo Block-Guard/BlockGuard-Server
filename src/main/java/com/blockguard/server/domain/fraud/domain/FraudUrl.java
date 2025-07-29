@@ -4,6 +4,7 @@ import com.blockguard.server.global.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -22,9 +23,8 @@ public class FraudUrl extends BaseEntity {
     @Column(nullable = false, columnDefinition = "TEXT", unique = true)
     private String url;
 
-    // Todo: Open API 제공자 추후 enum type 변경
-    @Column(nullable = false, length = 100)
-    private String provider;
+    @Column(nullable = false)
+    private LocalDate detectedDate;
 
     @Column(name = "last_checked_at", nullable = false)
     private LocalDateTime lastCheckedAt;

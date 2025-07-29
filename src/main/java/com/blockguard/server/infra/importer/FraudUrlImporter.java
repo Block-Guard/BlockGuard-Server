@@ -48,11 +48,11 @@ public class FraudUrlImporter {
     @Transactional
     public void syncFraudUrlsFromOpenApi() {
 
-  /*      log.info("2024 버전 사기 URL 동기화 시작");
-        importFrom(apiUrl);*/
+        log.info("2024 버전 사기 URL 동기화 시작");
+        importFrom(apiUrl);
 
-        log.info("2023 버전 사기 URL 동기화 시작");
-        importFrom(apiUrlOld);
+/*        log.info("2023 버전 사기 URL 동기화 시작");
+        importFrom(apiUrlOld);*/
     }
 
     private void importFrom(String baseUrl) {

@@ -1,4 +1,4 @@
-package com.blockguard.server.infra.scheduler;
+package com.blockguard.server.infra.importer;
 
 import com.blockguard.server.domain.fraud.dao.FraudUrlRepository;
 import com.blockguard.server.domain.fraud.domain.FraudUrl;

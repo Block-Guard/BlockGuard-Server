@@ -2,7 +2,7 @@ package com.blockguard.server.domain.admin.api;
 
 import com.blockguard.server.global.common.codes.SuccessCode;
 import com.blockguard.server.global.common.response.BaseResponse;
-import com.blockguard.server.infra.scheduler.FraudUrlImporter;
+import com.blockguard.server.infra.importer.FraudUrlImporter;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

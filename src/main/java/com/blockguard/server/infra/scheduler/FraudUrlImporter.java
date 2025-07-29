@@ -7,13 +7,9 @@ import com.blockguard.server.global.exception.BusinessExceptionHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.net.URLEncoder;
@@ -30,6 +26,7 @@ public class FraudUrlImporter {
     @Value("${open-api.fraud-url.base-url}")
     private String apiUrl;
 
+    // 2023 version
     @Value("${open-api.fraud-url.base-url-old}")
     private String apiUrlOld;
 
@@ -48,7 +45,7 @@ public class FraudUrlImporter {
 
             String encodedKey = URLEncoder.encode(serviceKey, StandardCharsets.UTF_8);
             String fullUrl = String.format("%s?page=%d&perPage=%d&serviceKey=%s",
-                    apiUrlOld, page, perPage, encodedKey);
+                    apiUrl, page, perPage, encodedKey);
 
             URI requestUrl = URI.create(fullUrl);
 
@@ -78,6 +75,9 @@ public class FraudUrlImporter {
                     }
                     page++;
                 }
+
+                log.info("DB 업데이트 완료");
+
             } else {
                 throw new BusinessExceptionHandler(ErrorCode.FAIL_IMPORT_OPEN_API);
             }

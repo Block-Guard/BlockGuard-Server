@@ -1,7 +1,7 @@
 package com.blockguard.server.domain.fraud.application;
 
+import com.blockguard.server.domain.analysis.domain.enums.RiskLevel;
 import com.blockguard.server.domain.fraud.dao.FraudUrlRepository;
-import com.blockguard.server.domain.fraud.domain.enums.RiskLevel;
 import com.blockguard.server.domain.fraud.dto.request.FraudUrlRequest;
 import com.blockguard.server.domain.fraud.dto.response.FraudUrlResponse;
 import com.blockguard.server.global.common.codes.ErrorCode;
@@ -26,7 +26,7 @@ public class FraudService {
         // 1차: DB 검사
         if(fraudUrlRepository.existsByUrl(url)){
             return FraudUrlResponse.builder()
-                    .riskLevel(RiskLevel.Danger)
+                    .riskLevel(RiskLevel.Dangers)
                     .build();
         }
 
@@ -34,7 +34,7 @@ public class FraudService {
         boolean isSafe = googleSafeBrowsingService.isUrlSafe(url);
         if (!isSafe){
             return FraudUrlResponse.builder()
-                    .riskLevel(RiskLevel.Danger)
+                    .riskLevel(RiskLevel.Dangers)
                     .build();
         }
 

@@ -26,10 +26,6 @@ public class FraudUrl extends BaseEntity {
     @Column(nullable = false)
     private LocalDate detectedDate;
 
-    /*// Todo: Open API 제공자 추후 enum type 변경
-    @Column(nullable = false, length = 100)
-    private String provider;*/
-
     @Column(name = "last_checked_at", nullable = false)
     private LocalDateTime lastCheckedAt;
 

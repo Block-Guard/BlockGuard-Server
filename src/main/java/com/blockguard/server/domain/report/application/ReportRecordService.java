@@ -7,6 +7,7 @@ import com.blockguard.server.domain.report.domain.UserReportRecord;
 import com.blockguard.server.domain.report.domain.enums.CheckboxType;
 import com.blockguard.server.domain.report.domain.enums.ReportStep;
 import com.blockguard.server.domain.report.domain.enums.ReportStepCheckboxConfig;
+import com.blockguard.server.domain.report.dto.response.CurrentReportRecordResponse;
 import com.blockguard.server.domain.report.dto.response.ReportRecordResponse;
 import com.blockguard.server.domain.user.domain.User;
 import com.blockguard.server.global.common.codes.ErrorCode;
@@ -14,6 +15,9 @@ import com.blockguard.server.global.exception.BusinessExceptionHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Comparator;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -61,5 +65,23 @@ public class ReportRecordService {
         userReportRecordRepository.save(userReportRecord);
 
         return ReportRecordResponse.from(userReportRecord, progress1);
+    }
+
+    @Transactional
+    public CurrentReportRecordResponse getCurrentRecord(User user) {
+        Optional<CurrentReportRecordResponse> currentReportRecordResponse = userReportRecordRepository.findFirstByUserAndIsCompletedFalseOrderByCreatedAtDesc(user)
+               .map(record -> {
+                    ReportStepProgress lastProgress = record.getProgressList().stream()
+                            .max(Comparator.comparing(ReportStepProgress::getStep))
+                            .orElseThrow();
+                    int stepNum = ReportStep.getOrder(lastProgress.getStep());
+                    return CurrentReportRecordResponse.builder()
+                            .reportId(record.getId())
+                            .createdAt(String.valueOf(record.getCreatedAt()))
+                            .step(stepNum)
+                            .build();
+
+                });
+        return currentReportRecordResponse.orElse(null);
     }
 }

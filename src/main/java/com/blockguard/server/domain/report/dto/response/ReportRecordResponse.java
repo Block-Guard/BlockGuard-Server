@@ -2,6 +2,7 @@ package com.blockguard.server.domain.report.dto.response;
 
 import com.blockguard.server.domain.report.domain.ReportStepProgress;
 import com.blockguard.server.domain.report.domain.UserReportRecord;
+import com.blockguard.server.domain.report.domain.enums.ReportStep;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
@@ -20,7 +21,7 @@ public class ReportRecordResponse {
     public static ReportRecordResponse from(UserReportRecord record, ReportStepProgress reportStepProgress) {
         return ReportRecordResponse.builder()
                 .reportId(record.getId())
-                .step(reportStepProgress.getStep().ordinal() + 1) // or record.getStep().getValue()
+                .step(ReportStep.getOrder(reportStepProgress.getStep()))
                 .isCompleted(record.isCompleted())
                 .createdAt(record.getCreatedAt().toString())
                 .build();

@@ -2,26 +2,22 @@ package com.blockguard.server.domain.analysis.domain.enums;
 
 import lombok.Getter;
 import com.fasterxml.jackson.annotation.JsonValue;
- 
-import lombok.AllArgsConstructor;
-  
-@AllArgsConstructor
+
 @Getter
 public enum RiskLevel {
     Dangers("위험"),
     Caution("주의"),
     Safety("안전");
 
-    private final String name;
     private final String value;
-  
+
     @JsonValue
     public String getValue(){
-      return value;
+        return value;
     }
 
-    RiskLevel(String name) {
-        this.name = name;
+    RiskLevel(String value) {
+        this.value = value;
     }
 
     public static RiskLevel fromScore(double score) {
@@ -33,4 +29,4 @@ public enum RiskLevel {
             return Dangers;
         }
     }
-  }
+}

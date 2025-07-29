@@ -31,7 +31,8 @@ public enum ErrorCode {
     URL_REQUIRED(HttpStatus.BAD_REQUEST, 4028, "URL은 필수 입력 값입니다."),
 
     // 5000~ : server error
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 5000, "서버 오류가 발생했습니다.");
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 5000, "서버 오류가 발생했습니다."),
+    AI_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 5001, "AI 서버와의 통신 오류가 발생했습니다.");
 
     private final HttpStatus status;
     private final int code;

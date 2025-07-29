@@ -11,10 +11,10 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class FraudAnalysisResponse {
-    private String riskLevel;
+public class GptResponse {
     private Double score;
     private String estimatedFraudType;
     private List<String> keywords;
     private String explanation;
 }
+

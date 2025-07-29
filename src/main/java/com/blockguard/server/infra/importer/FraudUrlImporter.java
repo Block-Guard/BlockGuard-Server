@@ -25,7 +25,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class FraudUrlImporter {
 
-    private static final int PER_PAGE = 1000;
+    private static final int PER_PAGE = 300;
     private static final int MAX_PAGE = 1000;
     private static final int DELAY_BETWEEN_REQUESTS_MS = 200;
 
@@ -61,7 +61,7 @@ public class FraudUrlImporter {
 
             String encodedKey = URLEncoder.encode(serviceKey, StandardCharsets.UTF_8);
             String fullUrl = String.format("%s?page=%d&perPage=%d&serviceKey=%s",
-                    apiUrl, page, PER_PAGE, encodedKey);
+                    baseUrl, page, PER_PAGE, encodedKey);
 
             URI requestUrl = URI.create(fullUrl);
 

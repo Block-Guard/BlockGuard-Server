@@ -30,6 +30,9 @@ public class FraudUrlImporter {
     @Value("${open-api.fraud-url.base-url}")
     private String apiUrl;
 
+    @Value("${open-api.fraud-url.base-url-old}")
+    private String apiUrlOld;
+
     @Value("${open-api.fraud-url.service-key}")
     private String serviceKey;
 
@@ -45,7 +48,7 @@ public class FraudUrlImporter {
 
             String encodedKey = URLEncoder.encode(serviceKey, StandardCharsets.UTF_8);
             String fullUrl = String.format("%s?page=%d&perPage=%d&serviceKey=%s",
-                    apiUrl, page, perPage, encodedKey);
+                    apiUrlOld, page, perPage, encodedKey);
 
             URI requestUrl = URI.create(fullUrl);
 

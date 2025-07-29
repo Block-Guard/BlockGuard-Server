@@ -30,4 +30,6 @@ public class NewsArticle extends BaseEntity {
 
     @Column(nullable = false, length = 100)
     private String newspaper;
+
+    private String imageUrl;
 }

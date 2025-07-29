@@ -24,6 +24,11 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 public class FraudUrlImporter {
+
+    private static final int PER_PAGE = 1000;
+    private static final int MAX_PAGE = 1000;
+    private static final int DELAY_BETWEEN_REQUESTS_MS = 200;
+
     @Value("${open-api.fraud-url.base-url}")
     private String apiUrl;
 
@@ -39,15 +44,24 @@ public class FraudUrlImporter {
 
     @Transactional
     public void syncFraudUrlsFromOpenApi() {
+
+        log.info("2024 버전 사기 URL 동기화 시작");
+        importFrom(apiUrl);
+
+        log.info("2023 버전 사기 URL 동기화 시작");
+        importFrom(apiUrlOld);
+
+    }
+
+    private void importFrom(String baseUrl) {
         int page = 1;
-        int perPage = 1000;
         boolean hasNext = true;
 
-        while (hasNext) {
+        while (hasNext && page <= MAX_PAGE) {
 
             String encodedKey = URLEncoder.encode(serviceKey, StandardCharsets.UTF_8);
             String fullUrl = String.format("%s?page=%d&perPage=%d&serviceKey=%s",
-                    apiUrl, page, perPage, encodedKey);
+                    apiUrl, page, PER_PAGE, encodedKey);
 
             URI requestUrl = URI.create(fullUrl);
 
@@ -78,14 +92,17 @@ public class FraudUrlImporter {
                     page++;
                 }
 
-                log.info("DB 업데이트 완료");
+                try {
+                    Thread.sleep(DELAY_BETWEEN_REQUESTS_MS);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    throw new BusinessExceptionHandler(ErrorCode.FAIL_IMPORT_OPEN_API);
+                }
 
             } else {
+                log.error("API 요청 실패 - {}", response.getStatusCode());
                 throw new BusinessExceptionHandler(ErrorCode.FAIL_IMPORT_OPEN_API);
             }
         }
-
     }
-
-
 }

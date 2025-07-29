@@ -110,5 +110,6 @@ public class FraudUrlImporter {
                 throw new BusinessExceptionHandler(ErrorCode.FAIL_IMPORT_OPEN_API);
             }
         }
+        log.info("전체 저장 완료");
     }
 }

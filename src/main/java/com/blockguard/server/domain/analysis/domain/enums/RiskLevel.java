@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonValue;
  
 import lombok.AllArgsConstructor;
   
-@AllArgsConstructor
 @Getter
 public enum RiskLevel {
     Dangers("위험"),
@@ -13,11 +12,10 @@ public enum RiskLevel {
     Safety("안전");
 
     private final String name;
-    private final String value;
-  
+
     @JsonValue
-    public String getValue(){
-      return value;
+    public String getName(){
+      return name;
     }
 
     RiskLevel(String name) {

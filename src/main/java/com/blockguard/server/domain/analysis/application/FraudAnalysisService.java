@@ -67,7 +67,7 @@ public class FraudAnalysisService {
                     .score(response.getBody().getScore())
                     .estimatedFraudType(response.getBody().getEstimatedFraudType())
                     .explanation(response.getBody().getExplanation())
-                    .riskLevel(RiskLevel.fromScore(score).getName())
+                    .riskLevel(RiskLevel.fromScore(score).getValue())
                     .build();
 
         } catch (RestClientException e){

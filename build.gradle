@@ -46,6 +46,8 @@ dependencies {
 	implementation(platform("software.amazon.awssdk:bom:2.31.58"))
 	implementation 'software.amazon.awssdk:s3'
 	implementation 'software.amazon.awssdk:auth'
+
+	implementation 'org.jsoup:jsoup:1.17.2'
 }
 
 tasks.named('test') {

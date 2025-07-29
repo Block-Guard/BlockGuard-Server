@@ -28,7 +28,7 @@ public class FraudAnalysisApi {
 
     @PostMapping(value = "/fraud-analysis", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "사기 분석")
-    public ResponseEntity<BaseResponse<FraudAnalysisResponse>> analyzeFraud
+    public BaseResponse<FraudAnalysisResponse> analyzeFraud
             (@RequestParam("fraudAnalysisRequest") String jsonStr,
              @RequestParam(value = "imageFiles", required = false) List<MultipartFile> imageFiles
             ) throws JsonProcessingException {
@@ -40,6 +40,6 @@ public class FraudAnalysisApi {
 
         FraudAnalysisRequest request = objectMapper.readValue(jsonStr, FraudAnalysisRequest.class);
         FraudAnalysisResponse fraudAnalysisResponse = fraudAnalysisService.fraudAnalysis(request, imageFiles);
-        return ResponseEntity.ok(BaseResponse.of(SuccessCode.ANALYZE_FRAUD_SUCCESS, fraudAnalysisResponse));
+        return BaseResponse.of(SuccessCode.ANALYZE_FRAUD_SUCCESS, fraudAnalysisResponse);
     }
 }

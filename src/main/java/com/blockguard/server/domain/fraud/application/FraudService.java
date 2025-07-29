@@ -20,7 +20,6 @@ public class FraudService {
         Optional<FraudUrl> foundUrl = fraudUrlRepository.findByUrl(url);
 
         if(foundUrl.isPresent()){
-            FraudUrl fraudUrl = foundUrl.get();
             return FraudUrlResponse.builder()
                     .riskLevel(RiskLevel.Danger)
                     .build();

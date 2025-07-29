@@ -10,4 +10,6 @@ public interface UserReportRecordRepository extends JpaRepository<UserReportReco
     boolean existsByUserAndIsCompletedFalse(User user);
 
     Optional<UserReportRecord> findFirstByUserAndIsCompletedFalseOrderByCreatedAtDesc(User user);
+
+    Optional<UserReportRecord> findByIdAndUser(Long id, User user);
 }

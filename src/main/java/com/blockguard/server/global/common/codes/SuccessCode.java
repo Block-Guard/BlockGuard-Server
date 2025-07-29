@@ -28,7 +28,8 @@ public enum SuccessCode {
     CHECK_PHONE_NUMBER_FRAUD_SUCCESS(HttpStatus.OK, 2017, "전화번호 사기 조회가 완료되었습니다."),
     IMPORT_OPEN_API_SUCCESS(HttpStatus.OK, 2018, "OPEN API 데이터 호출이 완료되었습니다."),
     CREATE_REPORT_RECORD_SUCCESS(HttpStatus.CREATED,2019, "신고 현황이 생성되었습니다."),
-    CURRENT_REPORT_FOUND(HttpStatus.OK,2020, "진행중인 신고 현황 조회에 성공하였습니다.");
+    CURRENT_REPORT_FOUND(HttpStatus.OK,2020, "진행중인 신고 현황 조회에 성공하였습니다."),
+    STEP_INFO_FOUND(HttpStatus.OK,2021, "신고 단계 정보 조회에 성공하였습니다.");
 
     private final HttpStatus status;
     private final int code;

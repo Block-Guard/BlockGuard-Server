@@ -21,7 +21,7 @@ public class ReportRecordResponse {
     public static ReportRecordResponse from(UserReportRecord record, ReportStepProgress reportStepProgress) {
         return ReportRecordResponse.builder()
                 .reportId(record.getId())
-                .step(ReportStep.getOrder(reportStepProgress.getStep()))
+                .step(reportStepProgress.getStep().getStepNumber())
                 .isCompleted(record.isCompleted())
                 .createdAt(record.getCreatedAt().toString())
                 .build();

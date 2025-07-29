@@ -6,6 +6,9 @@ import com.blockguard.server.global.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -29,4 +32,8 @@ public class UserReportRecord extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @OneToMany(mappedBy = "record", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<UserReportRecordCheckbox> checkboxes = new ArrayList<>();
 }

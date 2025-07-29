@@ -10,14 +10,12 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @Getter
-@Table(
-        name = "user_report_record_checkboxes",
+@Table(name = "report_step_checkboxes",
         uniqueConstraints = @UniqueConstraint(
-                name = "uk_record_type_index",
-                columnNames = {"record_id", "type", "box_index"}
-        )
-)
-public class UserReportRecordCheckbox extends BaseEntity {
+                name = "uk_progress_type_index",
+                columnNames = {"progress_id", "type", "box_index"}
+        ))
+public class ReportStepCheckbox extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +32,6 @@ public class UserReportRecordCheckbox extends BaseEntity {
     private boolean isChecked;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "record_id", nullable = false)
-    private UserReportRecord record;
+    @JoinColumn(name = "progress_id", nullable = false, updatable = false)
+    private ReportStepProgress stepProgress;
 }

@@ -1,7 +1,6 @@
 package com.blockguard.server.domain.report.domain;
 
 import com.blockguard.server.domain.user.domain.User;
-import com.blockguard.server.domain.report.domain.enums.ReportStep;
 import com.blockguard.server.global.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,10 +21,6 @@ public class UserReportRecord extends BaseEntity {
     @Column(nullable = false)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private ReportStep step;
-
     @Column(name = "is_completed", nullable = false)
     private boolean isCompleted = false;
 
@@ -33,7 +28,10 @@ public class UserReportRecord extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "record", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "record",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     @Builder.Default
-    private List<UserReportRecordCheckbox> checkboxes = new ArrayList<>();
+    private List<ReportStepProgress> progressList = new ArrayList<>();
+
 }

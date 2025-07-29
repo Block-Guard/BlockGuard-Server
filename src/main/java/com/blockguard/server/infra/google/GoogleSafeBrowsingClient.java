@@ -13,7 +13,7 @@ import java.util.Map;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class GoogleSafeBrowsingService {
+public class GoogleSafeBrowsingClient {
     private final RestTemplate restTemplate;
 
     @Value("${google.safe.api-key}")

@@ -6,7 +6,7 @@ import com.blockguard.server.domain.fraud.dto.request.FraudUrlRequest;
 import com.blockguard.server.domain.fraud.dto.response.FraudUrlResponse;
 import com.blockguard.server.global.common.codes.ErrorCode;
 import com.blockguard.server.global.exception.BusinessExceptionHandler;
-import com.blockguard.server.infra.google.GoogleSafeBrowsingService;
+import com.blockguard.server.infra.google.GoogleSafeBrowsingClient;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class FraudService {
     private final FraudUrlRepository fraudUrlRepository;
-    private final GoogleSafeBrowsingService googleSafeBrowsingService;
+    private final GoogleSafeBrowsingClient googleSafeBrowsingService;
 
     public FraudUrlResponse checkFraudUrl(FraudUrlRequest fraudUrlRequest) {
         String url = fraudUrlRequest.getUrl();

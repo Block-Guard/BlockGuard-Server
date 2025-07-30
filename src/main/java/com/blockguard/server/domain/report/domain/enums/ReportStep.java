@@ -18,10 +18,6 @@ public enum ReportStep {
         this.stepNumber = stepNumber;
     }
 
-    public static int getOrder(ReportStep step) {
-        return step.ordinal() + 1;
-    }
-
     public static Optional<ReportStep> from(int v) {
         return Arrays.stream(values()).filter(s -> s.stepNumber == v).findFirst();
     }

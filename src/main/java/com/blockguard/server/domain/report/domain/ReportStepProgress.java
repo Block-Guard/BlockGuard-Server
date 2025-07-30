@@ -1,6 +1,7 @@
 package com.blockguard.server.domain.report.domain;
 
 import com.blockguard.server.domain.report.domain.enums.ReportStep;
+import com.blockguard.server.domain.report.domain.enums.ReportStepCheckboxConfig;
 import com.blockguard.server.global.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -42,7 +43,35 @@ public class ReportStepProgress extends BaseEntity {
     @Builder.Default
     private List<ReportStepCheckbox> checkboxes = new ArrayList<>();
 
+    public static ReportStepProgress createWithDefaultCheckboxes(UserReportRecord userReportRecord, ReportStep step) {
+        ReportStepProgress progress = ReportStepProgress.builder()
+                .record(userReportRecord)
+                .step(step)
+                .build();
+
+        ReportStepCheckboxConfig cfg = ReportStepCheckboxConfig.of(step);
+
+        // 필수 체크박스
+        for (int i = 0; i < cfg.getRequiredCount(); i++) {
+            progress.addCheckbox(
+                    ReportStepCheckbox.createRequiredCheckbox(progress, i)
+            );
+        }
+
+        // 권장 체크박스
+        for (int i = 0; i < cfg.getRecommendedCount(); i++) {
+            progress.addCheckbox(
+                    ReportStepCheckbox.createRecommendedCheckbox(progress, i)
+            );
+        }
+        return progress;
+    }
+
     public void setCompleted(boolean completed) {
         this.isCompleted = completed;
+    }
+
+    public void addCheckbox(ReportStepCheckbox checkbox) {
+        this.checkboxes.add(checkbox);
     }
 }

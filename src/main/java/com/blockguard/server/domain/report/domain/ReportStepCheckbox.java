@@ -35,6 +35,22 @@ public class ReportStepCheckbox extends BaseEntity {
     @JoinColumn(name = "progress_id", nullable = false, updatable = false)
     private ReportStepProgress stepProgress;
 
+    public static ReportStepCheckbox createRequiredCheckbox(ReportStepProgress reportStepProgress, int boxIndex) {
+        return ReportStepCheckbox.builder()
+                .stepProgress(reportStepProgress)
+                .type(CheckboxType.REQUIRED)
+                .boxIndex(boxIndex)
+                .build();
+    }
+
+    public static ReportStepCheckbox createRecommendedCheckbox(ReportStepProgress reportStepProgress, int boxIndex) {
+        return ReportStepCheckbox.builder()
+                .stepProgress(reportStepProgress)
+                .type(CheckboxType.RECOMMENDED)
+                .boxIndex(boxIndex)
+                .build();
+    }
+
     public void updateChecked(boolean checked) {
         this.isChecked = checked;
     }

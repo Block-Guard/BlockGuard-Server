@@ -37,35 +37,11 @@ public class ReportRecordService {
                 .user(user)
                 .build();
 
-        ReportStepProgress progress1 = ReportStepProgress.builder()
-                .record(userReportRecord)
-                .step(ReportStep.STEP1)
-                .build();
-
-        ReportStepCheckboxConfig cfg = ReportStepCheckboxConfig.of(ReportStep.STEP1);
-
-        // STEP1 필수 체크박스 3개
-        for (int i = 0; i < cfg.getRequiredCount(); i++) {
-            progress1.getCheckboxes().add(ReportStepCheckbox.builder()
-                    .stepProgress(progress1)
-                    .type(CheckboxType.REQUIRED)
-                    .boxIndex(i)
-                    .build());
-        }
-
-        // STEP1 권장 체크박스 2개
-        for (int i = 0; i < cfg.getRecommendedCount(); i++) {
-            progress1.getCheckboxes().add(ReportStepCheckbox.builder()
-                    .stepProgress(progress1)
-                    .type(CheckboxType.RECOMMENDED)
-                    .boxIndex(i)
-                    .build());
-        }
-
-        userReportRecord.getProgressList().add(progress1);
+        ReportStepProgress progress = ReportStepProgress.createWithDefaultCheckboxes(userReportRecord, ReportStep.STEP1);
+        userReportRecord.addProgress(progress);
         userReportRecordRepository.save(userReportRecord);
 
-        return ReportRecordResponse.from(userReportRecord, progress1);
+        return ReportRecordResponse.from(userReportRecord, progress);
     }
 
     @Transactional
@@ -88,53 +64,18 @@ public class ReportRecordService {
 
     @Transactional
     public ReportRecordStepResponse getStepInfo(User user, Long reportId, int stepNumber) {
-        UserReportRecord record = userReportRecordRepository.findByIdAndUser(reportId, user)
-                .orElseThrow(() -> new BusinessExceptionHandler(ErrorCode.REPORT_NOT_FOUND));
+        UserReportRecord record = getUserReportRecord(user, reportId);
+        ReportStep step = getReportStep(stepNumber);
+        ReportStepProgress progress = getReportStepProgress(record, step);
 
-        ReportStep step = ReportStep.from(stepNumber)
-                .orElseThrow(() -> new BusinessExceptionHandler(ErrorCode.INVALID_STEP));
-
-        ReportStepProgress progress = record.getProgressList().stream()
-                .filter(p -> p.getStep() == step)
-                .findFirst()
-                .orElseThrow(() -> new BusinessExceptionHandler(ErrorCode.INVALID_STEP));
-
-        List<Boolean> requiredCheckboxes = progress.getCheckboxes().stream()
-                .filter(cb -> cb.getType() == CheckboxType.REQUIRED)
-                .sorted(Comparator.comparingInt(ReportStepCheckbox::getBoxIndex))
-                .map(ReportStepCheckbox::isChecked)
-                .toList();
-
-        List<Boolean> recommendedCheckboxes = progress.getCheckboxes().stream()
-                .filter(cb -> cb.getType() == CheckboxType.RECOMMENDED)
-                .sorted(Comparator.comparingInt(ReportStepCheckbox::getBoxIndex))
-                .map(ReportStepCheckbox::isChecked)
-                .toList();
-
-       recommendedCheckboxes = recommendedCheckboxes.isEmpty() ? null : recommendedCheckboxes;
-
-        return ReportRecordStepResponse.builder()
-                .reportId(reportId)
-                .step(stepNumber)
-                .checkBoxes(requiredCheckboxes)
-                .recommendedCheckBoxes(recommendedCheckboxes)
-                .isCompleted(progress.isCompleted())
-                .createdAt(String.valueOf(record.getCreatedAt()))
-                .build();
+        return getReportRecordStepResponse(reportId, stepNumber, progress, record);
     }
 
     @Transactional
     public ReportRecordStepResponse updateStepInfo(User user, Long reportId, int stepNumber, UpdateReportStepRequest updateReportStepRequest) {
-        UserReportRecord record = userReportRecordRepository.findByIdAndUser(reportId, user)
-                .orElseThrow(() -> new BusinessExceptionHandler(ErrorCode.REPORT_NOT_FOUND));
-
-        ReportStep step = ReportStep.from(stepNumber)
-                .orElseThrow(() -> new BusinessExceptionHandler(ErrorCode.INVALID_STEP));
-
-        ReportStepProgress progress = record.getProgressList().stream()
-                .filter(p -> p.getStep() == step)
-                .findFirst()
-                .orElseThrow(() -> new BusinessExceptionHandler(ErrorCode.INVALID_STEP));
+        UserReportRecord record = getUserReportRecord(user, reportId);
+        ReportStep step = getReportStep(stepNumber);
+        ReportStepProgress progress = getReportStepProgress(record, step);
 
         // 체스박스 수 검증
         ReportStepCheckboxConfig checkboxConfig = ReportStepCheckboxConfig.of(step);
@@ -178,29 +119,7 @@ public class ReportRecordService {
 
                 // 다음 스텝이 존재하지 않는다면 새롭게 생성
                 if (!exists) {
-                    ReportStepProgress nextProgress = ReportStepProgress.builder()
-                            .record(record)
-                            .step(nextStep)
-                            .build();
-
-                    ReportStepCheckboxConfig nextStepConfig = ReportStepCheckboxConfig.of(nextStep);
-
-                    for (int i = 0; i < nextStepConfig.getRequiredCount(); i++) {
-                        nextProgress.getCheckboxes().add(ReportStepCheckbox.builder()
-                                .stepProgress(nextProgress)
-                                .type(CheckboxType.REQUIRED)
-                                .boxIndex(i)
-                                .build());
-                    }
-
-                    // STEP1 권장 체크박스 2개
-                    for (int i = 0; i < nextStepConfig.getRecommendedCount(); i++) {
-                        nextProgress.getCheckboxes().add(ReportStepCheckbox.builder()
-                                .stepProgress(nextProgress)
-                                .type(CheckboxType.RECOMMENDED)
-                                .boxIndex(i)
-                                .build());
-                    }
+                    ReportStepProgress nextProgress = ReportStepProgress.createWithDefaultCheckboxes(record, nextStep);
                     record.addProgress(nextProgress);
                 }
             }
@@ -212,17 +131,12 @@ public class ReportRecordService {
 
         userReportRecordRepository.save(record);
 
-        List<Boolean> resultRequiredCheckboxes = progress.getCheckboxes().stream()
-                .filter(cb -> cb.getType() == CheckboxType.REQUIRED)
-                .sorted(Comparator.comparingInt(ReportStepCheckbox::getBoxIndex))
-                .map(ReportStepCheckbox::isChecked)
-                .toList();
+        return getReportRecordStepResponse(reportId, stepNumber, progress, record);
+    }
 
-        List<Boolean> resultRecommendedCheckboxes = progress.getCheckboxes().stream()
-                .filter(cb -> cb.getType() == CheckboxType.RECOMMENDED)
-                .sorted(Comparator.comparingInt(ReportStepCheckbox::getBoxIndex))
-                .map(ReportStepCheckbox::isChecked)
-                .toList();
+    private static ReportRecordStepResponse getReportRecordStepResponse(Long reportId, int stepNumber, ReportStepProgress progress, UserReportRecord record) {
+        List<Boolean> resultRequiredCheckboxes = getRequiredCheckboxes(progress, CheckboxType.REQUIRED);
+        List<Boolean> resultRecommendedCheckboxes = getRequiredCheckboxes(progress, CheckboxType.RECOMMENDED);
 
         resultRecommendedCheckboxes = resultRecommendedCheckboxes.isEmpty() ? null : resultRecommendedCheckboxes;
 
@@ -234,5 +148,30 @@ public class ReportRecordService {
                 .createdAt(String.valueOf(record.getCreatedAt()))
                 .isCompleted(progress.isCompleted())
                 .build();
+    }
+
+    private static List<Boolean> getRequiredCheckboxes(ReportStepProgress progress, CheckboxType required) {
+        return progress.getCheckboxes().stream()
+                .filter(cb -> cb.getType() == required)
+                .sorted(Comparator.comparingInt(ReportStepCheckbox::getBoxIndex))
+                .map(ReportStepCheckbox::isChecked)
+                .toList();
+    }
+
+    private static ReportStepProgress getReportStepProgress(UserReportRecord record, ReportStep step) {
+        return record.getProgressList().stream()
+                .filter(p -> p.getStep() == step)
+                .findFirst()
+                .orElseThrow(() -> new BusinessExceptionHandler(ErrorCode.INVALID_STEP));
+    }
+
+    private static ReportStep getReportStep(int stepNumber) {
+        return ReportStep.from(stepNumber)
+                .orElseThrow(() -> new BusinessExceptionHandler(ErrorCode.INVALID_STEP));
+    }
+
+    private UserReportRecord getUserReportRecord(User user, Long reportId) {
+        return userReportRecordRepository.findByIdAndUser(reportId, user)
+                .orElseThrow(() -> new BusinessExceptionHandler(ErrorCode.REPORT_NOT_FOUND));
     }
 }

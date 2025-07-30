@@ -2,7 +2,6 @@ package com.blockguard.server.domain.report.dto.response;
 
 import com.blockguard.server.domain.report.domain.ReportStepProgress;
 import com.blockguard.server.domain.report.domain.UserReportRecord;
-import com.blockguard.server.domain.report.domain.enums.ReportStep;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;

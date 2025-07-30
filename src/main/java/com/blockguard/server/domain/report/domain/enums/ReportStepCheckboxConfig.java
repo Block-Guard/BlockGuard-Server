@@ -27,6 +27,6 @@ public enum ReportStepCheckboxConfig {
                 return cfg;
             }
         }
-        throw new BusinessExceptionHandler(ErrorCode.INTERNAL_SERVER_ERROR);
+        throw new BusinessExceptionHandler(ErrorCode.INVALID_STEP);
     }
 }

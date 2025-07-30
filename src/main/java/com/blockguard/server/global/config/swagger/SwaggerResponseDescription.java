@@ -88,6 +88,12 @@ public enum SwaggerResponseDescription {
 
     INVALID_TOKEN(new LinkedHashSet<>(Set.of(
             ErrorCode.INVALID_TOKEN
+    ))),
+
+    GET_STEP_INFO_FAIL(new LinkedHashSet<>(Set.of(
+            ErrorCode.INVALID_TOKEN,
+            ErrorCode.REPORT_NOT_FOUND,
+            ErrorCode.INVALID_STEP
     )));
 
     private final Set<ErrorCode> errorCodeList;

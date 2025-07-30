@@ -38,7 +38,7 @@ public class ReportRecordApi {
     }
 
     @Operation(summary = "신고 현황의 특정 단계 정보 조회 API")
-    @CustomExceptionDescription(SwaggerResponseDescription.INVALID_TOKEN)
+    @CustomExceptionDescription(SwaggerResponseDescription.GET_STEP_INFO_FAIL)
     @GetMapping("/{reportId}/steps/{stepNumber}")
     public BaseResponse<ReportRecordStepResponse> getStepInfo(
             @Parameter(hidden = true) @CurrentUser User user,

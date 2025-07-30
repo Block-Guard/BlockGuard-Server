@@ -7,8 +7,6 @@ import com.blockguard.server.domain.analysis.dto.response.FraudAnalysisResponse;
 import com.blockguard.server.domain.analysis.dto.response.GptResponse;
 import com.blockguard.server.global.common.codes.ErrorCode;
 import com.blockguard.server.global.exception.BusinessExceptionHandler;
-import com.blockguard.server.infra.ocr.NaverOcrClient;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +16,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import com.blockguard.server.infra.ocr.NaverOcrClient;
 
 import java.io.IOException;
 import java.util.ArrayList;

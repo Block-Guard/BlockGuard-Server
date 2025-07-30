@@ -29,9 +29,13 @@ public class ReportStepCheckbox extends BaseEntity {
     private int boxIndex;       // 단계 내에서 몇 번째 체크박스인지
 
     @Column(name = "is_checked", nullable = false)
-    private boolean isChecked;
+    private boolean isChecked = false;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "progress_id", nullable = false, updatable = false)
     private ReportStepProgress stepProgress;
+
+    public void updateChecked(boolean checked) {
+        this.isChecked = checked;
+    }
 }

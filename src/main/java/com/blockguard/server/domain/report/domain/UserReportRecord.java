@@ -34,4 +34,12 @@ public class UserReportRecord extends BaseEntity {
     @Builder.Default
     private List<ReportStepProgress> progressList = new ArrayList<>();
 
+    public void addProgress(ReportStepProgress progress) {
+        this.progressList.add(progress);
+    }
+
+    public void setCompleted(boolean completed) {
+        this.isCompleted = completed;
+    }
+
 }

@@ -42,4 +42,7 @@ public class ReportStepProgress extends BaseEntity {
     @Builder.Default
     private List<ReportStepCheckbox> checkboxes = new ArrayList<>();
 
+    public void setCompleted(boolean completed) {
+        this.isCompleted = completed;
+    }
 }

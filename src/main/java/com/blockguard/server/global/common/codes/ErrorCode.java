@@ -31,7 +31,8 @@ public enum ErrorCode {
     URL_REQUIRED(HttpStatus.BAD_REQUEST, 4028, "URL은 필수 입력 값입니다."),
     REPORT_ALREADY_IN_PROGRESS(HttpStatus.BAD_REQUEST, 4029, "이미 진행중인 신고가 존재합니다."),
     INVALID_STEP(HttpStatus.BAD_REQUEST, 4030, "유효하지 않은 신고 단계 입니다."),
-    REPORT_NOT_FOUND(HttpStatus.BAD_REQUEST, 4030, "존재하지 않는 신고입니다."),
+    REPORT_NOT_FOUND(HttpStatus.BAD_REQUEST, 4031, "존재하지 않는 신고입니다."),
+    INVALID_CHECKBOX_COUNT(HttpStatus.BAD_REQUEST, 4032, "해당 단계에 유효하지 않은 체크박스 형식입니다."),
 
     // 5000~ : server error
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 5000, "서버 오류가 발생했습니다."),

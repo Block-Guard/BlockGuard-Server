@@ -1,6 +1,7 @@
 package com.blockguard.server.domain.report.api;
 
 import com.blockguard.server.domain.report.application.ReportRecordService;
+import com.blockguard.server.domain.report.dto.request.UpdateReportStepRequest;
 import com.blockguard.server.domain.report.dto.response.CurrentReportRecordResponse;
 import com.blockguard.server.domain.report.dto.response.ReportRecordResponse;
 import com.blockguard.server.domain.report.dto.response.ReportRecordStepResponse;
@@ -12,6 +13,7 @@ import com.blockguard.server.global.config.swagger.CustomExceptionDescription;
 import com.blockguard.server.global.config.swagger.SwaggerResponseDescription;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,5 +49,18 @@ public class ReportRecordApi {
     ) {
         ReportRecordStepResponse reportRecordStepResponse = reportRecordService.getStepInfo(user, reportId, stepNumber);
         return BaseResponse.of(SuccessCode.STEP_INFO_FOUND, reportRecordStepResponse);
+    }
+
+    @Operation(summary = "신고 현황 수정 API")
+    @CustomExceptionDescription(SwaggerResponseDescription.UPDATE_STEP_INFO_FAIL)
+    @PutMapping("/{reportId}/steps/{stepNumber}")
+    public BaseResponse<ReportRecordStepResponse> updateStepInfo(
+            @Parameter(hidden = true) @CurrentUser User user,
+            @PathVariable Long reportId,
+            @PathVariable int stepNumber,
+            @Valid @RequestBody UpdateReportStepRequest updateReportStepRequest
+    ) {
+        ReportRecordStepResponse reportRecordStepResponse = reportRecordService.updateStepInfo(user, reportId, stepNumber, updateReportStepRequest);
+        return BaseResponse.of(SuccessCode.UPDATE_STEP_INFO_SUCCESS, reportRecordStepResponse);
     }
 }

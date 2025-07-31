@@ -101,7 +101,8 @@ public enum SwaggerResponseDescription {
             ErrorCode.REPORT_NOT_FOUND,
             ErrorCode.INVALID_STEP,
             ErrorCode.INVALID_CHECKBOX_COUNT,
-            ErrorCode.INVALID_STEP_COMPLETION
+            ErrorCode.INVALID_STEP_COMPLETION,
+            ErrorCode.REPORT_STEP_ALREADY_COMPLETED
     )));
 
     private final Set<ErrorCode> errorCodeList;

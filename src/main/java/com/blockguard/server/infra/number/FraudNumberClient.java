@@ -33,7 +33,7 @@ public class FraudNumberClient {
      * @return CheckSpamNumberResponse.DataBlock
      */
     // Todo: 국제번호의 + 가능한지 체크
-    public CheckSpamNumberResponse.DataBlock checkSpamNumber(String number){
+    public CheckFraudNumberResponse.DataBlock checkSpamNumber(String number){
         HttpHeaders headers = new HttpHeaders();
         headers.add("CL_AUTH_KEY", apiKey);
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -44,18 +44,18 @@ public class FraudNumberClient {
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
 
         try{
-            ResponseEntity<CheckSpamNumberResponse> response =
+            ResponseEntity<CheckFraudNumberResponse> response =
                     restTemplate.postForEntity(
                             apiUrl,
                             request,
-                            CheckSpamNumberResponse.class
+                            CheckFraudNumberResponse.class
                     );
             if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
                 log.error("FraudNumber API error: status={}, body={}", response.getStatusCode(), response.getBody());
                 throw new BusinessExceptionHandler(ErrorCode.FRAUD_NUMBER_SERVER_ERROR);
             }
 
-            CheckSpamNumberResponse.DataBlock data = response.getBody().getData();
+            CheckFraudNumberResponse.DataBlock data = response.getBody().getData();
             if (data.getSuccess() != 1) {
                 log.warn("SpamNumber API returned success!=1: {}", data);
             }

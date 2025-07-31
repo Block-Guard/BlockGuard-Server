@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class CheckSpamNumberResponse {
+public class CheckFraudNumberResponse {
     private DataBlock data;
     private ApiBlock api;
 

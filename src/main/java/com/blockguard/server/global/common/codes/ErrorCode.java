@@ -34,7 +34,7 @@ public enum ErrorCode {
     REPORT_NOT_FOUND(HttpStatus.BAD_REQUEST, 4031, "존재하지 않는 신고입니다."),
     INVALID_CHECKBOX_COUNT(HttpStatus.BAD_REQUEST, 4032, "해당 단계에 유효하지 않은 체크박스 형식입니다."),
     INVALID_STEP_COMPLETION(HttpStatus.BAD_REQUEST, 4033, "해당 단계가 완료되려면 필수 체크박스가 모두 완료되어야 합니다."),
-    REPORT_STEP_ALREADY_COMPLETED(HttpStatus.BAD_REQUEST, 4033, "이미 완료된 단계의 체크박스는 수정할 수 없습니다."),
+    REPORT_STEP_ALREADY_COMPLETED(HttpStatus.BAD_REQUEST, 4034, "이미 완료된 단계의 체크박스는 수정할 수 없습니다."),
 
     // 5000~ : server error
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 5000, "서버 오류가 발생했습니다."),

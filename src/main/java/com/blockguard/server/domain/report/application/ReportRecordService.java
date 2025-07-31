@@ -77,8 +77,9 @@ public class ReportRecordService {
         ReportStep step = getReportStep(stepNumber);
         ReportStepProgress progress = getReportStepProgress(record, step);
 
-        // 체스박스 수 검증
-        validateCheckboxCounts(updateReportStepRequest, step);
+        // 요청 유효성 검증
+        validateUpdateStepInfo(updateReportStepRequest, progress, step);
+
         // 체크박스 상태 업데이트
         updateCheckboxStates(updateReportStepRequest, progress);
 
@@ -92,6 +93,20 @@ public class ReportRecordService {
         userReportRecordRepository.save(record);
 
         return buildReportRecordStepResponse(reportId, stepNumber, progress, record);
+    }
+
+    private void validateUpdateStepInfo(UpdateReportStepRequest updateReportStepRequest, ReportStepProgress progress, ReportStep step) {
+        // 이미 완료된 step 인지 검증
+        validateProgressIsCompleted(progress);
+        // 체스박스 수 검증
+        validateCheckboxCounts(updateReportStepRequest, step);
+        validateCompletionConsistency(updateReportStepRequest);
+    }
+
+    private void validateProgressIsCompleted(ReportStepProgress progress) {
+        if (progress.isCompleted()) {
+            throw new BusinessExceptionHandler(ErrorCode.REPORT_STEP_ALREADY_COMPLETED);
+        }
     }
 
     private void createNextStepIfNeeded(int stepNumber, UserReportRecord record) {
@@ -136,13 +151,30 @@ public class ReportRecordService {
     private void validateCheckboxCounts(UpdateReportStepRequest request, ReportStep step) {
         ReportStepCheckboxConfig checkboxConfig = ReportStepCheckboxConfig.of(step);
 
+        // 필수 체크박스 검증
         boolean isRequiredCountInvalid = request.getCheckBoxes().size() != checkboxConfig.getRequiredCount();
-        boolean isRecommendedCountInvalid = checkboxConfig.getRecommendedCount() > 0 &&
-                (request.getRecommendedCheckBoxes() == null ||
-                        request.getRecommendedCheckBoxes().size() != checkboxConfig.getRecommendedCount());
 
+        // 권장 체크박스 개수 검증
+        List<Boolean> rec = request.getRecommendedCheckBoxes();
+        boolean isRecommendedCountInvalid;
+        if (checkboxConfig.getRecommendedCount() == 0) {
+            // 권장 개수가 0개면, rec는 null 또는 비어 있어야 함
+            isRecommendedCountInvalid = rec != null && !rec.isEmpty();
+        } else {
+            // 권장 개수가 1개 이상이면, null 아니고 정확히 갯수 맞아야 함
+            isRecommendedCountInvalid = (rec == null || rec.size() != checkboxConfig.getRecommendedCount());
+        }
         if (isRequiredCountInvalid || isRecommendedCountInvalid) {
             throw new BusinessExceptionHandler(ErrorCode.INVALID_CHECKBOX_COUNT);
+        }
+    }
+
+    // 1) isCompleted=true 인데 하나라도 unchecked → 예외
+    private void validateCompletionConsistency(UpdateReportStepRequest request) {
+        boolean allRequiredChecked = request.getCheckBoxes().stream()
+                .allMatch(Boolean::booleanValue); // 모두 true 인가
+        if (!allRequiredChecked && request.getIsCompleted()) {
+            throw new BusinessExceptionHandler(ErrorCode.INVALID_STEP_COMPLETION);
         }
     }
 

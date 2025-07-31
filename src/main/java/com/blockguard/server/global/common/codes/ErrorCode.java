@@ -32,7 +32,8 @@ public enum ErrorCode {
 
     // 5000~ : server error
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 5000, "서버 오류가 발생했습니다."),
-    AI_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 5001, "AI 서버와의 통신 오류가 발생했습니다.");
+    AI_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 5001, "AI 서버와의 통신 오류가 발생했습니다."),
+    FRAUD_NUMBER_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 5002, "사기 전화번호 제공 서버와의 통신 오류가 발생했습니다.");
 
     private final HttpStatus status;
     private final int code;

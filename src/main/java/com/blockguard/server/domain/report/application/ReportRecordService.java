@@ -194,9 +194,9 @@ public class ReportRecordService {
                 .build();
     }
 
-    private List<Boolean> getRequiredCheckboxes(ReportStepProgress progress, CheckboxType required) {
+    private List<Boolean> getRequiredCheckboxes(ReportStepProgress progress, CheckboxType type) {
         return progress.getCheckboxes().stream()
-                .filter(cb -> cb.getType() == required)
+                .filter(cb -> cb.getType() == type)
                 .sorted(Comparator.comparingInt(ReportStepCheckbox::getBoxIndex))
                 .map(ReportStepCheckbox::isChecked)
                 .toList();

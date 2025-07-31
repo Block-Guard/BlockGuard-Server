@@ -1,10 +1,13 @@
 package com.blockguard.server.domain.fraud.api;
 
 import com.blockguard.server.domain.fraud.application.FraudService;
+import com.blockguard.server.domain.fraud.dto.request.FraudPhoneNumberRequest;
 import com.blockguard.server.domain.fraud.dto.request.FraudUrlRequest;
-import com.blockguard.server.domain.fraud.dto.response.FraudUrlResponse;
+import com.blockguard.server.domain.fraud.dto.response.FraudRiskLevelResponse;
 import com.blockguard.server.global.common.codes.SuccessCode;
 import com.blockguard.server.global.common.response.BaseResponse;
+import com.blockguard.server.global.config.swagger.CustomExceptionDescription;
+import com.blockguard.server.global.config.swagger.SwaggerResponseDescription;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -21,9 +24,17 @@ public class FraudApi {
 
     @PostMapping("/url")
     @Operation(summary = "입력된 url 사기 분석")
-    public BaseResponse<FraudUrlResponse> fraudUrl(@Valid @RequestBody FraudUrlRequest fraudUrlRequest){
-        FraudUrlResponse fraudUrlResponse = fraudService.checkFraudUrl(fraudUrlRequest);
-        return BaseResponse.of(SuccessCode.CHECK_URL_FRAUD_SUCCESS, fraudUrlResponse);
+    public BaseResponse<FraudRiskLevelResponse> fraudUrl(@Valid @RequestBody FraudUrlRequest fraudUrlRequest){
+        FraudRiskLevelResponse fraudRiskLevelResponse = fraudService.checkFraudUrl(fraudUrlRequest);
+        return BaseResponse.of(SuccessCode.CHECK_URL_FRAUD_SUCCESS, fraudRiskLevelResponse);
+    }
+
+    @PostMapping("/number")
+    @CustomExceptionDescription(SwaggerResponseDescription.CHECK_FRAUD_PHONE_NUMBER_FAIL)
+    @Operation(summary = "입력된 전화번호 사기 분석")
+    public BaseResponse<FraudRiskLevelResponse> fraudPhoneNumber(@Valid @RequestBody FraudPhoneNumberRequest fraudPhoneNumberRequest){
+        FraudRiskLevelResponse fraudRiskLevelResponse = fraudService.checkFraudPhoneNumber(fraudPhoneNumberRequest);
+        return BaseResponse.of(SuccessCode.CHECK_PHONE_NUMBER_FRAUD_SUCCESS, fraudRiskLevelResponse);
     }
 
 }

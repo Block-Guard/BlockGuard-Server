@@ -81,6 +81,10 @@ public enum SwaggerResponseDescription {
             ErrorCode.INVALID_EMAIL_TYPE
     ))),
 
+    CHECK_FRAUD_PHONE_NUMBER_FAIL(new LinkedHashSet<>(Set.of(
+            ErrorCode.FRAUD_NUMBER_SERVER_ERROR
+    ))),
+
     INVALID_TOKEN(new LinkedHashSet<>(Set.of(
             ErrorCode.INVALID_TOKEN
     )));

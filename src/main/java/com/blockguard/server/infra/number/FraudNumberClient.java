@@ -32,6 +32,7 @@ public class FraudNumberClient {
      * @param number "-" 없이 숫자만 이어 붙인 폰번호(ex: "01012341234")
      * @return CheckSpamNumberResponse.DataBlock
      */
+    // Todo: 국제번호의 + 가능한지 체크
     public CheckSpamNumberResponse.DataBlock checkSpamNumber(String number){
         HttpHeaders headers = new HttpHeaders();
         headers.add("CL_AUTH_KEY", apiKey);

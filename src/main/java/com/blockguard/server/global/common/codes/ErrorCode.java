@@ -36,6 +36,7 @@ public enum ErrorCode {
     INVALID_STEP_COMPLETION(HttpStatus.BAD_REQUEST, 4033, "해당 단계가 완료되려면 필수 체크박스가 모두 완료되어야 합니다."),
     REPORT_STEP_ALREADY_COMPLETED(HttpStatus.BAD_REQUEST, 4034, "이미 완료된 단계의 체크박스는 수정할 수 없습니다."),
     FAIL_TO_CRAWLING_NEWS(HttpStatus.BAD_REQUEST, 4035, "뉴스 크롤링에 실패하였습니다."),
+    MUST_BE_POSITIVE_NUMBER(HttpStatus.BAD_REQUEST, 4036, "페이지와 사이즈는 1이상의 값을 입력해야합니다."),
 
     // 5000~ : server error
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 5000, "서버 오류가 발생했습니다."),

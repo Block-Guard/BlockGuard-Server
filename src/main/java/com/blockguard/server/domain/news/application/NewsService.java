@@ -6,6 +6,8 @@ import com.blockguard.server.domain.news.domain.enums.Category;
 import com.blockguard.server.domain.news.dto.response.NewsArticleResponse;
 import com.blockguard.server.domain.news.dto.response.NewsPageResponse;
 import com.blockguard.server.domain.news.dto.response.PageableInfo;
+import com.blockguard.server.global.common.codes.ErrorCode;
+import com.blockguard.server.global.exception.BusinessExceptionHandler;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -23,12 +25,16 @@ public class NewsService {
     private final NewsRepository newsRepository;
 
     public NewsPageResponse getNewsList(int page, int size, String sort, String category) {
-        Pageable pageable = PageRequest.of(page -1, size, getSort(sort));
+        Pageable pageable = PageRequest.of(page - 1, size, getSort(sort));
         Page<NewsArticle> newsPage;
 
-        if(category.equals("전체")){
+        if (page < 1 || size < 1) {
+            throw new BusinessExceptionHandler(ErrorCode.MUST_BE_POSITIVE_NUMBER);
+        }
+
+        if (category.equals("전체")) {
             newsPage = newsRepository.findAllByIsFilteredOutFalse(pageable);
-        } else{
+        } else {
             Category enumCategory = Category.from(category);
             newsPage = newsRepository.findByCategoryAndIsFilteredOutFalse(enumCategory, pageable);
         }
@@ -41,7 +47,7 @@ public class NewsService {
                 .news(articleResponses)
                 .sort(sort)
                 .pageableInfo(PageableInfo.builder()
-                        .page(newsPage.getNumber()+1)
+                        .page(newsPage.getNumber() + 1)
                         .size(newsPage.getSize())
                         .totalElements(newsPage.getTotalElements())
                         .totalPages(newsPage.getTotalPages())

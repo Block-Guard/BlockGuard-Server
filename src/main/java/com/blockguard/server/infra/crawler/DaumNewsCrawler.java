@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.safety.Safelist;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Service;
 
@@ -75,10 +76,10 @@ public class DaumNewsCrawler {
                     }
 
                     NewsArticle article = NewsArticle.builder()
-                            .title(title)
+                            .title(Jsoup.clean(title, Safelist.none()))
                             .url(url)
                             .publishedAt(publishedAt)
-                            .newspaper(newspaper)
+                            .newspaper(Jsoup.clean(newspaper, Safelist.none()))
                             .imageUrl(imageUrl)
                             .category(category)
                             .build();

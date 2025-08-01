@@ -25,7 +25,7 @@ public class JwtTokenGenerator {
     }
 
     // User 정보를 가지고 AccessToken, RefreshToken을 생성
-    public JwtToken generateToken(Long userId, String grantType) {
+    public JwtToken generateToken(String userId, String grantType) {
         // 권한 가져오기
         long now = (new Date()).getTime();
 
@@ -38,7 +38,8 @@ public class JwtTokenGenerator {
         Date accessTokenExpiresIn = new Date(now + accessTokenExpireTime);
         String accessToken = Jwts.builder()
                 .setSubject(String.valueOf(userId))
-                .claim("auth", "ROLE_USER")
+                //.claim("auth", "ROLE_USER")
+                .claim("auth", "ROLE_" + grantType.toUpperCase())
                 .setExpiration(accessTokenExpiresIn)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();

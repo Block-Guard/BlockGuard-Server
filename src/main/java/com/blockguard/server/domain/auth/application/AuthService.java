@@ -1,6 +1,7 @@
 package com.blockguard.server.domain.auth.application;
 
 import com.blockguard.server.domain.auth.domain.JwtToken;
+import com.blockguard.server.domain.auth.enums.JwtGrantType;
 import com.blockguard.server.domain.auth.infra.JwtTokenGenerator;
 import com.blockguard.server.domain.user.domain.User;
 import com.blockguard.server.domain.user.dto.request.*;
@@ -67,7 +68,7 @@ public class AuthService {
             throw new BusinessExceptionHandler(ErrorCode.INVALID_PASSWORD);
         }
 
-        JwtToken jwtToken = jwtTokenGenerator.generateToken(user.getId(), "Bearer");
+        JwtToken jwtToken = jwtTokenGenerator.generateToken(user.getId().toString(), JwtGrantType.GRANT_TYPE_USER.getValue());
 
         return LoginResponse.builder()
                 .userId(user.getId())

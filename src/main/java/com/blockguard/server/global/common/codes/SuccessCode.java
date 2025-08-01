@@ -32,7 +32,8 @@ public enum SuccessCode {
     STEP_INFO_FOUND(HttpStatus.OK,2021, "신고 단계 정보 조회에 성공하였습니다."),
     UPDATE_STEP_INFO_SUCCESS(HttpStatus.OK,2022, "신고 단계 정보가 성공적으로 업데이트 되었습니다."),
     GET_NEWS_ARTICLES_SUCCESS(HttpStatus.OK, 2023, "뉴스 목록 조회가 완료되었습니다."),
-    CRWAL_DAUM_NEWS_SUCCESS(HttpStatus.OK, 2024, "뉴스 크롤링이 완료되었습니다.");
+    CRWAL_DAUM_NEWS_SUCCESS(HttpStatus.OK, 2024, "뉴스 크롤링이 완료되었습니다."),
+    ADMIN_TOKEN_SUCCESS(HttpStatus.OK, 2025, "관리자 토큰이 발급되었습니다.");
 
     private final HttpStatus status;
     private final int code;

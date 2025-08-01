@@ -1,5 +1,6 @@
 package com.blockguard.server.domain.news.domain;
 
+import com.blockguard.server.domain.news.domain.enums.Category;
 import com.blockguard.server.global.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -32,4 +33,11 @@ public class NewsArticle extends BaseEntity {
     private String newspaper;
 
     private String imageUrl;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Category category;
+
+    @Column(nullable = false)
+    private boolean isFilteredOut;
 }

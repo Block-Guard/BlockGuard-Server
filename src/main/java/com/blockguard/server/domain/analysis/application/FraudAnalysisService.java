@@ -6,7 +6,7 @@ import com.blockguard.server.domain.analysis.dto.request.GptRequest;
 import com.blockguard.server.domain.analysis.dto.response.FraudAnalysisResponse;
 import com.blockguard.server.domain.analysis.dto.response.GptResponse;
 import com.blockguard.server.infra.gpt.GptApiClient;
-import com.blockguard.server.infra.ocr.NaverOcrClient;
+import com.blockguard.server.infra.naver.ocr.NaverOcrClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

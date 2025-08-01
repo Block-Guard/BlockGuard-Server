@@ -96,6 +96,10 @@ public enum SwaggerResponseDescription {
             ErrorCode.INVALID_STEP
     ))),
 
+    GET_NEWS_ARTICLES_FAIL(new LinkedHashSet<>(Set.of(
+            ErrorCode.FAIL_TO_CRAWLING_NEWS
+    ))),
+
     UPDATE_STEP_INFO_FAIL(new LinkedHashSet<>(Set.of(
             ErrorCode.INVALID_TOKEN,
             ErrorCode.REPORT_NOT_FOUND,

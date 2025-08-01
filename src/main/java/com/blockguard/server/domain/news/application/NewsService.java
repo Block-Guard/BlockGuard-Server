@@ -6,7 +6,6 @@ import com.blockguard.server.domain.news.domain.enums.Category;
 import com.blockguard.server.domain.news.dto.response.NewsArticleResponse;
 import com.blockguard.server.domain.news.dto.response.NewsPageResponse;
 import com.blockguard.server.domain.news.dto.response.PageableInfo;
-import com.blockguard.server.infra.crawler.DaumNewsCrawler;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -21,7 +20,6 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 public class NewsService {
-    private final DaumNewsCrawler daumNewsCrawler;
     private final NewsRepository newsRepository;
 
     public NewsPageResponse getNewsList(int page, int size, String sort, String category) {

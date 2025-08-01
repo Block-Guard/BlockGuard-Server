@@ -7,10 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface NewsRepository extends JpaRepository<NewsArticle, Long> {
-    Page<NewsArticle> findAll(Pageable pageable);
     Page<NewsArticle> findByCategoryAndIsFilteredOutFalse(Category category, Pageable pageable);
-
     boolean existsByUrl(String url);
-
     Page<NewsArticle> findAllByIsFilteredOutFalse(Pageable pageable);
 }

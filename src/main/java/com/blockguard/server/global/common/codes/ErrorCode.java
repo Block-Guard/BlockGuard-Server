@@ -29,7 +29,13 @@ public enum ErrorCode {
     IMAGE_UPLOAD_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, 4026, "이미지는 최대 2장까지만 업로드 가능합니다."),
     FAIL_IMPORT_OPEN_API(HttpStatus.BAD_REQUEST, 4027, "OPEN API 호출에 실패하였습니다."),
     URL_REQUIRED(HttpStatus.BAD_REQUEST, 4028, "URL은 필수 입력 값입니다."),
-    FAIL_TO_CRAWLING_NEWS(HttpStatus.BAD_REQUEST, 4029, "뉴스 크롤링에 실패하였습니다."),
+    REPORT_ALREADY_IN_PROGRESS(HttpStatus.BAD_REQUEST, 4029, "이미 진행중인 신고가 존재합니다."),
+    INVALID_STEP(HttpStatus.BAD_REQUEST, 4030, "유효하지 않은 신고 단계 입니다."),
+    REPORT_NOT_FOUND(HttpStatus.BAD_REQUEST, 4031, "존재하지 않는 신고입니다."),
+    INVALID_CHECKBOX_COUNT(HttpStatus.BAD_REQUEST, 4032, "해당 단계에 유효하지 않은 체크박스 형식입니다."),
+    INVALID_STEP_COMPLETION(HttpStatus.BAD_REQUEST, 4033, "해당 단계가 완료되려면 필수 체크박스가 모두 완료되어야 합니다."),
+    REPORT_STEP_ALREADY_COMPLETED(HttpStatus.BAD_REQUEST, 4034, "이미 완료된 단계의 체크박스는 수정할 수 없습니다."),
+    FAIL_TO_CRAWLING_NEWS(HttpStatus.BAD_REQUEST, 4035, "뉴스 크롤링에 실패하였습니다."),
 
     // 5000~ : server error
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 5000, "서버 오류가 발생했습니다."),

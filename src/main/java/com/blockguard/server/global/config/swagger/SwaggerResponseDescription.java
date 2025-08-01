@@ -81,8 +81,28 @@ public enum SwaggerResponseDescription {
             ErrorCode.INVALID_EMAIL_TYPE
     ))),
 
+    CREATE_REPORT_FAIL(new LinkedHashSet<>(Set.of(
+            ErrorCode.INVALID_TOKEN,
+            ErrorCode.REPORT_ALREADY_IN_PROGRESS
+    ))),
+
     INVALID_TOKEN(new LinkedHashSet<>(Set.of(
             ErrorCode.INVALID_TOKEN
+    ))),
+
+    GET_STEP_INFO_FAIL(new LinkedHashSet<>(Set.of(
+            ErrorCode.INVALID_TOKEN,
+            ErrorCode.REPORT_NOT_FOUND,
+            ErrorCode.INVALID_STEP
+    ))),
+
+    UPDATE_STEP_INFO_FAIL(new LinkedHashSet<>(Set.of(
+            ErrorCode.INVALID_TOKEN,
+            ErrorCode.REPORT_NOT_FOUND,
+            ErrorCode.INVALID_STEP,
+            ErrorCode.INVALID_CHECKBOX_COUNT,
+            ErrorCode.INVALID_STEP_COMPLETION,
+            ErrorCode.REPORT_STEP_ALREADY_COMPLETED
     )));
 
     private final Set<ErrorCode> errorCodeList;

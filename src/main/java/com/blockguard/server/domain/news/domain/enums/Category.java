@@ -7,7 +7,7 @@ public enum Category {
         return switch (input){
             case "보이스피싱" -> VOICE_PHISHING;
             case "스미싱" -> SMISHING;
-            case "메신저 피싱" -> MESSAGE_VOICE_PHISHING;
+            case "메신저 피싱", "메신저피싱" -> MESSAGE_VOICE_PHISHING;
             default -> ETC;
         };
     }

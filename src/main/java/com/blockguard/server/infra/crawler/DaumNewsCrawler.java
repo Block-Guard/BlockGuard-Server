@@ -24,14 +24,16 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class DaumNewsCrawler {
     private final NewsRepository newsRepository;
+    private static final int MAX_PAGES = 10;
+    private static final int ARTICLE_RETENTION_DAYS = 60;
+    private static final long CRAWL_DELAY_MS = 500L;
 
     public void fetchNewsFromDaum(String keyword) {
         Category category = Category.from(keyword);
-        int maxPages = 10;
         int savedCount = 0;
 
         try {
-            for (int page = 1; page <= maxPages; page++) {
+            for (int page = 1; page <= MAX_PAGES; page++) {
                 String searchUrl = "https://search.daum.net/search?w=news&q=" +
                         URLEncoder.encode(keyword, StandardCharsets.UTF_8) + "&p=" + page;
 
@@ -68,7 +70,7 @@ public class DaumNewsCrawler {
                             .orElse(null);
 
                     LocalDateTime publishedAt = parsePublishedAt(timeText);
-                    if (publishedAt.isBefore(LocalDateTime.now().minusDays(60))) {
+                    if (publishedAt.isBefore(LocalDateTime.now().minusDays(ARTICLE_RETENTION_DAYS))) {
                         continue;
                     }
 
@@ -84,7 +86,7 @@ public class DaumNewsCrawler {
                     newsRepository.save(article);
                     savedCount++;
                 }
-                Thread.sleep(500);
+                Thread.sleep(CRAWL_DELAY_MS);
             }
 
         } catch (IOException e) {

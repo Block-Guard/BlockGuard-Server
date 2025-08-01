@@ -56,8 +56,26 @@ public class DaumNewsCrawler {
 
                     if (newsRepository.existsByUrl(url)) continue;
 
-                    String imageUrl = Optional.ofNullable(item.selectFirst("div.item-thumb img"))
-                            .map(img -> img.attr("src"))
+                    Element imageEl = item.selectFirst("a.thumb_bf img");
+
+                    String imageUrl = Optional.ofNullable(imageEl)
+                            .map(img -> {
+                                String[] candidates = {
+                                        img.attr("data-original-src"),
+                                        img.attr("data-src"),
+                                        img.attr("data-original"),
+                                        img.attr("src")
+                                };
+                                for (String candidate : candidates) {
+                                    if (candidate != null) {
+                                        String cleaned = candidate.trim();
+                                        if (cleaned.startsWith("http") && !cleaned.startsWith("data:image")) {
+                                            return cleaned;
+                                        }
+                                    }
+                                }
+                                return null;
+                            })
                             .orElse(null);
 
                     String newspaper = Optional.ofNullable(item.selectFirst("a.item-writer span.txt_info"))

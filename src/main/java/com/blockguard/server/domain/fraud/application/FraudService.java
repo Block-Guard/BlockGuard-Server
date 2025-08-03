@@ -47,7 +47,7 @@ public class FraudService {
     }
 
     public FraudRiskLevelResponse checkFraudPhoneNumber(FraudPhoneNumberRequest fraudPhoneNumberRequest) {
-        String phoneNumber = fraudPhoneNumberRequest.getPhoneNumber().replaceAll("\\D", "");
+        String phoneNumber = fraudPhoneNumberRequest.getPhoneNumber().replaceAll("\\s+", "");
 
         // 사기 전화번호 조회 api 호출
         String spamCount = fraudNumberClient.checkSpamNumber(phoneNumber).getSpamCount();
@@ -64,6 +64,7 @@ public class FraudService {
     }
 
     private Boolean isFraudNumber(String spamCount) {
+        // spam count 최대 "1000+" 가 나오는 경우 고려
         return Integer.parseInt(spamCount.replaceAll("\\D+", "")) > 0;
     }
 }

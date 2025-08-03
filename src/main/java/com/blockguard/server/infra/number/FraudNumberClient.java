@@ -21,27 +21,26 @@ import org.springframework.web.client.RestTemplate;
 public class FraudNumberClient {
     private final RestTemplate restTemplate;
 
-    @Value("${fraud.number.api.invoke-url}")
+    @Value("${open-api.fraud-number.base-url}")
     private String apiUrl;
 
-    @Value("${fraud.number.api.secret-key}")
+    @Value("${open-api.fraud-number.secret-key}")
     private String apiKey;
 
     /**
      * 주어진 번호에 대해 스팸 여부를 조회합니다.
-     * @param number "-" 없이 숫자만 이어 붙인 폰번호(ex: "01012341234")
+     * @param number 전화번호(국제전화, 번호 중간 "-" 허용, "-" 없이 숫자만 이어 붙인 번호 허용)
      * @return CheckSpamNumberResponse.DataBlock
      */
-    // Todo: 국제번호의 + 가능한지 체크
     public CheckFraudNumberResponse.DataBlock checkSpamNumber(String number){
         HttpHeaders headers = new HttpHeaders();
         headers.add("CL_AUTH_KEY", apiKey);
-        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         body.add("number", number);
 
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
+        HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<>(body, headers);
 
         try{
             ResponseEntity<CheckFraudNumberResponse> response =
@@ -57,9 +56,10 @@ public class FraudNumberClient {
 
             CheckFraudNumberResponse.DataBlock data = response.getBody().getData();
             if (data.getSuccess() != 1) {
-                log.warn("SpamNumber API returned success!=1: {}", data);
+                log.error("SpamNumber API returned success!=1: {}", data);
+                throw new BusinessExceptionHandler(ErrorCode.FRAUD_NUMBER_SERVER_ERROR);
             }
-
+            log.info("FraudNumber API Success, getSpamCount: {}", response.getBody().getData().getSpamCount());
             return data;
 
         } catch (RestClientException ex){

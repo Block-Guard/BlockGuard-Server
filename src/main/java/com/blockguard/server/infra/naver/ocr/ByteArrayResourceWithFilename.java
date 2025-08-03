@@ -1,4 +1,4 @@
-package com.blockguard.server.infra.ocr;
+package com.blockguard.server.infra.naver.ocr;
 
 import org.springframework.core.io.ByteArrayResource;
 

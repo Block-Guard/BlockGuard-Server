@@ -1,5 +1,6 @@
-package com.blockguard.server.infra.ocr;
+package com.blockguard.server.infra.naver.ocr;
 
+import com.blockguard.server.infra.naver.ocr.ByteArrayResourceWithFilename;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

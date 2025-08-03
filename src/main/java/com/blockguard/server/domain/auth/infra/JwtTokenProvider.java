@@ -42,20 +42,21 @@ public class JwtTokenProvider {
             throw new RuntimeException("권한 정보가 없는 토큰입니다.");
         }
 
-        Long userId = Long.valueOf(claims.getSubject());
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-
-        // 클레임에서 권한 정보 가져오기
         Collection<? extends GrantedAuthority> authorities = Arrays.stream(claims.get("auth").toString().split(","))
                 .map(SimpleGrantedAuthority::new)
                 .toList();
 
-        // UserDetails principal = new User(claims.getSubject(), "", authorities);
+        if ("admin".equals(claims.getSubject())) {
+            return new UsernamePasswordAuthenticationToken("admin", "", authorities);
+        }
+
+        Long userId = Long.valueOf(claims.getSubject());
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
         return new UsernamePasswordAuthenticationToken(user, "", authorities);
     }
 
-    // 토큰 정보를 검증하는 메서드
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
@@ -87,10 +88,17 @@ public class JwtTokenProvider {
             return e.getClaims();
         }
     }
+
     // 사용자 ID 가져오기
     public Long getUserIdFromToken(String accessToken) {
         String token = accessToken.substring(7);
         Claims claims = parseClaims(token);
+
+        String subject = claims.getSubject();
+        if ("admin".equals(subject)) {
+            return null;
+        }
+
         return Long.valueOf(claims.getSubject()); // claims.getSubject()를 Long으로 변환
     }
 }

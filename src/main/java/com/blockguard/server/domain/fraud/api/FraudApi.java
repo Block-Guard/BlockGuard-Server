@@ -31,7 +31,7 @@ public class FraudApi {
 
     @PostMapping("/number")
     @CustomExceptionDescription(SwaggerResponseDescription.CHECK_FRAUD_PHONE_NUMBER_FAIL)
-    @Operation(summary = "입력된 전화번호 사기 분석")
+    @Operation(summary = "입력된 전화번호 사기 분석", description = "전화번호의 입력 형식 상관없음")
     public BaseResponse<FraudRiskLevelResponse> fraudPhoneNumber(@Valid @RequestBody FraudPhoneNumberRequest fraudPhoneNumberRequest){
         FraudRiskLevelResponse fraudRiskLevelResponse = fraudService.checkFraudPhoneNumber(fraudPhoneNumberRequest);
         return BaseResponse.of(SuccessCode.CHECK_PHONE_NUMBER_FRAUD_SUCCESS, fraudRiskLevelResponse);

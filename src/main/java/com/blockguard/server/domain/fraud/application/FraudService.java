@@ -10,8 +10,10 @@ import com.blockguard.server.global.exception.BusinessExceptionHandler;
 import com.blockguard.server.infra.google.GoogleSafeBrowsingClient;
 import com.blockguard.server.infra.number.FraudNumberClient;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class FraudService {
@@ -64,7 +66,16 @@ public class FraudService {
     }
 
     private Boolean isFraudNumber(String spamCount) {
-        // spam count 최대 "1000+" 가 나오는 경우 고려
-        return Integer.parseInt(spamCount.replaceAll("\\D+", "")) > 0;
+        try {
+            // spam count 최대 "1000+" 가 나오는 경우 고려
+            String numericPart = spamCount.replaceAll("\\D+", "");
+            if (numericPart.isEmpty()){
+                throw new BusinessExceptionHandler(ErrorCode.FRAUD_NUMBER_SERVER_ERROR);
+            }
+            return Integer.parseInt(numericPart) > 0;
+        } catch (NumberFormatException e) {
+            log.error("Invalid spam count format: {}", spamCount, e);
+            throw new BusinessExceptionHandler(ErrorCode.FRAUD_NUMBER_SERVER_ERROR);
+        }
     }
 }

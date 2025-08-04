@@ -6,6 +6,6 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class FraudUrlResponse {
+public class FraudRiskLevelResponse {
     private RiskLevel riskLevel;
 }

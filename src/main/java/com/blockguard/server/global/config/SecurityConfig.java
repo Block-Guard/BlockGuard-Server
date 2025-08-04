@@ -55,7 +55,7 @@ public class SecurityConfig {
                         registry
                                 .requestMatchers("/api/auth/**").permitAll()   // 로그인 및 회원가입
                                 .requestMatchers("/api/admin/login").permitAll()   // 관리자 로그인
-                                .requestMatchers("/api/fraud/url", "/api/fraud-analysis").permitAll() // 사기 분석
+                                .requestMatchers("/api/fraud/url", "/api/fraud/number","/api/fraud-analysis").permitAll() // 사기 분석
                                 .requestMatchers("/api/news").permitAll() // 뉴스 조회
                                 .requestMatchers("/actuator/health").permitAll() // 헬스체크 허용
                                 .requestMatchers("/", "/index.html", "/favicon.ico").permitAll()

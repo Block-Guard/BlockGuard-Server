@@ -34,7 +34,7 @@ public enum ErrorCode {
     REPORT_NOT_FOUND(HttpStatus.BAD_REQUEST, 4031, "존재하지 않는 신고입니다."),
     INVALID_CHECKBOX_COUNT(HttpStatus.BAD_REQUEST, 4032, "해당 단계에 유효하지 않은 체크박스 형식입니다."),
     INVALID_STEP_COMPLETION(HttpStatus.BAD_REQUEST, 4033, "해당 단계가 완료되려면 필수 체크박스가 모두 완료되어야 합니다."),
-    REPORT_STEP_ALREADY_COMPLETED(HttpStatus.BAD_REQUEST, 4034, "이미 완료된 단계의 체크박스는 수정할 수 없습니다."),
+    REPORT_STEP_ALREADY_COMPLETED(HttpStatus.BAD_REQUEST, 4034, "완료된 단계의 필수 조치 체크박스는 수정할 수 없습니다."),
     FAIL_TO_CRAWLING_NEWS(HttpStatus.BAD_REQUEST, 4035, "뉴스 크롤링에 실패하였습니다."),
     MUST_BE_POSITIVE_NUMBER(HttpStatus.BAD_REQUEST, 4036, "페이지와 사이즈는 1이상의 값을 입력해야합니다."),
 

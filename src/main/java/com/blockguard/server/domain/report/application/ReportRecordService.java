@@ -97,15 +97,20 @@ public class ReportRecordService {
 
     private void validateUpdateStepInfo(UpdateReportStepRequest updateReportStepRequest, ReportStepProgress progress, ReportStep step) {
         // 이미 완료된 step 인지 검증
-        validateProgressIsCompleted(progress);
+        validateProgressIsCompleted(updateReportStepRequest, progress);
         // 체스박스 수 검증
         validateCheckboxCounts(updateReportStepRequest, step);
         validateCompletionConsistency(updateReportStepRequest);
     }
 
-    private void validateProgressIsCompleted(ReportStepProgress progress) {
+    // 완료된 단계의 필수 체크박스는 수정이 불가능
+    // 요청된 필수 체크박스(request.getCheckBoxes())가 저장된 필수 체크박스 상태와 다를 경우에만 에러를 던진다
+    private void validateProgressIsCompleted(UpdateReportStepRequest request, ReportStepProgress progress) {
         if (progress.isCompleted()) {
-            throw new BusinessExceptionHandler(ErrorCode.REPORT_STEP_ALREADY_COMPLETED);
+            List<Boolean> currentRequired = getCheckboxes(progress, CheckboxType.REQUIRED);
+            if (!currentRequired.equals(request.getCheckBoxes())){
+                throw new BusinessExceptionHandler(ErrorCode.REPORT_STEP_ALREADY_COMPLETED);
+            }
         }
     }
 
@@ -179,8 +184,8 @@ public class ReportRecordService {
     }
 
     private ReportRecordStepResponse buildReportRecordStepResponse(Long reportId, int stepNumber, ReportStepProgress progress, UserReportRecord record) {
-        List<Boolean> resultRequiredCheckboxes = getRequiredCheckboxes(progress, CheckboxType.REQUIRED);
-        List<Boolean> resultRecommendedCheckboxes = getRequiredCheckboxes(progress, CheckboxType.RECOMMENDED);
+        List<Boolean> resultRequiredCheckboxes = getCheckboxes(progress, CheckboxType.REQUIRED);
+        List<Boolean> resultRecommendedCheckboxes = getCheckboxes(progress, CheckboxType.RECOMMENDED);
 
         resultRecommendedCheckboxes = resultRecommendedCheckboxes.isEmpty() ? null : resultRecommendedCheckboxes;
 
@@ -194,7 +199,7 @@ public class ReportRecordService {
                 .build();
     }
 
-    private List<Boolean> getRequiredCheckboxes(ReportStepProgress progress, CheckboxType type) {
+    private List<Boolean> getCheckboxes(ReportStepProgress progress, CheckboxType type) {
         return progress.getCheckboxes().stream()
                 .filter(cb -> cb.getType() == type)
                 .sorted(Comparator.comparingInt(ReportStepCheckbox::getBoxIndex))

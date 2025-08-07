@@ -1,18 +1,22 @@
 package com.blockguard.server.domain.analysis.application;
 
+import com.blockguard.server.domain.analysis.dao.FraudAnalysisRecordRepository;
 import com.blockguard.server.domain.analysis.domain.enums.RiskLevel;
 import com.blockguard.server.domain.analysis.dto.request.FraudAnalysisRequest;
 import com.blockguard.server.domain.analysis.dto.request.GptRequest;
+import com.blockguard.server.domain.analysis.dto.response.FraudAnalysisRecordResponse;
 import com.blockguard.server.domain.analysis.dto.response.FraudAnalysisResponse;
 import com.blockguard.server.domain.analysis.dto.response.GptResponse;
 import com.blockguard.server.domain.fraud.application.FraudService;
 import com.blockguard.server.domain.fraud.dto.request.FraudPhoneNumberRequest;
 import com.blockguard.server.domain.fraud.dto.request.FraudUrlRequest;
+import com.blockguard.server.domain.user.domain.User;
 import com.blockguard.server.infra.gpt.GptApiClient;
 import com.blockguard.server.infra.naver.ocr.NaverOcrClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,7 +32,9 @@ public class FraudAnalysisService {
     private final NaverOcrClient naverOcrClient;
     private final GptApiClient gptApiClient;
     private final FraudService fraudService;
+    private final FraudAnalysisRecordRepository fraudAnalysisRecordRepository;
 
+    @Transactional
     public FraudAnalysisResponse fraudAnalysis(FraudAnalysisRequest fraudAnalysisRequest, List<MultipartFile> imageFiles) {
         List<String> keywords = new ArrayList<>();
         double score = 0;
@@ -125,5 +131,11 @@ public class FraudAnalysisService {
                 .messageContent(StringUtils.hasText(fraudAnalysisRequest.getMessageContent()) ? fraudAnalysisRequest.getMessageContent() : null)
                 .imageContent(StringUtils.hasText(imageContent) ? imageContent : null)
                 .build();
+    }
+
+    public List<FraudAnalysisRecordResponse> getAnalyzeFraudList(User user){
+        return fraudAnalysisRecordRepository.findAllByUserOrderByCreatedAtDesc(user).stream()
+                .map(FraudAnalysisRecordResponse::from)
+                .toList();
     }
 }

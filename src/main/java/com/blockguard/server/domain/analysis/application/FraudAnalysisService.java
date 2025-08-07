@@ -47,7 +47,7 @@ public class FraudAnalysisService {
         // ai 서버 호출
         GptResponse gptResponse = gptApiClient.analyze(gptRequest);
 
-        score += gptResponse.getScore();
+        score = Math.min(100, score + gptResponse.getScore());
         return FraudAnalysisResponse.builder()
                 .keywords(gptResponse.getKeywords())
                 .score(score)

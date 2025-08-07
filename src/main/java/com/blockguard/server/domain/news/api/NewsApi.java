@@ -1,6 +1,7 @@
 package com.blockguard.server.domain.news.api;
 
 import com.blockguard.server.domain.news.application.NewsService;
+import com.blockguard.server.domain.news.dto.response.NewsArticleResponse;
 import com.blockguard.server.domain.news.dto.response.NewsPageResponse;
 import com.blockguard.server.global.common.codes.SuccessCode;
 import com.blockguard.server.global.common.response.BaseResponse;
@@ -10,6 +11,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/news")
@@ -28,6 +31,13 @@ public class NewsApi {
             @RequestParam(defaultValue = "전체") String category) {
         NewsPageResponse newsPageResponse = newsService.getNewsList(page, size, sort, category);
         return BaseResponse.of(SuccessCode.GET_NEWS_ARTICLES_SUCCESS, newsPageResponse);
+    }
+
+    @GetMapping("/selected")
+    @Operation(summary = "주요 뉴스 조회")
+    public BaseResponse<List<NewsArticleResponse>> getSelectedArticles(){
+        List<NewsArticleResponse> selectedArticles = newsService.getSelectedArticles();
+        return BaseResponse.of(SuccessCode.GET_SELECTED_NEWS_SUCCESS, selectedArticles);
     }
 
 }

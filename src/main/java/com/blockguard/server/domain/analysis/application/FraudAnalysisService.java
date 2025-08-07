@@ -33,10 +33,10 @@ public class FraudAnalysisService {
         List<String> keywords = new ArrayList<>();
         double score = 0;
 
-        extractKeywordsFromRequest(fraudAnalysisRequest, keywords);
-
         score = addFraudUrlScore(fraudAnalysisRequest, score);
         score = addFraudPhoneNumberScore(fraudAnalysisRequest, score);
+
+        extractKeywordsFromRequest(fraudAnalysisRequest, keywords);
 
         String additionalDescription = fraudAnalysisRequest.getAdditionalDescription();
         String imageContent = "";
@@ -50,7 +50,7 @@ public class FraudAnalysisService {
         score += gptResponse.getScore();
         return FraudAnalysisResponse.builder()
                 .keywords(gptResponse.getKeywords())
-                .score(gptResponse.getScore())
+                .score(score)
                 .estimatedFraudType(gptResponse.getEstimatedFraudType())
                 .explanation(gptResponse.getExplanation())
                 .riskLevel(RiskLevel.fromScore(score).getValue())
@@ -61,7 +61,7 @@ public class FraudAnalysisService {
         if (StringUtils.hasText(fraudAnalysisRequest.getSuspiciousPhoneNumbers())) {
             // 전화번호 위험이면 score 15점 추가
             String number = fraudAnalysisRequest.getSuspiciousPhoneNumbers().replaceAll("\\D+", "");
-            if (number.isEmpty() &&
+            if (!number.isEmpty() &&
                     fraudService.checkFraudPhoneNumber(new FraudPhoneNumberRequest(number))
                             .getRiskLevel() == RiskLevel.Dangers){
                 score += 15;

@@ -34,7 +34,8 @@ public enum SuccessCode {
     GET_NEWS_ARTICLES_SUCCESS(HttpStatus.OK, 2023, "뉴스 목록 조회가 완료되었습니다."),
     CRWAL_DAUM_NEWS_SUCCESS(HttpStatus.OK, 2024, "뉴스 크롤링이 완료되었습니다."),
     ADMIN_TOKEN_SUCCESS(HttpStatus.OK, 2025, "관리자 토큰이 발급되었습니다."),
-    GET_ANALYZE_FRAUD_LIST_SUCCESS(HttpStatus.OK, 2026, "사기 분석 기록 조회가 완료되었습니다.");
+    GET_SELECTED_NEWS_SUCCESS(HttpStatus.OK, 2026, "선택된 주요 뉴스 6개가 조회 완료되었습니다."),
+    GET_ANALYZE_FRAUD_LIST_SUCCESS(HttpStatus.OK, 2027, "사기 분석 기록 조회가 완료되었습니다.");
 
     private final HttpStatus status;
     private final int code;

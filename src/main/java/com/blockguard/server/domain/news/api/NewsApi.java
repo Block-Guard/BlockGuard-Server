@@ -34,6 +34,7 @@ public class NewsApi {
     }
 
     @GetMapping("/selected")
+    @CustomExceptionDescription(SwaggerResponseDescription.GET_NEWS_ARTICLES_FAIL)
     @Operation(summary = "주요 뉴스 조회")
     public BaseResponse<List<NewsArticleResponse>> getSelectedArticles(){
         List<NewsArticleResponse> selectedArticles = newsService.getSelectedArticles();

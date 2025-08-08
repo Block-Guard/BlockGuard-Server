@@ -18,7 +18,7 @@ public class FraudAnalysisRecordResponse {
         return FraudAnalysisRecordResponse.builder()
                 .fraudAnalysisRecordId(record.getId())
                 .analyzedAt(record.getCreatedAt())
-                .estimatedFraudType(record.getEstimatedFraudType().getKorName())
+                .estimatedFraudType(record.getEstimatedFraudType() != null ? record.getEstimatedFraudType().getKorName(): null)
                 .riskLevel(record.getRiskLevel().getValue())
                 .build();
     }

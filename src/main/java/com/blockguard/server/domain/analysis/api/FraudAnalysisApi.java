@@ -10,6 +10,8 @@ import com.blockguard.server.global.common.codes.SuccessCode;
 import com.blockguard.server.global.common.response.BaseResponse;
 import com.blockguard.server.global.config.resolver.CurrentUser;
 import com.blockguard.server.global.config.resolver.OptionalUser;
+import com.blockguard.server.global.config.swagger.CustomExceptionDescription;
+import com.blockguard.server.global.config.swagger.SwaggerResponseDescription;
 import com.blockguard.server.global.exception.BusinessExceptionHandler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,6 +33,7 @@ public class FraudAnalysisApi {
     private final ObjectMapper objectMapper;
 
     @PostMapping(value = "/fraud-analysis", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @CustomExceptionDescription(SwaggerResponseDescription.ANALYZE_FRAUD_FAIL)
     @Operation(summary = "사기 분석")
     public BaseResponse<FraudAnalysisResponse> analyzeFraud(
             @RequestParam("fraudAnalysisRequest") String jsonStr,
@@ -49,6 +52,7 @@ public class FraudAnalysisApi {
     }
 
     @GetMapping(value = "/fraud-analysis")
+    @CustomExceptionDescription(SwaggerResponseDescription.INVALID_TOKEN)
     @Operation(summary = "사기 분석 기록 조회")
     public BaseResponse<List<FraudAnalysisRecordResponse>> getAnalyzeFraudList(@Parameter(hidden = true) @CurrentUser User user){
         List<FraudAnalysisRecordResponse> fraudAnalysisRecordResponse = fraudAnalysisService.getAnalyzeFraudList(user);

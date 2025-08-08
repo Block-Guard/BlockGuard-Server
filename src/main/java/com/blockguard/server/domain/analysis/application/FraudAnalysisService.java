@@ -1,6 +1,8 @@
 package com.blockguard.server.domain.analysis.application;
 
 import com.blockguard.server.domain.analysis.dao.FraudAnalysisRecordRepository;
+import com.blockguard.server.domain.analysis.domain.FraudAnalysisRecord;
+import com.blockguard.server.domain.analysis.domain.enums.FraudType;
 import com.blockguard.server.domain.analysis.domain.enums.RiskLevel;
 import com.blockguard.server.domain.analysis.dto.request.FraudAnalysisRequest;
 import com.blockguard.server.domain.analysis.dto.request.GptRequest;
@@ -21,6 +23,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +38,7 @@ public class FraudAnalysisService {
     private final FraudAnalysisRecordRepository fraudAnalysisRecordRepository;
 
     @Transactional
-    public FraudAnalysisResponse fraudAnalysis(FraudAnalysisRequest fraudAnalysisRequest, List<MultipartFile> imageFiles) {
+    public FraudAnalysisResponse fraudAnalysis(FraudAnalysisRequest fraudAnalysisRequest, List<MultipartFile> imageFiles, User user) {
         List<String> keywords = new ArrayList<>();
         double score = 0;
 
@@ -52,14 +55,29 @@ public class FraudAnalysisService {
 
         // ai 서버 호출
         GptResponse gptResponse = gptApiClient.analyze(gptRequest);
-
         score = Math.min(100, score + gptResponse.getScore());
+
+        // 사기 분석 기록 저장
+        RiskLevel riskLevel = RiskLevel.fromScore(score);
+        FraudType fraudTypeEnum = FraudType.fromKoreanName(gptResponse.getEstimatedFraudType());
+
+        if (user != null) {
+            fraudAnalysisRecordRepository.save(
+                    FraudAnalysisRecord.builder()
+                            .user(user)
+                            .score(BigDecimal.valueOf(score))
+                            .estimatedFraudType(riskLevel == RiskLevel.Safety ? null: fraudTypeEnum)
+                            .riskLevel(riskLevel)
+                            .build()
+            );
+        }
+
         return FraudAnalysisResponse.builder()
                 .keywords(gptResponse.getKeywords())
                 .score(score)
                 .estimatedFraudType(gptResponse.getEstimatedFraudType())
                 .explanation(gptResponse.getExplanation())
-                .riskLevel(RiskLevel.fromScore(score).getValue())
+                .riskLevel(riskLevel.getValue())
                 .build();
     }
 

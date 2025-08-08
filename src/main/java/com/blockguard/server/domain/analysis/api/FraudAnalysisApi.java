@@ -9,6 +9,7 @@ import com.blockguard.server.global.common.codes.ErrorCode;
 import com.blockguard.server.global.common.codes.SuccessCode;
 import com.blockguard.server.global.common.response.BaseResponse;
 import com.blockguard.server.global.config.resolver.CurrentUser;
+import com.blockguard.server.global.config.resolver.OptionalUser;
 import com.blockguard.server.global.exception.BusinessExceptionHandler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,10 +32,11 @@ public class FraudAnalysisApi {
 
     @PostMapping(value = "/fraud-analysis", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "사기 분석")
-    public BaseResponse<FraudAnalysisResponse> analyzeFraud
-            (@RequestParam("fraudAnalysisRequest") String jsonStr,
-             @RequestParam(value = "imageFiles", required = false) List<MultipartFile> imageFiles
-            ) throws JsonProcessingException {
+    public BaseResponse<FraudAnalysisResponse> analyzeFraud(
+            @RequestParam("fraudAnalysisRequest") String jsonStr,
+             @RequestParam(value = "imageFiles", required = false) List<MultipartFile> imageFiles,
+            @Parameter(hidden = true) @OptionalUser User user
+    ) throws JsonProcessingException {
 
         // TODO: 이미지 파일 개수 픽스 필요
         if (imageFiles != null && imageFiles.size() > 2) {
@@ -42,7 +44,7 @@ public class FraudAnalysisApi {
         }
 
         FraudAnalysisRequest request = objectMapper.readValue(jsonStr, FraudAnalysisRequest.class);
-        FraudAnalysisResponse fraudAnalysisResponse = fraudAnalysisService.fraudAnalysis(request, imageFiles);
+        FraudAnalysisResponse fraudAnalysisResponse = fraudAnalysisService.fraudAnalysis(request, imageFiles, user);
         return BaseResponse.of(SuccessCode.ANALYZE_FRAUD_SUCCESS, fraudAnalysisResponse);
     }
 

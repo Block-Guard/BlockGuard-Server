@@ -30,10 +30,10 @@ public class FraudAnalysisRecord extends BaseEntity {
     private BigDecimal score;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "estimated_fraud_type", nullable = false)
+    @Column(name = "estimated_fraud_type")
     private FraudType estimatedFraudType;
 
-    @Column(nullable = false, length = 255)
+    @Column(length = 255)
     private String keywords;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

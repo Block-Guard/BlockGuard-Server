@@ -64,4 +64,11 @@ public class NewsService {
     }
 
 
+    public List<NewsArticleResponse> getSelectedArticles() {
+        List<Long> selectedIds = List.of(1L, 2L, 3L, 4L, 5L, 6L);
+        List<NewsArticle> articles = newsRepository.findAllById(selectedIds);
+
+        return articles.stream().map(NewsArticleResponse::from)
+                .toList();
+    }
 }

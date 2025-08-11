@@ -45,13 +45,28 @@ public class UserService {
             try {
                 LocalDate parsedBirthDate = LocalDate.parse(updateUserInfo.getBirthDate(), DateTimeFormatter.BASIC_ISO_DATE);
                 user.updateBirthDate(parsedBirthDate);
-            } catch (DateTimeParseException e){
+            } catch (DateTimeParseException e) {
                 throw new BusinessExceptionHandler(ErrorCode.INVALID_DATE_FORMAT);
             }
         }
-        if (updateUserInfo.getProfileImage() != null && !updateUserInfo.getProfileImage().isEmpty()) {
-            String imageKey = s3Service.upload(updateUserInfo.getProfileImage(), "profiles");
-            user.updateProfileImageKey(imageKey);
+
+        Boolean isDefaultImg = updateUserInfo.getIsDefaultImage();
+        if (Boolean.TRUE.equals(isDefaultImg) && updateUserInfo.getProfileImage() != null && !updateUserInfo.getProfileImage().isEmpty()) {
+            throw new BusinessExceptionHandler(ErrorCode.UPDATE_PROFILE_CONFLICT);
+        }
+
+        if (Boolean.TRUE.equals(isDefaultImg)) {
+            if (user.getProfileImageKey() != null) {
+                s3Service.delete(user.getProfileImageKey());
+            }
+            user.removeProfileImage();
+            user.setDefaultImage(true);
+        } else if (Boolean.FALSE.equals(isDefaultImg)) {
+            if (updateUserInfo.getProfileImage() != null && !updateUserInfo.getProfileImage().isEmpty()) {
+                String imageKey = s3Service.upload(updateUserInfo.getProfileImage(), "profiles");
+                user.updateProfileImageKey(imageKey);
+                user.setDefaultImage(false);
+            }
         }
     }
 
@@ -63,7 +78,7 @@ public class UserService {
 
     @Transactional
     public void updatePassword(User user, UpdatePasswordRequest updatePasswordRequest) {
-        if(!passwordEncoder.matches(updatePasswordRequest.getCurrentPwd(), user.getPassword())){
+        if (!passwordEncoder.matches(updatePasswordRequest.getCurrentPwd(), user.getPassword())) {
             throw new BusinessExceptionHandler(ErrorCode.PASSWORD_MISMATCH);
         }
 

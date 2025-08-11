@@ -26,6 +26,8 @@ public class UpdateUserInfo {
             message = "phoneNumber must match 010-1234-5678 format")
     private String phoneNumber;
 
+    private Boolean isDefaultImage;
+
     private MultipartFile profileImage;
 
 }

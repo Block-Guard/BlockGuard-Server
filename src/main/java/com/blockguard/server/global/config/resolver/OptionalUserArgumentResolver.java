@@ -31,13 +31,9 @@ public class OptionalUserArgumentResolver implements HandlerMethodArgumentResolv
         // 현재 로그인된 사용자의 Authentication 정보 꺼내옴
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        // 로그인되지 않은 상태라면
-        if (authentication == null) {
+        // 로그인되지 않은 상태 또는 익명 사용자
+        if (authentication == null || !(authentication.getPrincipal() instanceof User)) {
             return null;
-        }
-        // 인증되지 않은 경우 에러 반환
-        if (!(authentication.getPrincipal() instanceof User)) {
-            throw new BusinessExceptionHandler(ErrorCode.INVALID_TOKEN);
         }
         // 인증된 사용자만 User 객체 반환
         return authentication.getPrincipal(); // 로그인된 사용자

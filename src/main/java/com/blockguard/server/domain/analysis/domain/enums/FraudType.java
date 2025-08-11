@@ -1,5 +1,7 @@
 package com.blockguard.server.domain.analysis.domain.enums;
 
+import com.blockguard.server.global.common.codes.ErrorCode;
+import com.blockguard.server.global.exception.BusinessExceptionHandler;
 import lombok.Getter;
 
 import java.util.Arrays;
@@ -32,9 +34,13 @@ public enum FraudType {
     }
 
     public static FraudType fromKoreanName(String kr) {
+        if (kr == null) {
+            throw new BusinessExceptionHandler(ErrorCode.AI_SERVER_ERROR);
+        }
+        final String kor = kr.trim();
         return Arrays.stream(values())
-                .filter(e -> e.korName.equals(kr))
+                .filter(e -> e.korName.equals(kor))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Unknown FraudType: " + kr));
+                .orElseThrow(() -> new BusinessExceptionHandler(ErrorCode.AI_SERVER_ERROR));
     }
 }

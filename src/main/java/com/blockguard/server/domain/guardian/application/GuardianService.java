@@ -74,7 +74,9 @@ public class GuardianService {
             if (currentKey != null){
                 s3Service.delete(currentKey);
             }
-        } else if (request.getProfileImage() != null && !request.getProfileImage().isEmpty()) {
+        }
+        // 새 이미지로 변경하는 경우
+        else if (request.getProfileImage() != null && !request.getProfileImage().isEmpty()) {
             // 새 이미지 업로드
             nextKey = s3Service.upload(request.getProfileImage(), "guardians");
             // 예전 이미지 삭제

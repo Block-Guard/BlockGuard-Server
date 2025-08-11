@@ -74,7 +74,10 @@ jobs:
 
             if [ "${PASSED:-0}" -ne 1 ]; then
               echo "헬스체크 실패 → 새 컨테이너 로그"
-              sudo docker logs "$NEW" | tail -n 200
+              docker logs "$NEW_NAME" | tail -n 200
+              echo "새 컨테이너 정리"
+              docker stop "$NEW_NAME" || true        
+              docker rm "$NEW_NAME" || true
               exit 1
             fi
             echo "헬스체크 통과"

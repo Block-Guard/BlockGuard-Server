@@ -4,6 +4,7 @@ import com.blockguard.server.domain.guardian.dao.GuardianRepository;
 import com.blockguard.server.domain.guardian.domain.Guardian;
 import com.blockguard.server.domain.guardian.dto.request.CreateGuardianRequest;
 import com.blockguard.server.domain.guardian.dto.request.UpdateGuardianPrimaryRequest;
+import com.blockguard.server.domain.guardian.dto.request.UpdateGuardianRequest;
 import com.blockguard.server.domain.guardian.dto.response.GuardianResponse;
 import com.blockguard.server.domain.guardian.dto.response.GuardiansListResponse;
 import com.blockguard.server.domain.user.domain.User;
@@ -54,7 +55,7 @@ public class GuardianService {
     }
 
     @Transactional
-    public GuardianResponse updateGuardian(User user, Long guardianId, CreateGuardianRequest request) {
+    public GuardianResponse updateGuardian(User user, Long guardianId, UpdateGuardianRequest request) {
         Guardian guardian = guardianRepository.findByIdAndUser(guardianId, user)
                 .orElseThrow(() -> new BusinessExceptionHandler(ErrorCode.GUARDIAN_NOT_FOUND));
 
@@ -63,19 +64,26 @@ public class GuardianService {
             throw new BusinessExceptionHandler(ErrorCode.DUPLICATE_GUARDIAN_NAME);
         }
 
-        String key = null;
-        if (request.getProfileImage() != null && !request.getProfileImage().isEmpty()){
-            // 새 이미지 업로드
-            key = s3Service.upload(request.getProfileImage(), "guardians");
+        String currentKey = guardian.getProfileImageKey();
+        String nextKey = currentKey;
+
+        // 기본 이미지로 변경하는 경우
+        if (request.getIsDefaultImage() != null && request.getIsDefaultImage()) {
+            nextKey = null;
             // 예전 이미지 삭제
-            if (guardian.getProfileImageKey() != null){
-                s3Service.delete(guardian.getProfileImageKey());
+            if (currentKey != null){
+                s3Service.delete(currentKey);
+            }
+        } else if (request.getProfileImage() != null && !request.getProfileImage().isEmpty()) {
+            // 새 이미지 업로드
+            nextKey = s3Service.upload(request.getProfileImage(), "guardians");
+            // 예전 이미지 삭제
+            if (currentKey != null){
+                s3Service.delete(currentKey);
             }
         }
-        guardian.updateGuardianInfo(request.getName(), request.getPhoneNumber(), key);
-
+        guardian.updateGuardianInfo(request.getName(), request.getPhoneNumber(), nextKey);
         Guardian updated = guardianRepository.save(guardian);
-
         return GuardianResponse.from(updated, s3Service);
     }
 

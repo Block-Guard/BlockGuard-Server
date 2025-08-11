@@ -50,9 +50,6 @@ public class User extends BaseEntity {
     @Column(name = "profile_image_key", length = 512)
     private String profileImageKey;
 
-    @Column(name = "is_default_image")
-    private Boolean isDefaultImage;
-
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt = null;
 
@@ -86,14 +83,6 @@ public class User extends BaseEntity {
 
     public void updateProfileImageKey(String updateProfileImageKey) {
         this.profileImageKey = updateProfileImageKey;
-    }
-
-    public void setDefaultImage(boolean isDefaultImage) {
-        this.isDefaultImage = isDefaultImage;
-    }
-
-    public void removeProfileImage(){
-        this.profileImageKey = null;
     }
 
     public void updateBirthDate(LocalDate updateBirthDate) {

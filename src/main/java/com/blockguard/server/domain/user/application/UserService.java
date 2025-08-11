@@ -9,6 +9,7 @@ import com.blockguard.server.global.common.codes.ErrorCode;
 import com.blockguard.server.global.config.S3.S3Service;
 import com.blockguard.server.global.exception.BusinessExceptionHandler;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 @Service
+@Slf4j
 @AllArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
@@ -51,21 +53,34 @@ public class UserService {
         }
 
         Boolean isDefaultImg = updateUserInfo.getIsDefaultImage();
+
         if (Boolean.TRUE.equals(isDefaultImg) && updateUserInfo.getProfileImage() != null && !updateUserInfo.getProfileImage().isEmpty()) {
             throw new BusinessExceptionHandler(ErrorCode.UPDATE_PROFILE_CONFLICT);
         }
 
         if (Boolean.TRUE.equals(isDefaultImg)) {
-            if (user.getProfileImageKey() != null) {
-                s3Service.delete(user.getProfileImageKey());
+            String oldKey = user.getProfileImageKey();
+            if (oldKey != null && !oldKey.isBlank()) {
+                try {
+                    s3Service.delete(oldKey);
+                } catch (Exception ex) {
+                    log.warn("S3 delete fail key={}", oldKey, ex);
+                }
             }
-            user.removeProfileImage();
-            user.setDefaultImage(true);
+            user.updateProfileImageKey(null);
         } else if (Boolean.FALSE.equals(isDefaultImg)) {
             if (updateUserInfo.getProfileImage() != null && !updateUserInfo.getProfileImage().isEmpty()) {
-                String imageKey = s3Service.upload(updateUserInfo.getProfileImage(), "profiles");
-                user.updateProfileImageKey(imageKey);
-                user.setDefaultImage(false);
+                String oldKey = user.getProfileImageKey();
+                String newKey = s3Service.upload(updateUserInfo.getProfileImage(), "profiles");
+                user.updateProfileImageKey(newKey);
+
+                if (oldKey != null && !oldKey.equals(newKey)) {
+                    try {
+                        s3Service.delete(oldKey);
+                    } catch (Exception ex) {
+                        log.warn("S3 delete fail key={}", oldKey, ex);
+                    }
+                }
             }
         }
     }

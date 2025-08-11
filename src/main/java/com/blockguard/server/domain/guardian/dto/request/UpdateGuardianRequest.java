@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 @AllArgsConstructor
 @Builder
-public class CreateGuardianRequest {
+public class UpdateGuardianRequest {
     @NotBlank
     @Size(max = 50, message = "name length must be <= 50")
     private String name;
@@ -24,4 +24,6 @@ public class CreateGuardianRequest {
 
     @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private MultipartFile profileImage;
+
+    private Boolean isDefaultImage;
 }

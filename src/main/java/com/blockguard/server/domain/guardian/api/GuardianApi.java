@@ -2,6 +2,7 @@ package com.blockguard.server.domain.guardian.api;
 
 import com.blockguard.server.domain.guardian.dto.request.CreateGuardianRequest;
 import com.blockguard.server.domain.guardian.dto.request.UpdateGuardianPrimaryRequest;
+import com.blockguard.server.domain.guardian.dto.request.UpdateGuardianRequest;
 import com.blockguard.server.domain.guardian.dto.response.GuardianResponse;
 import com.blockguard.server.domain.guardian.dto.response.GuardiansListResponse;
 import com.blockguard.server.domain.guardian.application.GuardianService;
@@ -47,8 +48,8 @@ public class GuardianApi {
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<BaseResponse<GuardianResponse>> updateGuardian(@Parameter(hidden = true) @CurrentUser User user,
                                                                          @PathVariable("id") Long guardianId,
-                                                                         @Valid CreateGuardianRequest createGuardianRequest) {
-        GuardianResponse guardianResponse = guardianService.updateGuardian(user, guardianId, createGuardianRequest);
+                                                                         @Valid UpdateGuardianRequest updateGuardianRequest) {
+        GuardianResponse guardianResponse = guardianService.updateGuardian(user, guardianId, updateGuardianRequest);
         return ResponseEntity.ok(BaseResponse.of(SuccessCode.GUARDIAN_UPDATED, guardianResponse));
     }
 

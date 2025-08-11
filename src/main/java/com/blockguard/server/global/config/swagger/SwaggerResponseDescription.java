@@ -70,7 +70,8 @@ public enum SwaggerResponseDescription {
             ErrorCode.FILE_NAME_NOT_FOUND,
             ErrorCode.INVALID_DIRECTORY_ROUTE,
             ErrorCode.FILE_SIZE_EXCEEDED,
-            ErrorCode.DUPLICATE_GUARDIAN_NAME
+            ErrorCode.DUPLICATE_GUARDIAN_NAME,
+            ErrorCode.UPDATE_PROFILE_CONFLICT
     ))),
 
     UPDATE_GUARDIAN_PRIMARY_FAIL(new LinkedHashSet<>(Set.of(

@@ -83,12 +83,12 @@ public class FraudAnalysisService {
 
     private double addFraudPhoneNumberScore(FraudAnalysisRequest fraudAnalysisRequest, double score) {
         if (StringUtils.hasText(fraudAnalysisRequest.getSuspiciousPhoneNumbers())) {
-            // 전화번호 위험이면 score 15점 추가
+            // 전화번호 위험이면 score 10점 추가
             String number = fraudAnalysisRequest.getSuspiciousPhoneNumbers().replaceAll("\\D+", "");
             if (!number.isEmpty() &&
                     fraudService.checkFraudPhoneNumber(new FraudPhoneNumberRequest(number))
                             .getRiskLevel() == RiskLevel.Dangers){
-                score += 15;
+                score += 10;
             }
         }
         return score;
@@ -96,12 +96,12 @@ public class FraudAnalysisService {
 
     private double addFraudUrlScore(FraudAnalysisRequest fraudAnalysisRequest, double score) {
         if (StringUtils.hasText(fraudAnalysisRequest.getSuspiciousLinks())) {
-            // 링크 위험이면 score 15점 추가
+            // 링크 위험이면 score 10점 추가
             String link = fraudAnalysisRequest.getSuspiciousLinks().trim();
             if (!link.isEmpty() &&
                     fraudService.checkFraudUrl(new FraudUrlRequest(link))
                             .getRiskLevel() == RiskLevel.Dangers) {
-                score += 15;
+                score += 10;
             }
         }
         return score;
@@ -127,19 +127,27 @@ public class FraudAnalysisService {
         return String.join(" ", imageContents);
     }
 
-    private static void extractKeywordsFromRequest(FraudAnalysisRequest fraudAnalysisRequest, List<String> keywords) {
-        if (StringUtils.hasText(fraudAnalysisRequest.getContactMethod()))
-            keywords.add(fraudAnalysisRequest.getContactMethod());
-        if (StringUtils.hasText(fraudAnalysisRequest.getCounterpart()))
-            keywords.add(fraudAnalysisRequest.getCounterpart());
-        if (fraudAnalysisRequest.getRequestedAction() != null && !fraudAnalysisRequest.getRequestedAction().isEmpty())
-            keywords.addAll(fraudAnalysisRequest.getRequestedAction());
-        if (fraudAnalysisRequest.getRequestedInfo() != null && !fraudAnalysisRequest.getRequestedInfo().isEmpty())
-            keywords.addAll(fraudAnalysisRequest.getRequestedInfo());
-        if (StringUtils.hasText(fraudAnalysisRequest.getAppType()))
-            keywords.add(fraudAnalysisRequest.getAppType());
-        if (fraudAnalysisRequest.getAtmGuided())
-            keywords.add("긴급성이나 위기감을 느끼게 하는 표현이 있었다");
+    private static void extractKeywordsFromRequest(FraudAnalysisRequest request, List<String> keywords) {
+        if (StringUtils.hasText(request.getContactMethod()))
+            keywords.add(request.getContactMethod());
+        if (StringUtils.hasText(request.getCounterpart()))
+            keywords.add(request.getCounterpart());
+        if (request.getRequestedAction() != null && !request.getRequestedAction().isEmpty())
+            keywords.addAll(request.getRequestedAction());
+        if (request.getRequestedInfo() != null && !request.getRequestedInfo().isEmpty())
+            keywords.addAll(request.getRequestedInfo());
+        if (StringUtils.hasText(request.getLinkType()))
+            keywords.add(request.getLinkType());
+        if (Boolean.TRUE.equals(request.getPressuredInfo()))
+            keywords.add("개인정보 유출/범죄 연루 언급 등 심리적 압박");
+        if (Boolean.TRUE.equals(request.getAppOrLinkRequest()))
+            keywords.add("앱 설치/링크 접속 유도");
+        if (Boolean.TRUE.equals(request.getThirdPartyConnect()))
+            keywords.add("제3자(수사관 등) 연결 시도");
+        if (Boolean.TRUE.equals(request.getAuthorityPressure()))
+            keywords.add("직책 강조 및 권위적 태도 보임");
+        if (Boolean.TRUE.equals(request.getAccountOrLinkRequest()))
+            keywords.add("계좌이체/현금인출 유도");
     }
 
     private static GptRequest buildGptRequest(FraudAnalysisRequest fraudAnalysisRequest, List<String> keywords, String additionalDescription, String imageContent) {

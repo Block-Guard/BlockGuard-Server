@@ -23,7 +23,7 @@ public class MyPageResponse {
                 .name(user.getName())
                 .birthDate(user.getBirthDate().format(DateTimeFormatter.ofPattern("yyyyMMdd")))
                 .phoneNumber(user.getPhoneNumber())
-                .profileImageUrl(user.getProfileImageKey())
+                .profileImageUrl(profileImageUrl)
                 .build();
     }
 }

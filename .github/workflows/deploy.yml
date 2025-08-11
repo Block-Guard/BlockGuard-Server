@@ -64,23 +64,23 @@ jobs:
             docker rm $NEW_NAME || true
             docker run -d --name $NEW_NAME -p $NEW_PORT:8080 ${{ secrets.DOCKER_USERNAME }}/blockguard_server:latest
 
-            echo "헬스체크 진행 중..."
-            for i in {1..10}; do
-              STATUS=$(curl -s http://localhost:$NEW_PORT/actuator/health | grep '"status":"UP"' || true)
-              if [ -n "$STATUS" ]; then
-                echo "헬스체크 통과"
-                break
-              else
-                echo "⏱ 대기 중..."
-                sleep 3
-              fi
+            echo "헬스체크 시작"
+            for i in $(seq 1 40); do
+              STATUS=$(curl -s http://localhost:$NEW_PORT/actuator/health || true)
+              echo "[$i] health: $STATUS"
+              echo "$STATUS" | grep -q '"status":"UP"' && PASSED=1 && break || true
+              sleep 3
             done
 
-            if [ -z "$STATUS" ]; then
-              echo "헬스체크 실패: 롤백 없음"
-              docker logs $NEW_NAME
+            if [ "${PASSED:-0}" -ne 1 ]; then
+              echo "헬스체크 실패 → 새 컨테이너 로그"
+              docker logs "$NEW_NAME" | tail -n 200
+              echo "새 컨테이너 정리"
+              docker stop "$NEW_NAME" || true        
+              docker rm "$NEW_NAME" || true
               exit 1
             fi
+            echo "헬스체크 통과"
 
             echo "nginx 포트 전환"
             sudo sed -i "s/proxy_pass http:\/\/localhost:808[0-9];/proxy_pass http:\/\/localhost:$NEW_PORT;/" /etc/nginx/sites-available/default

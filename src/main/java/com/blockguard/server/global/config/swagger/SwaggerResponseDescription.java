@@ -33,7 +33,8 @@ public enum SwaggerResponseDescription {
             ErrorCode.INVALID_TOKEN,
             ErrorCode.FILE_NAME_NOT_FOUND,
             ErrorCode.INVALID_DIRECTORY_ROUTE,
-            ErrorCode.FILE_SIZE_EXCEEDED
+            ErrorCode.FILE_SIZE_EXCEEDED,
+            ErrorCode.UPDATE_PROFILE_CONFLICT
     ))),
 
     UPDATE_PASSWORD_FAIL(new LinkedHashSet<>(Set.of(

@@ -75,7 +75,7 @@ public class FraudAnalysisService {
         return FraudAnalysisResponse.builder()
                 .keywords(gptResponse.getKeywords())
                 .score(score)
-                .estimatedFraudType(gptResponse.getEstimatedFraudType())
+                .estimatedFraudType(fraudTypeEnum.getKorName())
                 .explanation(gptResponse.getExplanation())
                 .riskLevel(riskLevel.getValue())
                 .build();

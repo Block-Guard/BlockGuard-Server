@@ -2,6 +2,7 @@ package com.blockguard.server.global.config;
 
 import com.blockguard.server.domain.auth.interceptor.AdminCheckInterceptor;
 import com.blockguard.server.global.config.resolver.CurrentUserArgumentResolver;
+import com.blockguard.server.global.config.resolver.OptionalUserArgumentResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -17,6 +18,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private final long MAX_AGE_SECS = 3600;
     private final CurrentUserArgumentResolver currentUserArgumentResolver;
     private final AdminCheckInterceptor adminCheckInterceptor;
+    private final OptionalUserArgumentResolver optionalUserArgumentResolver;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -31,6 +33,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(currentUserArgumentResolver);
+        resolvers.add(optionalUserArgumentResolver);
     }
 
     @Override

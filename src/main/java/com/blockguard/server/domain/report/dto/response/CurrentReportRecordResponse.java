@@ -8,5 +8,5 @@ import lombok.Getter;
 public class CurrentReportRecordResponse {
     private Long reportId;
     private int step;
-    private String createdAt;
+    private String updatedAt;
 }

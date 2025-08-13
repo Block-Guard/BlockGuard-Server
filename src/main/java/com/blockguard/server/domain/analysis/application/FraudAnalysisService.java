@@ -55,7 +55,10 @@ public class FraudAnalysisService {
 
         // ai 서버 호출
         GptResponse gptResponse = gptApiClient.analyze(gptRequest);
-        score = Math.min(100, score + gptResponse.getScore());
+
+
+        // 최종 점수 계산
+        score = Math.min(100, score + getSurveyScore(fraudAnalysisRequest) + gptResponse.getScore());
 
         // 사기 분석 기록 저장
         RiskLevel riskLevel = RiskLevel.fromScore(score);
@@ -79,6 +82,15 @@ public class FraudAnalysisService {
                 .explanation(gptResponse.getExplanation())
                 .riskLevel(riskLevel.getValue())
                 .build();
+    }
+
+    private static int getSurveyScore(FraudAnalysisRequest fraudAnalysisRequest) {
+        int addionalScore = 0;
+        if (Boolean.TRUE.equals(fraudAnalysisRequest.getPressuredInfo()) || Boolean.TRUE.equals(fraudAnalysisRequest.getAuthorityPressure()))
+            addionalScore += 5;
+        if (Boolean.TRUE.equals(fraudAnalysisRequest.getThirdPartyConnect()) || Boolean.TRUE.equals(fraudAnalysisRequest.getAccountOrLinkRequest()))
+            addionalScore += 5;
+        return addionalScore;
     }
 
     private double addFraudPhoneNumberScore(FraudAnalysisRequest fraudAnalysisRequest, double score) {
@@ -128,26 +140,30 @@ public class FraudAnalysisService {
     }
 
     private static void extractKeywordsFromRequest(FraudAnalysisRequest request, List<String> keywords) {
-        if (StringUtils.hasText(request.getContactMethod()))
-            keywords.add(request.getContactMethod());
-        if (StringUtils.hasText(request.getCounterpart()))
-            keywords.add(request.getCounterpart());
-        if (request.getRequestedAction() != null && !request.getRequestedAction().isEmpty())
-            keywords.addAll(request.getRequestedAction());
-        if (request.getRequestedInfo() != null && !request.getRequestedInfo().isEmpty())
-            keywords.addAll(request.getRequestedInfo());
-        if (StringUtils.hasText(request.getLinkType()))
-            keywords.add(request.getLinkType());
-        if (Boolean.TRUE.equals(request.getPressuredInfo()))
-            keywords.add("개인정보 유출/범죄 연루 언급 등 심리적 압박");
-        if (Boolean.TRUE.equals(request.getAppOrLinkRequest()))
-            keywords.add("앱 설치/링크 접속 유도");
-        if (Boolean.TRUE.equals(request.getThirdPartyConnect()))
-            keywords.add("제3자(수사관 등) 연결 시도");
-        if (Boolean.TRUE.equals(request.getAuthorityPressure()))
-            keywords.add("직책 강조 및 권위적 태도 보임");
-        if (Boolean.TRUE.equals(request.getAccountOrLinkRequest()))
-            keywords.add("계좌이체/현금인출 유도");
+        addIfKeyword(request.getContactMethod(), keywords);
+        addIfKeyword(request.getCounterpart(), keywords);
+        addAllIfKeyword(request.getRequestedAction(), keywords);
+        addAllIfKeyword(request.getRequestedInfo(), keywords);
+        addIfKeyword(request.getLinkType(), keywords);
+    }
+
+    private static void addIfKeyword(String v, List<String> keywords) {
+        if (StringUtils.hasText(v) && isNotEtc(v))
+            keywords.add(v);
+    }
+
+    private static void addAllIfKeyword(List<String> vlist, List<String> keywords) {
+        if (vlist == null || vlist.isEmpty()) return;
+        vlist.stream()
+                .filter(StringUtils::hasText)
+                .filter(FraudAnalysisService::isNotEtc)
+                .forEach(keywords::add);
+    }
+
+    private static boolean isNotEtc(String v) {
+        String t = v.trim().replaceAll("\\s+", "");
+        if (t.isEmpty()) return false;
+        return !t.equals("기타");
     }
 
     private static GptRequest buildGptRequest(FraudAnalysisRequest fraudAnalysisRequest, List<String> keywords, String additionalDescription, String imageContent) {

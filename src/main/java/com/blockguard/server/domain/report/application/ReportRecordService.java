@@ -18,8 +18,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -51,11 +53,17 @@ public class ReportRecordService {
                     ReportStepProgress lastProgress = record.getProgressList().stream()
                             .max(Comparator.comparing(ReportStepProgress::getStep))
                             .orElseThrow();
-                    int stepNum = lastProgress.getStep().getStepNumber();
+
+                    LocalDateTime lastUpdatedAt = lastProgress.getCheckboxes().stream()
+                            .map(ReportStepCheckbox::getUpdatedAt)
+                            .filter(Objects::nonNull)
+                            .max(Comparator.naturalOrder())
+                            .orElse(lastProgress.getUpdatedAt());
+
                     return CurrentReportRecordResponse.builder()
                             .reportId(record.getId())
-                            .createdAt(String.valueOf(record.getCreatedAt()))
-                            .step(stepNum)
+                            .updatedAt(lastUpdatedAt.toString())
+                            .step(lastProgress.getStep().getStepNumber())
                             .build();
 
                 });
@@ -194,7 +202,7 @@ public class ReportRecordService {
                 .step(stepNumber)
                 .checkBoxes(resultRequiredCheckboxes)
                 .recommendedCheckBoxes(resultRecommendedCheckboxes)
-                .createdAt(String.valueOf(record.getCreatedAt()))
+                .createdAt(String.valueOf(progress.getCreatedAt()))
                 .isCompleted(progress.isCompleted())
                 .build();
     }

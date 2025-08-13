@@ -202,7 +202,7 @@ public class ReportRecordService {
                 .step(stepNumber)
                 .checkBoxes(resultRequiredCheckboxes)
                 .recommendedCheckBoxes(resultRecommendedCheckboxes)
-                .createdAt(String.valueOf(record.getCreatedAt()))
+                .createdAt(String.valueOf(progress.getCreatedAt()))
                 .isCompleted(progress.isCompleted())
                 .build();
     }

@@ -13,7 +13,7 @@ public class NewsSaveScheduler {
     private final DaumNewsCrawler daumNewsCrawler;
 
     public void crawlingForAdmin(){
-        String[] keywords = {"보이스피싱", "스미싱", "메신저 피싱", "몸캠"};
+        String[] keywords = {"보이스 피싱", "스미싱", "메신저 피싱", "몸캠"};
         for (String keyword : keywords) {
             try {
                 daumNewsCrawler.fetchNewsFromDaum(keyword);
@@ -27,7 +27,7 @@ public class NewsSaveScheduler {
     public void saveNewsArticles(){
         log.info("뉴스 크롤링 스케줄링 시작");
 
-        daumNewsCrawler.fetchNewsFromDaum("보이스피싱");
+        daumNewsCrawler.fetchNewsFromDaum("보이스 피싱");
         daumNewsCrawler.fetchNewsFromDaum("스미싱");
         daumNewsCrawler.fetchNewsFromDaum("메신저 피싱");
         daumNewsCrawler.fetchNewsFromDaum("몸캠");

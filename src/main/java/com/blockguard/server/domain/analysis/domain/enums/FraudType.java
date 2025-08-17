@@ -1,7 +1,5 @@
 package com.blockguard.server.domain.analysis.domain.enums;
 
-import com.blockguard.server.global.common.codes.ErrorCode;
-import com.blockguard.server.global.exception.BusinessExceptionHandler;
 import lombok.Getter;
 
 import java.util.Arrays;
@@ -26,7 +24,8 @@ public enum FraudType {
     CRYPTOCURRENCY_SCAM       ("가상화폐 사기형"),
     STOCK_INVESTMENT_SCAM     ("주식투자 사기형"),
     IPO_SCAM                  ("청약 공모주 사기형"),
-    FALSE_PAYMENT_SCAM        ("허위결제 사기형");
+    FALSE_PAYMENT_SCAM        ("허위결제 사기형"),
+    UNKNOWN("알 수 없음");
 
     private final String korName;
 
@@ -43,13 +42,13 @@ public enum FraudType {
 
     public static FraudType fromKoreanName(String kr) {
         if (kr == null) {
-            throw new BusinessExceptionHandler(ErrorCode.AI_SERVER_ERROR);
+            return UNKNOWN;
         }
         final String target = squashSpaces(kr.trim());
 
         return Arrays.stream(values())
                 .filter(e -> squashSpaces(e.korName).equals(target))
                 .findFirst()
-                .orElseThrow(() -> new BusinessExceptionHandler(ErrorCode.AI_SERVER_ERROR));
+                .orElse(UNKNOWN);
     }
 }

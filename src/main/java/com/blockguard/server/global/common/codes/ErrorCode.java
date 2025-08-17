@@ -38,6 +38,7 @@ public enum ErrorCode {
     FAIL_TO_CRAWLING_NEWS(HttpStatus.BAD_REQUEST, 4035, "뉴스 크롤링에 실패하였습니다."),
     MUST_BE_POSITIVE_NUMBER(HttpStatus.BAD_REQUEST, 4036, "페이지와 사이즈는 1이상의 값을 입력해야합니다."),
     UPDATE_PROFILE_CONFLICT(HttpStatus.CONFLICT, 4037, "기본 이미지로 변경 요청과 프로필 사진 수정 요청이 동시에 들어올 수 없습니다."),
+    DELETED_USER_CANNOT_REJOIN(HttpStatus.BAD_REQUEST, 4038,"탈퇴한 회원은 재가입할 수 없습니다."),
 
     // 5000~ : server error
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 5000, "서버 오류가 발생했습니다."),

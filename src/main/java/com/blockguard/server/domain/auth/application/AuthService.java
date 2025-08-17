@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -32,7 +33,14 @@ public class AuthService {
     private JwtTokenGenerator jwtTokenGenerator;
 
     public RegisterResponse register(RegisterRequest registerRequest) {
-        if (userRepository.findByEmail((registerRequest.getEmail())).isPresent()) {
+
+        Optional<User> everyUser = userRepository.findAnyByEmail(registerRequest.getEmail());
+
+        if (everyUser.isPresent()) {
+            User user = everyUser.get();
+            if (user.getDeletedAt() != null) {
+                throw new BusinessExceptionHandler(ErrorCode.DELETED_USER_CANNOT_REJOIN);
+            }
             throw new BusinessExceptionHandler(ErrorCode.DUPLICATED_EMAIL);
         }
 

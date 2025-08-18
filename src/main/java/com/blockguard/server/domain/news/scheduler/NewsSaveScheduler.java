@@ -25,7 +25,7 @@ public class NewsSaveScheduler {
             Map.entry(Category.LOAN_FRAUD, List.of("대출 사기", "저금리 대출 사기", "대출 빙자 사기")),
             Map.entry(Category.CARD_IMPERSONATION, List.of("카드사 사칭", "카드사 피싱", "신용카드 사칭")),
             Map.entry(Category.FAMILY_IMPERSONATION, List.of("가족 사칭", "지인 사칭")),
-            Map.entry(Category.EVENT_IMPERSONATION, List.of("경조사 사칭", "경조사 문자 사기")),
+            Map.entry(Category.EVENT_IMPERSONATION, List.of("경조사 사칭", "경조사 문자 사기", "모바일 청첩장 사기", "부고장 스미싱","온라인 부고장 사기","청첩장 스미싱")),
             Map.entry(Category.PUBLIC_IMPERSONATION, List.of("공공기관 사칭", "국세청 사칭", "경찰 출석 요구 사칭", "검찰 사칭", "과태료 사칭")),
             Map.entry(Category.PART_TIME_SCAM, List.of("알바 사기", "부업 사기", "구인 사기")),
             Map.entry(Category.GOVERNMENT_GRANT_SCAM, List.of("정부지원금 사기", "보조금 사기", "지원금 사칭")),

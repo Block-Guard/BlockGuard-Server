@@ -19,8 +19,10 @@ public enum Category {
 
     private static final Map<String, Category> MAPPING = Map.ofEntries(
             Map.entry("보이스피싱", VOICE_PHISHING),
+            Map.entry("보이스 피싱", VOICE_PHISHING),
             Map.entry("스미싱", SMISHING),
             Map.entry("메신저피싱", MESSAGE_VOICE_PHISHING),
+            Map.entry("메신저 피싱", MESSAGE_VOICE_PHISHING),
             Map.entry("기관 사칭형", INSTITUTION_IMPERSONATION),
             Map.entry("대출 사기형", LOAN_FRAUD),
             Map.entry("카드사 사칭형", CARD_IMPERSONATION),

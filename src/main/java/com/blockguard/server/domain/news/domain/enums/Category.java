@@ -51,23 +51,4 @@ public enum Category {
         return Optional.ofNullable(MAPPING.get(input.trim()))
                 .orElse(ETC);
     }
-        /*return switch (input.trim()) {
-            case "보이스피싱", "보이스 피싱" -> VOICE_PHISHING;
-            case "스미싱" -> SMISHING;
-            case "메신저 피싱", "메신저피싱" -> MESSAGE_VOICE_PHISHING;
-
-            case "기관 사칭형" -> INSTITUTION_IMPERSONATION;
-            case "대출 사기형" -> LOAN_FRAUD;
-            case "카드사 사칭형" -> CARD_IMPERSONATION;
-            case "가족/지인 사칭형" -> FAMILY_IMPERSONATION;
-            case "경조사 사칭형" -> EVENT_IMPERSONATION;
-            case "공공기관 사칭형" -> PUBLIC_IMPERSONATION;
-            case "알바/부업 사기형" -> PART_TIME_SCAM;
-            case "정부지원금 위장형" -> GOVERNMENT_GRANT_SCAM;
-            case "택배 사기형" -> DELIVERY_SCAM;
-            case "투자 사기형" -> INVESTMENT_SCAM;
-            case "허위결제 사기형" -> FALSE_PAYMENT_SCAM;
-            default -> ETC;
-        };*/
-
 }

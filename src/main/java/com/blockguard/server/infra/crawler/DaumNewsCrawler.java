@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +29,16 @@ public class DaumNewsCrawler {
     private static final int MAX_PAGES = 20;
     private static final int ARTICLE_RETENTION_DAYS = 365;
     private static final long CRAWL_DELAY_MS = 500L;
+
+    private static final Pattern NON_KO_ALNUM = Pattern.compile("[^가-힣a-zA-Z0-9]");
+    private String norm(String s) {
+        if (s == null) return "";
+        return NON_KO_ALNUM.matcher(s).replaceAll("").toLowerCase();
+    }
+
+    private boolean titleContains(String title, String keyword) {
+        return norm(title).contains(norm(keyword));
+    }
 
     public void fetchNewsFromDaum(String keyword, Category forceCategory) {
         Category category = (forceCategory != null) ? forceCategory : Category.from(keyword);
@@ -53,6 +64,7 @@ public class DaumNewsCrawler {
                     String title = titleEl.text();
                     String url = titleEl.attr("href");
 
+                    if (!titleContains(title, keyword)) continue;
                     if (newsRepository.existsByUrl(url)) continue;
 
                     Element imageEl = item.selectFirst("a.thumb_bf img");

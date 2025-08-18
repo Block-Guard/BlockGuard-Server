@@ -4,6 +4,7 @@ import com.blockguard.server.domain.news.domain.enums.Category;
 import com.blockguard.server.infra.crawler.DaumNewsCrawler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -34,11 +35,12 @@ public class NewsSaveScheduler {
             Map.entry(Category.ETC, List.of("몸캠"))
     );
 
-
+    @Async
     public void crawlingForAdmin() {
         crawlAll();
     }
 
+    @Async
     // @Scheduled(cron = "0 0 4 * * *")
     public void saveNewsArticles() {
         crawlAll();

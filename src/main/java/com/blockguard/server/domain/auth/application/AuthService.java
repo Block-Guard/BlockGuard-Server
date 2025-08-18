@@ -62,7 +62,7 @@ public class AuthService {
 
 
     public CheckEmailDuplicatedResponse checkEmailDuplicated(CheckEmailDuplicatedRequest checkEmailDuplicatedRequest) {
-        boolean isDuplicated = userRepository.findByEmail(checkEmailDuplicatedRequest.getEmail()).isPresent();
+        boolean isDuplicated = userRepository.findAnyByEmail(checkEmailDuplicatedRequest.getEmail()).isPresent();
         return CheckEmailDuplicatedResponse.builder()
                 .isDuplicated(isDuplicated)
                 .build();

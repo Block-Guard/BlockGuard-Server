@@ -26,7 +26,7 @@ import java.util.Optional;
 public class DaumNewsCrawler {
     private final NewsRepository newsRepository;
     private static final int MAX_PAGES = 20;
-    private static final int ARTICLE_RETENTION_DAYS = 730;
+    private static final int ARTICLE_RETENTION_DAYS = 365;
     private static final long CRAWL_DELAY_MS = 500L;
 
     public void fetchNewsFromDaum(String keyword, Category forceCategory) {

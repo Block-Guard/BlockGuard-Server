@@ -45,19 +45,30 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script: |
-            CURRENT_PORT=$(docker ps --filter "name=blockguard_server_blue" --format "{{.Ports}}" | grep -q "8080" && echo blue || echo green)
-
-            if [ "$CURRENT_PORT" = "blue" ]; then
-              NEW_PORT=8081
-              NEW_NAME=blockguard_server_green
-              OLD_NAME=blockguard_server_blue
+            set -euo pipefail
+            
+            if docker ps --format '{{.Names}} {{.Ports}}' | grep -q 'blockguard_server_blue.*0.0.0.0:8080->8080'; then
+              CURRENT_PORT=blue
+            elif docker ps --format '{{.Names}} {{.Ports}}' | grep -q 'blockguard_server_green.*0.0.0.0:8080->8080'; then
+              CURRENT_PORT=green
             else
-              NEW_PORT=8080
+              CURRENT_PORT=green
+            fi
+            
+            if [ "$CURRENT_PORT" = "blue" ]; then
+              NEW_NAME=blockguard_server_green
+              NEW_PORT=8081
+              OLD_NAME=blockguard_server_blue
+              OLD_PORT=8080
+            else
               NEW_NAME=blockguard_server_blue
+              NEW_PORT=8080
               OLD_NAME=blockguard_server_green
+              OLD_PORT=8081
             fi
 
             echo "새 컨테이너 실행: $NEW_NAME (포트: $NEW_PORT)"
+            
             docker pull ${{ secrets.DOCKER_USERNAME }}/blockguard_server:latest
             
             docker stop $NEW_NAME || true
@@ -75,7 +86,6 @@ jobs:
             if [ "${PASSED:-0}" -ne 1 ]; then
               echo "헬스체크 실패 → 새 컨테이너 로그"
               docker logs "$NEW_NAME" | tail -n 200
-              echo "새 컨테이너 정리"
               docker stop "$NEW_NAME" || true        
               docker rm "$NEW_NAME" || true
               exit 1
@@ -83,8 +93,9 @@ jobs:
             echo "헬스체크 통과"
 
             echo "nginx 포트 전환"
-            sudo sed -i "s/proxy_pass http:\/\/localhost:808[0-9];/proxy_pass http:\/\/localhost:$NEW_PORT;/" /etc/nginx/sites-available/default
-            sudo nginx -s reload
+            sudo sed -i "s/server 127\.0\.0\.1:[0-9][0-9]*/server 127.0.0.1:$NEW_PORT;/" /etc/nginx/conf.d/app-upstream.conf
+            sudo nginx -t
+            sudo systemctl reload nginx
 
             echo "이전 컨테이너 정리: $OLD_NAME"
             docker stop $OLD_NAME || true

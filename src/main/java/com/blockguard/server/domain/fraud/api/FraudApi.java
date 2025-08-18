@@ -23,6 +23,7 @@ public class FraudApi {
     private final FraudService fraudService;
 
     @PostMapping("/url")
+    @CustomExceptionDescription(SwaggerResponseDescription.CHECK_FRAUD_URL_FAIL)
     @Operation(summary = "입력된 url 사기 분석")
     public BaseResponse<FraudRiskLevelResponse> fraudUrl(@Valid @RequestBody FraudUrlRequest fraudUrlRequest){
         FraudRiskLevelResponse fraudRiskLevelResponse = fraudService.checkFraudUrl(fraudUrlRequest);

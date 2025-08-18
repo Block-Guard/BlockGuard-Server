@@ -48,24 +48,19 @@ jobs:
             set -euo pipefail
             
             if docker ps --format '{{.Names}} {{.Ports}}' | grep -q 'blockguard_server_blue.*0.0.0.0:8080->8080'; then
-              CURRENT_PORT=blue
-            elif docker ps --format '{{.Names}} {{.Ports}}' | grep -q 'blockguard_server_green.*0.0.0.0:8080->8080'; then
-              CURRENT_PORT=green
+              CURRENT_PORT=8080
             else
-              CURRENT_PORT=green
+              CURRENT_PORT=8081
             fi
             
-            if [ "$CURRENT_PORT" = "blue" ]; then
-              NEW_NAME=blockguard_server_green
+            if [ "$CURRENT_PORT" = "8080" ]; then
               NEW_PORT=8081
-              OLD_NAME=blockguard_server_blue
-              OLD_PORT=8080
             else
-              NEW_NAME=blockguard_server_blue
               NEW_PORT=8080
-              OLD_NAME=blockguard_server_green
-              OLD_PORT=8081
             fi
+            
+            NEW_NAME=blockguard_server_$(if [ "$NEW_PORT" = "8080" ]; then echo "blue"; else echo "green"; fi)
+            OLD_NAME=blockguard_server_$(if [ "$CURRENT_PORT" = "8080" ]; then echo "blue"; else echo "green"; fi)
 
             echo "새 컨테이너 실행: $NEW_NAME (포트: $NEW_PORT)"
             
@@ -93,7 +88,7 @@ jobs:
             echo "헬스체크 통과"
 
             echo "nginx 포트 전환"
-            sudo sed -i "s/server 127\.0\.0\.1:[0-9][0-9]*/server 127.0.0.1:$NEW_PORT;/" /etc/nginx/conf.d/app-upstream.conf
+            sudo sed -i "s/server 127\.0\.0\.1:[0-9][0-9]*/server 127.0.0.1:$NEW_PORT/" /etc/nginx/conf.d/app-upstream.conf
             sudo nginx -t
             sudo systemctl reload nginx
 

@@ -26,11 +26,11 @@ import java.util.Optional;
 public class DaumNewsCrawler {
     private final NewsRepository newsRepository;
     private static final int MAX_PAGES = 20;
-    private static final int ARTICLE_RETENTION_DAYS = 1095;
+    private static final int ARTICLE_RETENTION_DAYS = 365;
     private static final long CRAWL_DELAY_MS = 500L;
 
-    public void fetchNewsFromDaum(String keyword) {
-        Category category = Category.from(keyword);
+    public void fetchNewsFromDaum(String keyword, Category forceCategory) {
+        Category category = (forceCategory != null) ? forceCategory : Category.from(keyword);
         int savedCount = 0;
 
         try {
@@ -44,7 +44,6 @@ public class DaumNewsCrawler {
                         .get();
 
                 Elements newsItems = doc.select("li[data-docid]");
-
                 if (newsItems.isEmpty()) break;
 
                 for (Element item : newsItems) {

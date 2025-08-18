@@ -111,6 +111,9 @@ public enum SwaggerResponseDescription {
             ErrorCode.FRAUD_NUMBER_SERVER_ERROR
     ))),
 
+    CHECK_FRAUD_URL_FAIL(new LinkedHashSet<>(Set.of(
+    ))),
+
     ANALYZE_FRAUD_FAIL(new LinkedHashSet<>(Set.of(
             ErrorCode.INVALID_TOKEN,
             ErrorCode.AI_SERVER_ERROR,

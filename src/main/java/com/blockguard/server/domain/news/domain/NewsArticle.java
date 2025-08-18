@@ -35,7 +35,7 @@ public class NewsArticle extends BaseEntity {
     private String imageUrl;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     private Category category;
 
     @Column(nullable = false)

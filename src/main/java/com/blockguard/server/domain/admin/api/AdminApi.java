@@ -32,6 +32,7 @@ public class AdminApi {
     private String adminSecret;
 
     @PostMapping("/login")
+    @Operation(summary = "관리자 로그인")
     public BaseResponse<JwtToken> loginAdmin(@RequestParam String key) {
         if (!adminSecret.equals(key)) {
             throw new BusinessExceptionHandler(ErrorCode.INVALID_TOKEN);
@@ -42,7 +43,7 @@ public class AdminApi {
     }
 
     @PostMapping("/update/fraud-url")
-    @Operation(summary = "공공 api 데이터 호출 - 관리자용")
+    @Operation(summary = "공공 api 데이터 호출")
     public BaseResponse<Void> syncFraudUrls() {
         fraudUrlImporter.syncFraudUrlsFromOpenApi();
         return BaseResponse.of(SuccessCode.IMPORT_OPEN_API_SUCCESS);
@@ -50,7 +51,7 @@ public class AdminApi {
 
 
     @PostMapping("/crawl")
-    @Operation(summary = "뉴스 크롤링 - 관리자용")
+    @Operation(summary = "뉴스 크롤링")
     public BaseResponse<Void> crawlNewsManually() {
         newsSaveScheduler.crawlingForAdmin();
         return BaseResponse.of(SuccessCode.CRWAL_DAUM_NEWS_SUCCESS);

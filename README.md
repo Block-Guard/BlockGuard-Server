@@ -38,7 +38,7 @@ Spring Boot 기반으로 개발되었으며, AI 서버와 연동하여 사기 �
 REST API 엔드포인트 및 스펙은 아래 문서를 참고하세요.
 
 - [API 명세서 (Swagger 링크)](https://www.blockguard.shop/swagger-ui/index.html)
-- 여기 API 명세서 노션 문서 추가
+- [API 명세서 (Notion 링크)](https://breezy-index-18b.notion.site/API-253ec5aa3e1a8014a18dc53ee1d1c5c8)
 
 ---
 

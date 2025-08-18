@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CheckEmailDuplicatedResponse {
     private boolean isDuplicated;
+    private boolean isDeleted;
 }

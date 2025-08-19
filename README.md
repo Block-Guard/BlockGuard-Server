@@ -4,9 +4,6 @@
 
 ---
 
-## 📌 Package Structure
-
-
 ## 📌 ERD (Entity Relationship Diagram)
 - [ERD Diagram Link](https://dbdiagram.io/d/BlockGuard_ERD-686d1997f413ba3508d99080)
   <img width="1920" height="994" alt="image" src="https://github.com/user-attachments/assets/54a18ee7-f831-45a4-b4bb-173986c8708c" />

@@ -48,6 +48,8 @@ REST API 엔드포인트 및 스펙은 아래 문서를 참고하세요.
 
 <img width="1368" height="1002" alt="image" src="https://github.com/user-attachments/assets/a2ab4818-0240-48ef-b9b5-ffb099068bc8" />
 
+Spring 서버 아키텍처 다이어그램입니다.
+![img.png](img.png)
 
 ### 구성 요소:
 - **AWS EC2**: 서버 애플리케이션 컨테이너 실행 (Docker)

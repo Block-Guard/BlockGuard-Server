@@ -4,6 +4,95 @@
 
 ---
 
+## 📌 Package Structure
+```
+├── 📄 Dockerfile
+├── 📄 PULL_REQUEST_TEMPLATE.md
+├── 📄 README.md
+├── 📄 build.gradle
+├── 📂 gradle
+│   └── 📂 wrapper
+│       ├── 📦 gradle-wrapper.jar
+│       └── ⚙️ gradle-wrapper.properties
+├── ⚙️ gradlew
+├── ⚙️ gradlew.bat
+├── 📄 settings.gradle
+└── 📂 src/main/java/com/blockguard/server
+    ├── 🚀 ServerApplication.java
+    ├── 📂 domain
+    │   ├── 📂 admin
+    │   │   └── 📂 api
+    │   ├── 📂 analysis
+    │   │   ├── 📂 api
+    │   │   ├── 📂 application
+    │   │   ├── 📂 dao
+    │   │   ├── 📂 domain
+    │   │   └── 📂 dto
+    │   │       ├── 📂 request
+    │   │       └── 📂 response
+    │   ├── 📂 auth
+    │   │   ├── 📂 api
+    │   │   ├── 📂 application
+    │   │   ├── 📂 domain
+    │   │   ├── 📂 dto
+    │   │   ├── 📂 enhancer
+    │   │   ├── 📂 enums
+    │   │   ├── 📂 infra
+    │   │   └── 📂 interceptor
+    │   ├── 📂 fraud
+    │   │   ├── 📂 api
+    │   │   ├── 📂 application
+    │   │   ├── 📂 dao
+    │   │   ├── 📂 domain
+    │   │   └── 📂 dto
+    │   ├── 📂 guardian
+    │   │   ├── 📂 api
+    │   │   ├── 📂 application
+    │   │   ├── 📂 dao
+    │   │   ├── 📂 domain
+    │   │   └── 📂 dto
+    │   ├── 📂 news
+    │   │   ├── 📂 api
+    │   │   ├── 📂 application
+    │   │   ├── 📂 dao
+    │   │   ├── 📂 domain
+    │   │   ├── 📂 dto
+    │   │   └── 📂 scheduler
+    │   ├── 📂 report
+    │   │   ├── 📂 api
+    │   │   ├── 📂 application
+    │   │   ├── 📂 dao
+    │   │   ├── 📂 domain
+    │   │   └── 📂 dto
+    │   └── 📂 user
+    │       ├── 📂 api
+    │       ├── 📂 application
+    │       ├── 📂 dao
+    │       ├── 📂 domain
+    │       └── 📂 dto
+    ├── 📂 global
+    │   ├── 📂 common
+    │   │   ├── 📂 codes
+    │   │   ├── 📂 entity
+    │   │   └── 📂 response
+    │   ├── 📂 config
+    │   │   ├── 📂 S3
+    │   │   ├── 📂 resolver
+    │   │   └── 📂 swagger
+    │   └── 📂 exception
+    │       ├── 🛠️ BusinessExceptionHandler.java
+    │       └── 🛠️ GlobalExceptionHandler.java
+    └── 📂 infra
+        ├── 📂 crawler
+        ├── 📂 google
+        ├── 📂 gpt
+        ├── 📂 importer
+        ├── 📂 naver
+        │   └── 📂 ocr
+        └── 📂 number
+```
+
+
 ## 📌 ERD (Entity Relationship Diagram)
 - [ERD Diagram Link](https://dbdiagram.io/d/BlockGuard_ERD-686d1997f413ba3508d99080)
 ![img_4.png](img_4.png)

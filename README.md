@@ -39,8 +39,7 @@
 ## 📌 Architecture Diagram
 
 - 서비스 전체 아키텍처 다이어그램
-<img width="1368" height="1002" alt="image" src="https://github.com/user-attachments/assets/a2ab4818-0240-48ef-b9b5-ffb099068bc8" />
-
+![img_2.png](img_2.png)
 
 - 서버 아키텍처 다이어그램
-![img.png](img.png)
+![img_3.png](img_3.png)

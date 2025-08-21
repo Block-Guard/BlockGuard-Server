@@ -21,9 +21,9 @@ public enum RiskLevel {
     }
 
     public static RiskLevel fromScore(double score) {
-        if (score <= 30) {
+        if (score <= 33) {
             return Safety;
-        } else if (score <= 60) {
+        } else if (score <= 66) {
             return Caution;
         } else {
             return Dangers;

@@ -4,6 +4,7 @@ import com.blockguard.server.domain.news.domain.enums.Category;
 import com.blockguard.server.infra.crawler.DaumNewsCrawler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -37,7 +38,7 @@ public class NewsSaveScheduler {
             Map.entry(Category.ETC, List.of("몸캠"))
     );
 
-    @Async
+    @CacheEvict(value = "news:list:v2", allEntries = true)
     public void crawlingForAdmin() {
         crawlByCategories(EnumSet.of(
                 Category.VOICE_PHISHING,
@@ -46,7 +47,7 @@ public class NewsSaveScheduler {
         ));
     }
 
-    @Async
+    @CacheEvict(value = "news:list:v2", allEntries = true)
     // @Scheduled(cron = "0 0 4 * * *")
     public void saveNewsArticles() {
         crawlAll();

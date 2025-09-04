@@ -20,16 +20,6 @@ import java.util.Map;
 @EnableCaching
 @Configuration
 public class RedisConfig {
-    @Value("${spring.data.redis.host}")
-    private String host;
-
-    @Value("${spring.data.redis.port}")
-    private int port;
-
-    @Bean
-    public RedisConnectionFactory redisConnectionFactory() {
-        return new LettuceConnectionFactory(host, port);
-    }
 
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory cf) {

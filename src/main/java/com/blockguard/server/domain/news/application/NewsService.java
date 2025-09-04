@@ -10,6 +10,7 @@ import com.blockguard.server.global.common.codes.ErrorCode;
 import com.blockguard.server.global.exception.BusinessExceptionHandler;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +25,7 @@ import java.util.List;
 public class NewsService {
     private final NewsRepository newsRepository;
 
+    @Cacheable(value = "news:list:v2", key = "'list:' + #page + ':' + #size + ':' + #sort + ':' + #category")
     public NewsPageResponse getNewsList(int page, int size, String sort, String category) {
         Pageable pageable = PageRequest.of(page - 1, size, getSort(sort));
         Page<NewsArticle> newsPage;

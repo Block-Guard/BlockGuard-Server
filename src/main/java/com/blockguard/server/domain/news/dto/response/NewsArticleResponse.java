@@ -4,6 +4,7 @@ import com.blockguard.server.domain.news.domain.NewsArticle;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Builder(toBuilder = true)
 @AllArgsConstructor
+@NoArgsConstructor
 public class NewsArticleResponse {
     private Long id;
     private String title;

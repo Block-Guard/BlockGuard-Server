@@ -53,7 +53,6 @@ public class AdminApi {
 
     @PostMapping("/crawl")
     @Operation(summary = "뉴스 크롤링")
-    @CacheEvict(value = "news:list:v2", allEntries = true)
     public BaseResponse<Void> crawlNewsManually() {
         newsSaveScheduler.crawlingForAdmin();
         return BaseResponse.of(SuccessCode.CRWAL_DAUM_NEWS_SUCCESS);

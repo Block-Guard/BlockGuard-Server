@@ -4,6 +4,7 @@ import com.blockguard.server.domain.analysis.dao.FraudAnalysisRecordRepository;
 import com.blockguard.server.domain.analysis.domain.FraudAnalysisRecord;
 import com.blockguard.server.domain.analysis.domain.enums.FraudType;
 import com.blockguard.server.domain.analysis.domain.enums.RiskLevel;
+import com.blockguard.server.domain.analysis.dto.ai.FraudAnalysisResult;
 import com.blockguard.server.domain.analysis.dto.request.FraudAnalysisRequest;
 import com.blockguard.server.domain.analysis.dto.request.GptRequest;
 import com.blockguard.server.domain.analysis.dto.response.FraudAnalysisRecordResponse;
@@ -17,6 +18,8 @@ import com.blockguard.server.infra.gpt.GptApiClient;
 import com.blockguard.server.infra.naver.ocr.NaverOcrClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.document.Document;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -36,6 +39,8 @@ public class FraudAnalysisService {
     private final GptApiClient gptApiClient;
     private final FraudService fraudService;
     private final FraudAnalysisRecordRepository fraudAnalysisRecordRepository;
+    private final FraudVectorStoreService fraudVectorStoreService;
+    private final ChatClient chatClient;
 
     @Transactional
     public FraudAnalysisResponse fraudAnalysis(FraudAnalysisRequest fraudAnalysisRequest, List<MultipartFile> imageFiles, User user) {
@@ -82,6 +87,87 @@ public class FraudAnalysisService {
                 .explanation(gptResponse.getExplanation())
                 .riskLevel(riskLevel.getValue())
                 .build();
+    }
+
+    @Transactional
+    public FraudAnalysisResponse fraudAnalysisRAG(FraudAnalysisRequest fraudAnalysisRequest, List<MultipartFile> imageFiles, User user) {
+        // 1. URL/전화번호/설문 가산점
+        double score = 0;
+        score = addFraudUrlScore(fraudAnalysisRequest, score);
+        score = addFraudPhoneNumberScore(fraudAnalysisRequest, score);
+        score += getSurveyScore(fraudAnalysisRequest);
+
+        // 2. 키워드 추출
+        List<String> keywords = new ArrayList<>();
+        extractKeywordsFromRequest(fraudAnalysisRequest, keywords);
+
+        // 3. OCR 텍스트 추출
+        String imageContent = extractOcrText(imageFiles);
+
+        // 4. 유사 사례 벡터 검색
+        String query = StringUtils.hasText(fraudAnalysisRequest.getMessageContent())
+                ? fraudAnalysisRequest.getMessageContent()
+                : fraudAnalysisRequest.getAdditionalDescription();
+        List<Document> similarCases = fraudVectorStoreService.searchSimilarCases(query);
+        similarCases.forEach(doc -> log.info("[RAG 유사 사례] 유형={} / 유사문자={}",
+                doc.getMetadata().get("typeName"), doc.getText()));
+        String formattedCases = fraudVectorStoreService.formatDocumentsForPrompt(similarCases);
+
+        // 5. few-shot 프롬프트 구성 및 ChatClient 호출
+        String userPrompt = buildRagPrompt(fraudAnalysisRequest, keywords, imageContent, formattedCases);
+
+        FraudAnalysisResult result = chatClient.prompt()
+                .user(userPrompt)
+                .call()
+                .entity(FraudAnalysisResult.class);
+
+        // 6. 최종 점수 계산 및 레벨 판정
+        score = Math.min(100, score + result.getRiskScore());
+        RiskLevel riskLevel = RiskLevel.fromScore(score);
+        FraudType fraudTypeEnum = FraudType.fromKoreanName(result.getFraudType());
+
+        if (user != null) {
+            fraudAnalysisRecordRepository.save(
+                    FraudAnalysisRecord.builder()
+                            .user(user)
+                            .score(BigDecimal.valueOf(score))
+                            .estimatedFraudType(riskLevel == RiskLevel.Safety ? null : fraudTypeEnum)
+                            .riskLevel(riskLevel)
+                            .build()
+            );
+        }
+
+        return FraudAnalysisResponse.builder()
+                .keywords(keywords)
+                .score(score)
+                .estimatedFraudType(fraudTypeEnum.getKorName())
+                .explanation(result.getReason())
+                .riskLevel(riskLevel.getValue())
+                .build();
+    }
+
+    private static String buildRagPrompt(FraudAnalysisRequest req, List<String> keywords, String imageContent, String formattedCases) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[유사 사례]\n").append(formattedCases).append("\n\n");
+        sb.append("[분석 대상]\n");
+        if (StringUtils.hasText(req.getMessageContent())) {
+            sb.append("문자 내용: ").append(req.getMessageContent()).append("\n");
+        }
+        if (StringUtils.hasText(imageContent)) {
+            sb.append("이미지 OCR: ").append(imageContent).append("\n");
+        }
+        if (!keywords.isEmpty()) {
+            sb.append("키워드: ").append(String.join(", ", keywords)).append("\n");
+        }
+        sb.append("추가 설명: ").append(req.getAdditionalDescription()).append("\n\n");
+        sb.append("아래 JSON 형식으로 분석 결과를 응답하라:\n")
+          .append("{{\n")
+          .append("  \"fraudType\": \"사기 유형명\",\n")
+          .append("  \"riskScore\": 0~70의 정수,\n")
+          .append("  \"reason\": \"판단 이유\",\n")
+          .append("  \"recommendation\": \"대응 권고\"\n")
+          .append("}}\n");
+        return sb.toString();
     }
 
     private static int getSurveyScore(FraudAnalysisRequest fraudAnalysisRequest) {

@@ -51,6 +51,24 @@ public class FraudAnalysisApi {
         return BaseResponse.of(SuccessCode.ANALYZE_FRAUD_SUCCESS, fraudAnalysisResponse);
     }
 
+    @PostMapping(value = "/fraud-analysis/v2", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @CustomExceptionDescription(SwaggerResponseDescription.ANALYZE_FRAUD_FAIL)
+    @Operation(summary = "사기 분석")
+    public BaseResponse<FraudAnalysisResponse> analyzeFraudRAG(
+            @RequestParam("fraudAnalysisRequest") String jsonStr,
+            @RequestParam(value = "imageFiles", required = false) List<MultipartFile> imageFiles,
+            @Parameter(hidden = true) @OptionalUser User user
+    ) throws JsonProcessingException {
+
+        if (imageFiles != null && imageFiles.size() > 2) {
+            throw new BusinessExceptionHandler(ErrorCode.IMAGE_UPLOAD_LIMIT_EXCEEDED);
+        }
+
+        FraudAnalysisRequest request = objectMapper.readValue(jsonStr, FraudAnalysisRequest.class);
+        FraudAnalysisResponse fraudAnalysisResponse = fraudAnalysisService.fraudAnalysisRAG(request, imageFiles, user);
+        return BaseResponse.of(SuccessCode.ANALYZE_FRAUD_SUCCESS, fraudAnalysisResponse);
+    }
+
     @GetMapping(value = "/fraud-analysis")
     @CustomExceptionDescription(SwaggerResponseDescription.INVALID_TOKEN)
     @Operation(summary = "사기 분석 기록 조회")
